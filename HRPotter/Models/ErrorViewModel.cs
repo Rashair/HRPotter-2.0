@@ -1,6 +1,6 @@
 using System;
 
-namespace HR_Potter.Models
+namespace HRPotter.Models
 {
     public class ErrorViewModel
     {

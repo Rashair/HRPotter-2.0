@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using HR_Potter.Models;
+using HRPotter.Models;
 
-namespace HR_Potter.Controllers
+namespace HRPotter.Controllers
 {
     public class HomeController : Controller
     {
