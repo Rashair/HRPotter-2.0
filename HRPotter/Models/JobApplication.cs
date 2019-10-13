@@ -8,6 +8,8 @@ namespace HRPotter.Models
 {
     public class JobApplication
     {
+        [Key]
+        public int Id { get; set; }
         public Person PersonData { get; set; }
         public Educaction EducationData { get; set; }
     }
