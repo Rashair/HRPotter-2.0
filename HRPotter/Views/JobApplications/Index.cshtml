@@ -12,12 +12,72 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.JobOfferId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.University)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudySubject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudiesBeginning)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudiesEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsStudent)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobOfferId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.University)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudySubject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudiesBeginning)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudiesEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsStudent)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

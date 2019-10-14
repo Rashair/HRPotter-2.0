@@ -53,7 +53,7 @@ namespace HRPotter.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] JobApplication jobApplication)
+        public async Task<IActionResult> Create([Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +85,7 @@ namespace HRPotter.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] JobApplication jobApplication)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
         {
             if (id != jobApplication.Id)
             {
