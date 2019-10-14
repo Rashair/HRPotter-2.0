@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,9 +22,13 @@ namespace HRPotter.Models
         public string Phone { get; set; }
 
         public string University { get; set; }
+        [Display(Name = "Study subject")]
         public string StudySubject { get; set; }
-        public DateTime StudiesBeginning { get; set; }
+        [Display(Name = "Start date")]
+        public DateTime StudiesStart { get; set; }
+        [Display(Name = "End date")]
         public DateTime StudiesEnd { get; set; }
+        [Display(Name = "Student")]
         public bool IsStudent { get; set; }
     }
 }

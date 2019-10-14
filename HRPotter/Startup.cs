@@ -26,9 +26,6 @@ namespace HRPotter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
-            services.AddDbContext<HRPotterContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("HRPotterContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,10 +54,6 @@ namespace HRPotter
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            using var context = scope.ServiceProvider.GetService<HRPotterContext>();
-            context.Database.Migrate();
         }
     }
 }

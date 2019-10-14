@@ -6,34 +6,42 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HRPotter.Models;
+using System.IO;
 
 namespace HRPotter.Controllers
 {
     public class JobApplicationsController : Controller
     {
-        private readonly HRPotterContext _context;
 
-        public JobApplicationsController(HRPotterContext context)
+        private readonly static List<JobApplication> jobApplications = new List<JobApplication>
         {
-            _context = context;
+            new JobApplication {JobOfferId = 2, FirstName = "Stefan" , LastName = "Johnson" , Email = "johnson@nsa.gov"},
+            new JobApplication {JobOfferId = 3, FirstName = "Bogdan" , LastName = "Smith" , Email = "smith@nsa.gov"},
+            new JobApplication {JobOfferId = 3, FirstName = "Ambroży" , LastName = "Miller" , Email = "miller@nsa.gov"},
+            new JobApplication {JobOfferId = 1, FirstName = "Bogusław" , LastName = "Jones" , Email = "jones@nsa.gov"},
+            new JobApplication {JobOfferId = 2, FirstName = "Lech" , LastName = "Wilson" , Email = "wilson@nsa.gov"},
+            new JobApplication {JobOfferId = 2, FirstName = "Orfeusz" , LastName = "Williams" , Email = "williams@nsa.gov"}
+        };
+
+        public JobApplicationsController()
+        {
         }
 
         // GET: JobApplications
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.JobApplication.ToListAsync());
+            return View(jobApplications);
         }
 
         // GET: JobApplications/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var jobApplication = await _context.JobApplication
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var jobApplication = jobApplications.FirstOrDefault(m => m.Id == id);
             if (jobApplication == null)
             {
                 return NotFound();
@@ -49,30 +57,26 @@ namespace HRPotter.Controllers
         }
 
         // POST: JobApplications/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
+        public IActionResult Create([Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(jobApplication);
-                await _context.SaveChangesAsync();
+                jobApplications.Add(jobApplication);
                 return RedirectToAction(nameof(Index));
             }
             return View(jobApplication);
         }
 
         // GET: JobApplications/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var jobApplication = await _context.JobApplication.FindAsync(id);
+            var jobApplication = jobApplications.Find(i => i.Id == id);
             if (jobApplication == null)
             {
                 return NotFound();
@@ -81,11 +85,8 @@ namespace HRPotter.Controllers
         }
 
         // POST: JobApplications/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
+        public IActionResult Edit(int id, [Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
         {
             if (id != jobApplication.Id)
             {
@@ -94,37 +95,22 @@ namespace HRPotter.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(jobApplication);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!JobApplicationExists(jobApplication.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                int index = jobApplications.FindIndex(i => i.Id == id);
+                jobApplications[index] = jobApplication;
                 return RedirectToAction(nameof(Index));
             }
             return View(jobApplication);
         }
 
         // GET: JobApplications/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var jobApplication = await _context.JobApplication
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var jobApplication = jobApplications.FirstOrDefault(m => m.Id == id);
             if (jobApplication == null)
             {
                 return NotFound();
@@ -135,18 +121,11 @@ namespace HRPotter.Controllers
 
         // POST: JobApplications/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var jobApplication = await _context.JobApplication.FindAsync(id);
-            _context.JobApplication.Remove(jobApplication);
-            await _context.SaveChangesAsync();
+            var jobApplication = jobApplications.Find(i => i.Id == id);
+            jobApplications.Remove(jobApplication);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool JobApplicationExists(int id)
-        {
-            return _context.JobApplication.Any(e => e.Id == id);
         }
     }
 }
