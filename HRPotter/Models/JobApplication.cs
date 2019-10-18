@@ -30,5 +30,16 @@ namespace HRPotter.Models
         public DateTime StudiesEnd { get; set; }
         [Display(Name = "Student")]
         public bool IsStudent { get; set; }
+
+        public string Description { get; set; }
+    
+        public ApplicationStatus Status { get; set; }
+    }
+
+    public enum ApplicationStatus
+    {
+        Under_Examination,
+        Approved,
+        Rejected
     }
 }
