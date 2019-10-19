@@ -17,7 +17,7 @@ namespace HRPotter.Controllers
         {
             new JobApplication {JobOfferId = 2, FirstName = "Stefan" , LastName = "Johnson" , Email = "johnson@nsa.gov"},
             new JobApplication {JobOfferId = 3, FirstName = "Bogdan" , LastName = "Smith" , Email = "smith@nsa.gov"},
-            new JobApplication {JobOfferId = 3, FirstName = "Ambroży" , LastName = "Miller" , Email = "miller@nsa.gov"},
+            new JobApplication {JobOfferId = 3, FirstName = "Ambroży" , LastName = "Miller" , Email = "miller@nsa.gov", IsStudent = true},
             new JobApplication {JobOfferId = 1, FirstName = "Bogusław" , LastName = "Jones" , Email = "jones@nsa.gov"},
             new JobApplication {JobOfferId = 2, FirstName = "Lech" , LastName = "Wilson" , Email = "wilson@nsa.gov"},
             new JobApplication {JobOfferId = 2, FirstName = "Orfeusz" , LastName = "Williams" , Email = "williams@nsa.gov"}

@@ -12,7 +12,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.JobOfferId)
+                Job offer
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
@@ -40,7 +40,7 @@
         {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.JobOfferId)
+                <a href="@item.JobOfferId" > Job title </a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
@@ -55,18 +55,18 @@
                 @Html.DisplayFor(modelItem => item.StudySubject)
             </th>
             <td>
-                @Html.DisplayFor(modelItem => item.IsStudent)
+                @Html.Raw(item.IsStudent ? "&#x2714;" : "&#x2716;")
             </td>
             <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" : item.Status==ApplicationStatus.Rejected ? "text-danger" : "")>
-                @item.Status.ToString()
+                @item.Status.GetDescription()
             </td>
             <td>
-                @if (item.Status == ApplicationStatus.Under_Examination)
+                @if (item.Status == ApplicationStatus.ToBeReviewed)
                 {
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                 }
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                @if (item.Status == ApplicationStatus.Under_Examination)
+                @if (item.Status == ApplicationStatus.ToBeReviewed)
                 {
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 }
