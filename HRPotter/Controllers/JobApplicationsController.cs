@@ -15,12 +15,12 @@ namespace HRPotter.Controllers
 
         private readonly static List<JobApplication> jobApplications = new List<JobApplication>
         {
-            new JobApplication {JobOfferId = 2, FirstName = "Stefan" , LastName = "Johnson" , Email = "johnson@nsa.gov"},
-            new JobApplication {JobOfferId = 3, FirstName = "Bogdan" , LastName = "Smith" , Email = "smith@nsa.gov"},
-            new JobApplication {JobOfferId = 3, FirstName = "Ambroży" , LastName = "Miller" , Email = "miller@nsa.gov", IsStudent = true},
-            new JobApplication {JobOfferId = 1, FirstName = "Bogusław" , LastName = "Jones" , Email = "jones@nsa.gov"},
-            new JobApplication {JobOfferId = 2, FirstName = "Lech" , LastName = "Wilson" , Email = "wilson@nsa.gov"},
-            new JobApplication {JobOfferId = 2, FirstName = "Orfeusz" , LastName = "Williams" , Email = "williams@nsa.gov"}
+            new JobApplication {Id = 0, JobOfferId = 2, FirstName = "Stefan" , LastName = "Johnson" , Email = "johnson@nsa.gov"},
+            new JobApplication {Id = 1, JobOfferId = 3, FirstName = "Bogdan" , LastName = "Smith" , Email = "smith@nsa.gov"},
+            new JobApplication {Id = 2, JobOfferId = 3, FirstName = "Ambroży" , LastName = "Miller" , Email = "miller@nsa.gov", IsStudent = true},
+            new JobApplication {Id = 3, JobOfferId = 1, FirstName = "Bogusław" , LastName = "Jones" , Email = "jones@nsa.gov"},
+            new JobApplication {Id = 4, JobOfferId = 2, FirstName = "Lech" , LastName = "Wilson" , Email = "wilson@nsa.gov"},
+            new JobApplication {Id = 5, JobOfferId = 2, FirstName = "Orfeusz" , LastName = "Williams" , Email = "williams@nsa.gov"}
         };
 
         public JobApplicationsController()
@@ -88,7 +88,7 @@ namespace HRPotter.Controllers
         [HttpPost]
         public IActionResult Edit(int id, [Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
         {
-            if (id != jobApplication.Id)
+            if (jobApplication == null || id != jobApplication.Id)
             {
                 return NotFound();
             }

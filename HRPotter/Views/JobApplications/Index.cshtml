@@ -1,4 +1,4 @@
-﻿@using HRPotter.Models;
+﻿@using HRPotter.Helpers;
 @model IEnumerable<JobApplication>
 
 @{
@@ -12,22 +12,7 @@
     <thead>
         <tr>
             <th>
-                Job offer
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.University)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StudySubject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsStudent)
+                @Html.DisplayNameFor(model => model.JobOfferId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -40,22 +25,7 @@
         {
         <tr>
             <td>
-                <a href="@item.JobOfferId" > Job title </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.University)
-            </td>
-            <th>
-                @Html.DisplayFor(modelItem => item.StudySubject)
-            </th>
-            <td>
-                @Html.Raw(item.IsStudent ? "&#x2714;" : "&#x2716;")
+                <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId" > Job title </a>
             </td>
             <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" : item.Status==ApplicationStatus.Rejected ? "text-danger" : "")>
                 @item.Status.GetDescription()
