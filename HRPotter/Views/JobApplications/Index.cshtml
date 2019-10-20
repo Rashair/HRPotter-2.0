@@ -1,0 +1,47 @@
+﻿@using HRPotter.Helpers;
+@model IEnumerable<JobApplication>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>List of your applications</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.JobOfferId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId" > Job title </a>
+            </td>
+            <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" : item.Status==ApplicationStatus.Rejected ? "text-danger" : "")>
+                @item.Status.GetDescription()
+            </td>
+            <td>
+                @if (item.Status == ApplicationStatus.ToBeReviewed)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                }
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                @if (item.Status == ApplicationStatus.ToBeReviewed)
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
