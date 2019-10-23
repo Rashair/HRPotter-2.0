@@ -50,15 +50,15 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
-        // GET: JobApplications/Create
-        public IActionResult Create()
+        // GET: JobApplications/Add
+        public IActionResult Add()
         {
             return View();
         }
 
-        // POST: JobApplications/Create
+        // POST: JobApplications/Add
         [HttpPost]
-        public IActionResult Create([Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
+        public IActionResult Add([Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
         {
             if (ModelState.IsValid)
             {

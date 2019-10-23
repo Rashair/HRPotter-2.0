@@ -13,11 +13,11 @@ namespace HRPotter.Controllers
     {
         private readonly static List<JobOffer> jobOffers = new List<JobOffer>
         {
-            new JobOffer {Id = 0, JobTitle = "Backend Developer", CompanyName = "Microsoft" , City = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
-            new JobOffer {Id = 1, JobTitle = "Frontend Developer", CompanyName = "Microsoft" , City = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
-            new JobOffer {Id = 2, JobTitle = "Manager", CompanyName = "Apple" , City = "New York" , SalaryFrom = 15000, SalaryTo = 25000},
-            new JobOffer {Id = 3, JobTitle = "Teacher", CompanyName = "Warsaw University of Technology" , City = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
-            new JobOffer {Id = 4, JobTitle = "Cook", CompanyName = "Microsoft" , City = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
+            new JobOffer {Id = 0, JobTitle = "Backend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
+            new JobOffer {Id = 1, JobTitle = "Frontend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
+            new JobOffer {Id = 2, JobTitle = "Manager", CompanyName = "Apple" , Location = "New York" , SalaryFrom = 15000, SalaryTo = 25000},
+            new JobOffer {Id = 3, JobTitle = "Teacher", CompanyName = "Warsaw University of Technology" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
+            new JobOffer {Id = 4, JobTitle = "Cook", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
         };
 
 
@@ -30,6 +30,14 @@ namespace HRPotter.Controllers
         {
             return View(jobOffers);
         }
+
+
+        // GET: JobOffers
+        public IActionResult IndexHR()
+        {
+            return View(jobOffers);
+        }
+
 
         // GET: JobOffers/Details/5
         public IActionResult Details(int? id)
@@ -59,7 +67,7 @@ namespace HRPotter.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,JobTitle,CompanyName,City,SalaryFrom,SalaryTo,Description")] JobOffer jobOffer)
+        public IActionResult Create([Bind("Id,JobTitle,CompanyName,Location,SalaryFrom,SalaryTo,Description")] JobOffer jobOffer)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +97,7 @@ namespace HRPotter.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult Edit(int id, [Bind("Id,JobTitle,CompanyName,City,SalaryFrom,SalaryTo,Description")] JobOffer jobOffer)
+        public IActionResult Edit(int id, [Bind("Id,JobTitle,CompanyName,Location,SalaryFrom,SalaryTo,Description")] JobOffer jobOffer)
         {
             if (jobOffer == null || id != jobOffer.Id)
             {

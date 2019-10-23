@@ -12,13 +12,15 @@ namespace HRPotter.Models
         public int Id { get; set; }
         
         [Required]
+        [Display(Name ="Job tittle")]
         public string JobTitle { get; set; }
 
         [Required]
+        [Display(Name = "Company")]
         public string CompanyName { get; set; }
 
         [Required]
-        public string City { get; set; }
+        public string Location { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
         public int SalaryFrom { get; set; }
