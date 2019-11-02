@@ -10,14 +10,14 @@ namespace HRPotter.Controllers
     {
         public readonly static List<JobOffer> jobOffers = new List<JobOffer>
         {
-            new JobOffer {Id = 0, JobTitle = "Backend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryTo = 15000,
+            new JobOffer {Id = 0, JobTitle = "Backend Developer", Company = Company.companies[0] , Location = "Warsaw" , SalaryTo = 15000,
                 Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
-            new JobOffer {Id = 1, JobTitle = "Frontend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000,
+            new JobOffer {Id = 1, JobTitle = "Frontend Developer", Company = Company.companies[0] , Location = "Warsaw" , SalaryFrom = 10000,
                 Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
-            new JobOffer {Id = 2, JobTitle = "Manager", CompanyName = "Apple" , Location = "New York" , SalaryFrom = 15000, SalaryTo = 25000},
-            new JobOffer {Id = 3, JobTitle = "Teacher", CompanyName = "Warsaw University of Technology" , Location = "Warsaw" , SalaryFrom = 10000,
+            new JobOffer {Id = 2, JobTitle = "Manager", Company = Company.companies[1] , Location = "New York" , SalaryFrom = 15000, SalaryTo = 25000},
+            new JobOffer {Id = 3, JobTitle = "Teacher", Company = Company.companies[2] , Location = "Warsaw" , SalaryFrom = 10000,
                 SalaryTo = 15000, Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
-            new JobOffer {Id = 4, JobTitle = "Cook", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000,
+            new JobOffer {Id = 4, JobTitle = "Cook", Company = Company.companies[0] , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000,
                 Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
         };
 

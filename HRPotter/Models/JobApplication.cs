@@ -23,22 +23,7 @@ namespace HRPotter.Models
         [Required]
         public string Email { get; set; }
         public string Phone { get; set; }
-
-
-        public string University { get; set; }
-
-        [Display(Name = "Study subject")]
-        public string StudySubject { get; set; }
-
-        [Display(Name = "Start date")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        [DataType(DataType.Date)]
-        public DateTime? StudiesStart { get; set; }
-
-        [Display(Name = "End date")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        [DataType(DataType.Date)]
-        public DateTime? StudiesEnd { get; set; }
+        public Uri CvUrl { get; set; }
 
         [Display(Name = "Student")]
         public bool IsStudent { get; set; }
