@@ -28,13 +28,17 @@
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SalaryFrom" class="control-label"></label>
-                <input asp-for="SalaryFrom" class="form-control" />
+                <label class="control-label">Salary range</label>
+                <div class="form-row">
+                    <div class="col">
+                        <input asp-for="SalaryFrom" class="form-control" />
+                    </div>
+                    -
+                    <div class="col">
+                        <input asp-for="SalaryTo" class="form-control" />
+                    </div>
+                </div>
                 <span asp-validation-for="SalaryFrom" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SalaryTo" class="control-label"></label>
-                <input asp-for="SalaryTo" class="form-control" />
                 <span asp-validation-for="SalaryTo" class="text-danger"></span>
             </div>
             <div class="form-group">

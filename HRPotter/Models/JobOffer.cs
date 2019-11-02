@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HRPotter.Models
 {
@@ -22,7 +20,12 @@ namespace HRPotter.Models
         [Required]
         public string Location { get; set; }
 
+        [Display(Name = "Salary from")]
+        [Range(1, 1000000)]
         public int? SalaryFrom { get; set; }
+
+        [Display(Name = "Salary to")]
+        [Range(1, 1000000)]
         public int? SalaryTo { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
@@ -34,5 +37,7 @@ namespace HRPotter.Models
         public DateTime? ValidUntil { get; set; }
 
         public string Description { get; set; }
+
+        public List<JobApplication> JobApplications { get; } = new List<JobApplication>();
     }
 }

@@ -63,6 +63,12 @@
                         onclick="location.href='@Url.Action("Add", "JobApplications", new { offerId = Model.Id})'">
                     Apply
                 </button>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+                @using (Html.BeginForm("Delete", "JobOffers", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                }
             </div>
         </div>
     </div>

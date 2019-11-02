@@ -1,12 +1,7 @@
-﻿using System;
+﻿using HRPotter.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HRPotter.Models;
-using System.IO;
 
 namespace HRPotter.Controllers
 {
@@ -25,6 +20,11 @@ namespace HRPotter.Controllers
 
         public JobApplicationsController()
         {
+            for (int i = 0; i < jobApplications.Count; ++i)
+            {
+
+                jobApplications[i].JobOffer = JobOffersController.jobOffers.FirstOrDefault(offer => offer.Id == jobApplications[i].JobOfferId);
+            }
         }
 
         // GET: JobApplications
@@ -54,18 +54,19 @@ namespace HRPotter.Controllers
         [HttpGet]
         public IActionResult Add(int? offerId)
         {
-            if(offerId == null)
+            if (offerId == null)
             {
                 return NotFound();
             }
 
             JobOffer offer = JobOffersController.jobOffers.FirstOrDefault(jobOffer => jobOffer.Id == offerId.Value);
-            if(offer == null)
+            if (offer == null)
             {
                 return NotFound();
             }
-            JobApplication jobApplication = new JobApplication { 
-                JobOfferId = offerId.Value, 
+            JobApplication jobApplication = new JobApplication
+            {
+                JobOfferId = offerId.Value,
                 JobOffer = offer
             };
             return View(jobApplication);

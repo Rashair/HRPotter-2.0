@@ -1,11 +1,8 @@
-﻿using System;
+﻿using HRPotter.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HRPotter.Models;
 
 namespace HRPotter.Controllers
 {
@@ -18,7 +15,7 @@ namespace HRPotter.Controllers
             new JobOffer {Id = 1, JobTitle = "Frontend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000,
                 Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
             new JobOffer {Id = 2, JobTitle = "Manager", CompanyName = "Apple" , Location = "New York" , SalaryFrom = 15000, SalaryTo = 25000},
-            new JobOffer {Id = 3, JobTitle = "Teacher", CompanyName = "Warsaw University of Technology" , Location = "Warsaw" , SalaryFrom = 10000, 
+            new JobOffer {Id = 3, JobTitle = "Teacher", CompanyName = "Warsaw University of Technology" , Location = "Warsaw" , SalaryFrom = 10000,
                 SalaryTo = 15000, Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
             new JobOffer {Id = 4, JobTitle = "Cook", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000,
                 Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
@@ -27,6 +24,11 @@ namespace HRPotter.Controllers
 
         public JobOffersController()
         {
+            for (int i = 0; i < jobOffers.Count; ++i)
+            {
+                jobOffers[i].JobApplications.AddRange(JobApplicationsController.jobApplications.
+                    Where(application => application.JobOfferId == jobOffers[i].Id));
+            }
         }
 
         // GET: JobOffers
@@ -45,6 +47,23 @@ namespace HRPotter.Controllers
 
         // GET: JobOffers/Details/5
         public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var jobOffer = jobOffers.FirstOrDefault(m => m.Id == id);
+            if (jobOffer == null)
+            {
+                return NotFound();
+            }
+
+            return View(jobOffer);
+        }
+
+        // GET: JobOffers/Details/5
+        public IActionResult DetailsHR(int? id)
         {
             if (id == null)
             {
