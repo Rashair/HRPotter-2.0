@@ -22,14 +22,16 @@ namespace HRPotter.Models
         [Required]
         public string Location { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
-        public int SalaryFrom { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
-        public int SalaryTo { get; set; }
+        public int? SalaryFrom { get; set; }
+        public int? SalaryTo { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]
         public DateTime Created { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
+        public DateTime? ValidUntil { get; set; }
 
         public string Description { get; set; }
     }

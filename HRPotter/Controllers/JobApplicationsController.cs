@@ -13,7 +13,7 @@ namespace HRPotter.Controllers
     public class JobApplicationsController : Controller
     {
 
-        private readonly static List<JobApplication> jobApplications = new List<JobApplication>
+        public readonly static List<JobApplication> jobApplications = new List<JobApplication>
         {
             new JobApplication {Id = 0, JobOfferId = 2, FirstName = "Stefan" , LastName = "Johnson" , Email = "johnson@nsa.gov"},
             new JobApplication {Id = 1, JobOfferId = 3, FirstName = "Bogdan" , LastName = "Smith" , Email = "smith@nsa.gov"},
@@ -50,10 +50,24 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
-        // GET: JobApplications/Add
-        public IActionResult Add(int offerId)
+        // GET: JobApplications/Add/1
+        [HttpGet]
+        public IActionResult Add(int? offerId)
         {
-            JobApplication jobApplication = new JobApplication { JobOfferId = offerId };
+            if(offerId == null)
+            {
+                return NotFound();
+            }
+
+            JobOffer offer = JobOffersController.jobOffers.FirstOrDefault(jobOffer => jobOffer.Id == offerId.Value);
+            if(offer == null)
+            {
+                return NotFound();
+            }
+            JobApplication jobApplication = new JobApplication { 
+                JobOfferId = offerId.Value, 
+                JobOffer = offer
+            };
             return View(jobApplication);
         }
 

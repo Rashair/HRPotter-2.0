@@ -11,13 +11,17 @@ namespace HRPotter.Controllers
 {
     public class JobOffersController : Controller
     {
-        private readonly static List<JobOffer> jobOffers = new List<JobOffer>
+        public readonly static List<JobOffer> jobOffers = new List<JobOffer>
         {
-            new JobOffer {Id = 0, JobTitle = "Backend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
-            new JobOffer {Id = 1, JobTitle = "Frontend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
+            new JobOffer {Id = 0, JobTitle = "Backend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryTo = 15000,
+                Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
+            new JobOffer {Id = 1, JobTitle = "Frontend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000,
+                Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
             new JobOffer {Id = 2, JobTitle = "Manager", CompanyName = "Apple" , Location = "New York" , SalaryFrom = 15000, SalaryTo = 25000},
-            new JobOffer {Id = 3, JobTitle = "Teacher", CompanyName = "Warsaw University of Technology" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
-            new JobOffer {Id = 4, JobTitle = "Cook", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000},
+            new JobOffer {Id = 3, JobTitle = "Teacher", CompanyName = "Warsaw University of Technology" , Location = "Warsaw" , SalaryFrom = 10000, 
+                SalaryTo = 15000, Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
+            new JobOffer {Id = 4, JobTitle = "Cook", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000,
+                Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
         };
 
 

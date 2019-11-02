@@ -25,7 +25,7 @@
         {
         <tr>
             <td>
-                <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId" > Job title </a>
+                <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId" > @item.JobOffer.JobTitle </a>
             </td>
             <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" : item.Status==ApplicationStatus.Rejected ? "text-danger" : "")>
                 @item.Status.GetDescription()

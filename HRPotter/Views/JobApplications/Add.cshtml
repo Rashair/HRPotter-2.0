@@ -4,7 +4,7 @@
     ViewData["Title"] = "Add application";
 }
 
-<h4>Application for <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@Model.JobOfferId"> Job title </a> </h4>
+<h4>Application for <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@Model.JobOfferId"> @Model.JobOffer.JobTitle </a> </h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
