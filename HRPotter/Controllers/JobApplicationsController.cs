@@ -1,4 +1,5 @@
-﻿using HRPotter.Models;
+﻿using HRPotter.Data;
+using HRPotter.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ namespace HRPotter.Controllers
 {
     public class JobApplicationsController : Controller
     {
-
+        private HRPotterContext _context;
         public readonly static List<JobApplication> jobApplications = new List<JobApplication>
         {
             new JobApplication {Id = 0, JobOfferId = 2, FirstName = "Stefan" , LastName = "Johnson" , Email = "johnson@nsa.gov"},
@@ -18,12 +19,13 @@ namespace HRPotter.Controllers
             new JobApplication {Id = 5, JobOfferId = 2, FirstName = "Orfeusz" , LastName = "Williams" , Email = "williams@nsa.gov"}
         };
 
-        public JobApplicationsController()
+        public JobApplicationsController(HRPotterContext context)
         {
+            _context = context;
             for (int i = 0; i < jobApplications.Count; ++i)
             {
 
-                jobApplications[i].JobOffer = JobOffersController.jobOffers.FirstOrDefault(offer => offer.Id == jobApplications[i].JobOfferId);
+                jobApplications[i].JobOffer = _context.JobOffers.FirstOrDefault(offer => offer.Id == jobApplications[i].JobOfferId);
             }
         }
 
@@ -59,7 +61,7 @@ namespace HRPotter.Controllers
                 return NotFound();
             }
 
-            JobOffer offer = JobOffersController.jobOffers.FirstOrDefault(jobOffer => jobOffer.Id == offerId.Value);
+            JobOffer offer = _context.JobOffers.FirstOrDefault(jobOffer => jobOffer.Id == offerId.Value);
             if (offer == null)
             {
                 return NotFound();

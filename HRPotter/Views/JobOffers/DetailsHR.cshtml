@@ -59,10 +59,6 @@
                 </div>
             }
             <div>
-                <button type="button" class="btn btn-primary"
-                        onclick="location.href='@Url.Action("Add", "JobApplications", new { offerId = Model.Id})'">
-                    Apply
-                </button>
                 @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
                 @using (Html.BeginForm("Delete", "JobOffers", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
                 {
@@ -72,6 +68,6 @@
             </div>
         </div>
     </div>
-    @Html.ActionLink("Go back to Job Offers", "Index", "JobOffers", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Go back to Job Offers", "IndexHR", "JobOffers", null, new { @class = "btn btn-primary" })
 </div>
 
