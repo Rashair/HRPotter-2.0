@@ -10,9 +10,9 @@ namespace HRPotter.Models
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
-        [Display(Name ="Job tittle")]
+        [Display(Name = "Job tittle")]
         public string JobTitle { get; set; }
 
         [Required]
@@ -26,6 +26,10 @@ namespace HRPotter.Models
         public int SalaryFrom { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
         public int SalaryTo { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
+        public DateTime Created { get; set; }
 
         public string Description { get; set; }
     }

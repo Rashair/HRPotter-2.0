@@ -51,9 +51,10 @@ namespace HRPotter.Controllers
         }
 
         // GET: JobApplications/Add
-        public IActionResult Add()
+        public IActionResult Add(int offerId)
         {
-            return View();
+            JobApplication jobApplication = new JobApplication { JobOfferId = offerId };
+            return View(jobApplication);
         }
 
         // POST: JobApplications/Add
