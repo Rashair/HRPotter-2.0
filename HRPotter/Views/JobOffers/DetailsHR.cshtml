@@ -1,0 +1,77 @@
+﻿@model HRPotter.Models.JobOffer
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+    label {
+        font-weight: bold;
+    }
+</style>
+
+<div class="row">
+    <h1 class="col-sm-12">@Model.JobTitle</h1>
+    <div class="col-sm-8">
+        <div class="offer-description" id="previewMarkdown">
+            @Model.Description
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="offer-details">
+            <div>
+                <label>Company:</label>
+                <span>@Model.CompanyName</span>
+            </div>
+            <div>
+                <label>Location:</label>
+                <span>@Model.Location</span>
+            </div>
+            @if (Model.SalaryFrom.HasValue)
+            {
+                <div>
+
+                    <span></span>
+                </div>
+            }
+            @if (Model.SalaryFrom.HasValue || Model.SalaryTo.HasValue)
+            {
+                <div>
+                    <label>Salary</label>
+                    <span>
+                        @Html.DisplayFor(item => item.SalaryFrom)
+
+                        @(Model.SalaryTo.HasValue && Model.SalaryFrom.HasValue ? "-" : "")
+
+                        @Html.DisplayFor(item => item.SalaryTo) (PLN)
+                    </span>
+                </div>
+            }
+            <div>
+                <label>Created:</label>
+                <span> @Html.DisplayFor(item => item.Created) </span>
+            </div>
+            @if (Model.ValidUntil.HasValue)
+            {
+                <div>
+                    <label>Valid:</label>
+                    <span>@Model.ValidUntil.Value.Subtract(DateTime.Now).Days days (@Model.ValidUntil)</span>
+                </div>
+            }
+            <div>
+                <button type="button" class="btn btn-primary"
+                        onclick="location.href='@Url.Action("Add", "JobApplications", new { offerId = Model.Id})'">
+                    Apply
+                </button>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+                @using (Html.BeginForm("Delete", "JobOffers", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                }
+            </div>
+        </div>
+    </div>
+    @Html.ActionLink("Go back to Job Offers", "Index", "JobOffers", null, new { @class = "btn btn-primary" })
+</div>
+

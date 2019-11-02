@@ -1,19 +1,14 @@
-﻿using System;
+﻿using HRPotter.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HRPotter.Models;
-using System.IO;
 
 namespace HRPotter.Controllers
 {
     public class JobApplicationsController : Controller
     {
 
-        private readonly static List<JobApplication> jobApplications = new List<JobApplication>
+        public readonly static List<JobApplication> jobApplications = new List<JobApplication>
         {
             new JobApplication {Id = 0, JobOfferId = 2, FirstName = "Stefan" , LastName = "Johnson" , Email = "johnson@nsa.gov"},
             new JobApplication {Id = 1, JobOfferId = 3, FirstName = "Bogdan" , LastName = "Smith" , Email = "smith@nsa.gov"},
@@ -25,6 +20,11 @@ namespace HRPotter.Controllers
 
         public JobApplicationsController()
         {
+            for (int i = 0; i < jobApplications.Count; ++i)
+            {
+
+                jobApplications[i].JobOffer = JobOffersController.jobOffers.FirstOrDefault(offer => offer.Id == jobApplications[i].JobOfferId);
+            }
         }
 
         // GET: JobApplications
@@ -50,15 +50,31 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
-        // GET: JobApplications/Create
-        public IActionResult Create()
+        // GET: JobApplications/Add/1
+        [HttpGet]
+        public IActionResult Add(int? offerId)
         {
-            return View();
+            if (offerId == null)
+            {
+                return NotFound();
+            }
+
+            JobOffer offer = JobOffersController.jobOffers.FirstOrDefault(jobOffer => jobOffer.Id == offerId.Value);
+            if (offer == null)
+            {
+                return NotFound();
+            }
+            JobApplication jobApplication = new JobApplication
+            {
+                JobOfferId = offerId.Value,
+                JobOffer = offer
+            };
+            return View(jobApplication);
         }
 
-        // POST: JobApplications/Create
+        // POST: JobApplications/Add
         [HttpPost]
-        public IActionResult Create([Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
+        public IActionResult Add([Bind("Id,JobOfferId,FirstName,LastName,Email,Phone,University,StudySubject,StudiesBeginning,StudiesEnd,IsStudent")] JobApplication jobApplication)
         {
             if (ModelState.IsValid)
             {

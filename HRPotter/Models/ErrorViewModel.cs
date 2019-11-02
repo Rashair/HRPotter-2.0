@@ -1,5 +1,3 @@
-using System;
-
 namespace HRPotter.Models
 {
     public class ErrorViewModel
