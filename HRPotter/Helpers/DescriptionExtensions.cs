@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 
 namespace HRPotter.Helpers
@@ -28,6 +32,18 @@ namespace HRPotter.Helpers
             }
 
             return e.ToString();
+        }
+
+        // https://stackoverflow.com/a/15768915/6841224
+        public static IEnumerable<SelectListItem> GetEnumSelectList<T>() where T : Enum
+        {
+            foreach (T obj in Enum.GetValues(typeof(T)))
+            {
+                Enum enumObj = Enum.Parse(typeof(T), obj.ToString()) as Enum;
+                int enumInt = Convert.ToInt32(enumObj, CultureInfo.InvariantCulture);
+                yield return new SelectListItem() { Value = enumInt.ToString(CultureInfo.InvariantCulture), 
+                    Text = enumObj.GetDescription() };
+            }
         }
     }
 }

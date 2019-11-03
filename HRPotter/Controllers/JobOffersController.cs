@@ -48,64 +48,39 @@ namespace HRPotter.Controllers
             return View(searchResult);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return BadRequest("Id cannot be null");
             }
 
-            JobOffer offer = await _context.JobOffers.FirstOrDefaultAsync(o => o.Id == id);
+            JobOffer offer = await _context.JobOffers.Include(x => x.Company).FirstOrDefaultAsync(o => o.Id == id);
             if (offer == null)
             {
                 return NotFound($"Offer with corresponding id was not found: {id}");
             }
 
-            var createView = new JobOfferCreateView(offer)
-            {
-                Companies = await _context.Companies.ToListAsync()
-            };
-
-            return View(createView);
+            return View(offer);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(JobOffer model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            JobOffer offer = await _context.JobOffers.FirstOrDefaultAsync(o => o.Id == model.Id);
-
-            offer.JobTitle = model.JobTitle;
-            offer.Description = model.Description;
-            offer.CompanyId = model.CompanyId;
-            offer.Location = model.Location;
-            offer.SalaryFrom = model.SalaryFrom;
-            offer.SalaryTo = model.SalaryTo;
-            offer.ValidUntil = model.ValidUntil;
-            _context.Update(offer);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("DetailsHR", new { id = model.Id });
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<IActionResult> DetailsHR(int? id)
         {
             if (id == null)
             {
                 return BadRequest("Id cannot be null");
             }
 
+            JobOffer offer = await _context.JobOffers.
+                Include(x => x.Company).
+                Include(x => x.JobApplications).
+                FirstOrDefaultAsync(o => o.Id == id);
+            if (offer == null)
+            {
+                return NotFound($"Offer with corresponding id was not found: {id}");
+            }
 
-            _context.Remove(new JobOffer { Id = id.Value });
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("IndexHR");
+            return View(offer);
         }
 
         public async Task<ActionResult> Create()
@@ -146,29 +121,64 @@ namespace HRPotter.Controllers
             return RedirectToAction("IndexHR");
         }
 
-        public async Task<IActionResult> Details(int id)
+
+        public async Task<IActionResult> Edit(int? id)
         {
-            JobOffer offer = await _context.JobOffers.Include(x => x.Company).FirstOrDefaultAsync(o => o.Id == id);
+            if (id == null)
+            {
+                return BadRequest("Id cannot be null");
+            }
+
+            JobOffer offer = await _context.JobOffers.FirstOrDefaultAsync(o => o.Id == id);
             if (offer == null)
             {
                 return NotFound($"Offer with corresponding id was not found: {id}");
             }
 
-            return View(offer);
+            var createView = new JobOfferCreateView(offer)
+            {
+                Companies = await _context.Companies.ToListAsync()
+            };
+
+            return View(createView);
         }
 
-        public async Task<IActionResult> DetailsHR(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(JobOffer model)
         {
-            JobOffer offer = await _context.JobOffers.
-                Include(x => x.Company).
-                Include(x => x.JobApplications).
-                FirstOrDefaultAsync(o => o.Id == id);
-            if (offer == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound($"Offer with corresponding id was not found: {id}");
+                return View(model);
             }
 
-            return View(offer);
+            JobOffer offer = await _context.JobOffers.FirstOrDefaultAsync(o => o.Id == model.Id);
+
+            offer.JobTitle = model.JobTitle;
+            offer.Description = model.Description;
+            offer.CompanyId = model.CompanyId;
+            offer.Location = model.Location;
+            offer.SalaryFrom = model.SalaryFrom;
+            offer.SalaryTo = model.SalaryTo;
+            offer.ValidUntil = model.ValidUntil;
+            _context.Update(offer);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("DetailsHR", new { id = model.Id });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest("Id cannot be null");
+            }
+
+            _context.Remove(new JobOffer { Id = id.Value });
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("IndexHR");
         }
     }
 }

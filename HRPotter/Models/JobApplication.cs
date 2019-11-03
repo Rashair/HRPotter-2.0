@@ -35,7 +35,6 @@ namespace HRPotter.Models
 
     public enum ApplicationStatus
     {
-        None = 0,
         [Description("To be reviewed")]
         ToBeReviewed = 1,
         Reviewed = 2,
