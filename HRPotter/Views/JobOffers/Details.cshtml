@@ -21,19 +21,12 @@
         <div class="offer-details">
             <div>
                 <label>Company:</label>
-                <span>@Model.CompanyName</span>
+                <span>@Model.Company.Name</span>
             </div>
             <div>
                 <label>Location:</label>
                 <span>@Model.Location</span>
             </div>
-            @if (Model.SalaryFrom.HasValue)
-            {
-                <div>
-
-                    <span></span>
-                </div>
-            }
             @if (Model.SalaryFrom.HasValue || Model.SalaryTo.HasValue)
             {
                 <div>

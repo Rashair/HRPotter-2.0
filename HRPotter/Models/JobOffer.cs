@@ -14,8 +14,8 @@ namespace HRPotter.Models
         public string JobTitle { get; set; }
 
         [Required]
-        [Display(Name = "Company")]
-        public string CompanyName { get; set; }
+        public virtual int CompanyId { get; set; }
+        public virtual Company Company { get; set; }
 
         [Required]
         public string Location { get; set; }

@@ -1,166 +1,184 @@
-﻿using HRPotter.Models;
+﻿using HRPotter.Data;
+using HRPotter.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
 {
     public class JobOffersController : Controller
     {
-        public readonly static List<JobOffer> jobOffers = new List<JobOffer>
-        {
-            new JobOffer {Id = 0, JobTitle = "Backend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryTo = 15000,
-                Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
-            new JobOffer {Id = 1, JobTitle = "Frontend Developer", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000,
-                Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
-            new JobOffer {Id = 2, JobTitle = "Manager", CompanyName = "Apple" , Location = "New York" , SalaryFrom = 15000, SalaryTo = 25000},
-            new JobOffer {Id = 3, JobTitle = "Teacher", CompanyName = "Warsaw University of Technology" , Location = "Warsaw" , SalaryFrom = 10000,
-                SalaryTo = 15000, Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
-            new JobOffer {Id = 4, JobTitle = "Cook", CompanyName = "Microsoft" , Location = "Warsaw" , SalaryFrom = 10000, SalaryTo = 15000,
-                Description=String.Join(' ',Enumerable.Repeat("lorem ipsum", 10))},
-        };
+        private readonly HRPotterContext _context;
 
-
-        public JobOffersController()
+        public JobOffersController(HRPotterContext context)
         {
-            for (int i = 0; i < jobOffers.Count; ++i)
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index([FromQuery(Name = "search")] string searchString)
+        {
+            if (string.IsNullOrEmpty(searchString))
             {
-                jobOffers[i].JobApplications.AddRange(JobApplicationsController.jobApplications.
-                    Where(application => application.JobOfferId == jobOffers[i].Id));
+                List<JobOffer> offers = await _context.JobOffers.Include(x => x.Company).ToListAsync();
+                return View(offers);
             }
+
+            List<JobOffer> searchResult = await _context.JobOffers.Include(x => x.Company).
+                Where(offer => offer.JobTitle.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).
+                ToListAsync();
+            return View(searchResult);
         }
 
-        // GET: JobOffers
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> IndexHR([FromQuery(Name = "search")] string searchString)
         {
-            return View(jobOffers);
+            if (string.IsNullOrEmpty(searchString))
+            {
+                List<JobOffer> offers = await _context.JobOffers.Include(x => x.Company).ToListAsync();
+                return View(offers);
+            }
+
+            List<JobOffer> searchResult = await _context.JobOffers.Include(x => x.Company).
+                Where(offer => offer.JobTitle.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).
+                ToListAsync();
+            return View(searchResult);
         }
 
-
-        // GET: JobOffers
-        public IActionResult IndexHR()
-        {
-            return View(jobOffers);
-        }
-
-
-        // GET: JobOffers/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return BadRequest("Id cannot be null");
             }
 
-            var jobOffer = jobOffers.FirstOrDefault(m => m.Id == id);
-            if (jobOffer == null)
+            JobOffer offer = await _context.JobOffers.Include(x => x.Company).FirstOrDefaultAsync(o => o.Id == id);
+            if (offer == null)
             {
-                return NotFound();
+                return NotFound($"Offer with corresponding id was not found: {id}");
             }
 
-            return View(jobOffer);
+            return View(offer);
         }
 
-        // GET: JobOffers/Details/5
-        public IActionResult DetailsHR(int? id)
+        public async Task<IActionResult> DetailsHR(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return BadRequest("Id cannot be null");
             }
 
-            var jobOffer = jobOffers.FirstOrDefault(m => m.Id == id);
-            if (jobOffer == null)
+            JobOffer offer = await _context.JobOffers.
+                Include(x => x.Company).
+                Include(x => x.JobApplications).
+                FirstOrDefaultAsync(o => o.Id == id);
+            if (offer == null)
             {
-                return NotFound();
+                return NotFound($"Offer with corresponding id was not found: {id}");
             }
 
-            return View(jobOffer);
+            return View(offer);
         }
 
-        // GET: JobOffers/Create
-        public IActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var model = new JobOfferCreateView
+            {
+                Companies = await _context.Companies.ToListAsync()
+            };
+
+            return View(model);
         }
 
-        // POST: JobOffers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,JobTitle,CompanyName,Location,SalaryFrom,SalaryTo,Description")] JobOffer jobOffer)
+        public async Task<ActionResult> Create(JobOfferCreateView model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                jobOffers.Add(jobOffer);
-                return RedirectToAction(nameof(Index));
+                model.Companies = await _context.Companies.ToListAsync();
+                return View(model);
             }
-            return View(jobOffer);
+
+            JobOffer offer = new JobOffer
+            {
+                CompanyId = model.CompanyId,
+                Description = model.Description,
+                JobTitle = model.JobTitle,
+                Location = model.Location,
+                SalaryFrom = model.SalaryFrom,
+                SalaryTo = model.SalaryTo,
+                ValidUntil = model.ValidUntil,
+                Created = DateTime.Now,
+            };
+
+            await _context.JobOffers.AddAsync(offer);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("IndexHR");
         }
 
-        // GET: JobOffers/Edit/5
-        public IActionResult Edit(int? id)
+
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return BadRequest("Id cannot be null");
             }
 
-            var jobOffer = jobOffers.Find(jobOffer => jobOffer.Id == id);
-            if (jobOffer == null)
+            JobOffer offer = await _context.JobOffers.FirstOrDefaultAsync(o => o.Id == id);
+            if (offer == null)
             {
-                return NotFound();
+                return NotFound($"Offer with corresponding id was not found: {id}");
             }
-            return View(jobOffer);
+
+            var createView = new JobOfferCreateView(offer)
+            {
+                Companies = await _context.Companies.ToListAsync()
+            };
+
+            return View(createView);
         }
 
-        // POST: JobOffers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult Edit(int id, [Bind("Id,JobTitle,CompanyName,Location,SalaryFrom,SalaryTo,Description")] JobOffer jobOffer)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(JobOffer model)
         {
-            if (jobOffer == null || id != jobOffer.Id)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return View(model);
             }
 
-            if (ModelState.IsValid)
-            {
-                int index = jobOffers.FindIndex(i => i.Id == id);
-                jobOffers[index] = jobOffer;
-                return RedirectToAction(nameof(Index));
-            }
+            JobOffer offer = await _context.JobOffers.FirstOrDefaultAsync(o => o.Id == model.Id);
 
-            return View(jobOffer);
+            offer.JobTitle = model.JobTitle;
+            offer.Description = model.Description;
+            offer.CompanyId = model.CompanyId;
+            offer.Location = model.Location;
+            offer.SalaryFrom = model.SalaryFrom;
+            offer.SalaryTo = model.SalaryTo;
+            offer.ValidUntil = model.ValidUntil;
+            _context.Update(offer);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("DetailsHR", new { id = model.Id });
         }
 
-        // GET: JobOffers/Delete/5
-        public IActionResult Delete(int? id)
+        [HttpPost]
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return BadRequest("Id cannot be null");
             }
 
-            var jobOffer = jobOffers.FirstOrDefault(m => m.Id == id);
-            if (jobOffer == null)
-            {
-                return NotFound();
-            }
+            _context.Remove(new JobOffer { Id = id.Value });
+            await _context.SaveChangesAsync();
 
-            return View(jobOffer);
-        }
-
-        // POST: JobOffers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var jobOffer = jobOffers.Find(jobOffer => jobOffer.Id == id);
-            jobOffers.Remove(jobOffer);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("IndexHR");
         }
     }
 }

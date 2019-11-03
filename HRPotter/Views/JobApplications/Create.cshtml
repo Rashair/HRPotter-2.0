@@ -1,7 +1,7 @@
 ﻿@model HRPotter.Models.JobApplication
 
 @{
-    ViewData["Title"] = "Add application";
+    ViewData["Title"] = "Create application";
 }
 
 <h4>Application for <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@Model.JobOfferId"> @Model.JobOffer.JobTitle </a> </h4>
@@ -29,26 +29,6 @@
                 <label asp-for="Phone" class="control-label"></label>
                 <input asp-for="Phone" class="form-control" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="University" class="control-label"></label>
-                <input asp-for="University" class="form-control" />
-                <span asp-validation-for="University" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StudySubject" class="control-label"></label>
-                <input asp-for="StudySubject" class="form-control" />
-                <span asp-validation-for="StudySubject" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StudiesStart" class="control-label"></label>
-                <input asp-for="StudiesStart" class="form-control" />
-                <span asp-validation-for="StudiesStart" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StudiesEnd" class="control-label"></label>
-                <input asp-for="StudiesEnd" class="form-control" />
-                <span asp-validation-for="StudiesEnd" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">

@@ -23,10 +23,10 @@
         {
             <tr>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.JobTitle)</a>
+                    <a asp-action="DetailsHR" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.JobTitle)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CompanyName)
+                    @Html.DisplayFor(modelItem => item.Company.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Location)
