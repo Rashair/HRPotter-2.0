@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HRPotter.Models
 {
-    public class JobOffer
+    public class JobOffer : IValidatableObject
     {
         [Key]
         public int Id { get; set; }
@@ -39,5 +39,18 @@ namespace HRPotter.Models
         public string Description { get; set; }
 
         public List<JobApplication> JobApplications { get; } = new List<JobApplication>();
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if(SalaryFrom != null && SalaryTo != null && SalaryFrom > SalaryTo)
+            {
+                yield return new ValidationResult("Lower bound of salary cannot be greater than upper bound!", new[] { "Salary" });
+            }
+
+            if(ValidUntil != null && ValidUntil < DateTime.Now)
+            {
+                yield return new ValidationResult("Offer expiration date cannot be past date!", new[] { "Expiration date" });
+            }
+        }
     }
 }
