@@ -8,8 +8,9 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Add">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.JobOfferId" value="@Model.JobOfferId"/>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
@@ -37,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Attachments</label>
-                <input class="form-control-file" type="file" multiple="multiple" accept=".doc,.docx,application/msword, .pdf, .txt" />
+                <input class="form-control-file" type="file" multiple="multiple" accept=".doc,.docx,application/msword,.pdf,.txt" />
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -46,21 +47,18 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Add" class="btn btn-primary" />
+                <input type="submit" value="Apply" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="JobOffers" asp-action="Index" class="btn btn-secondary" >Back to job offers</a>
 </div>
 
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <<!-- TODO: Validate file size, and show uploaded files names -->
-    <script>
-
-    </script>
 }

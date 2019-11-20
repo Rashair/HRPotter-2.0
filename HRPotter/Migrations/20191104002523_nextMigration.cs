@@ -23,12 +23,12 @@ namespace HRPotter.Migrations
                 columns: new[] { "Id", "CompanyId", "Created", "Description", "JobTitle", "Location", "SalaryFrom", "SalaryTo", "ValidUntil" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2019, 11, 4, 1, 25, 23, 297, DateTimeKind.Local).AddTicks(2087), "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "Backend Developer", "Warsaw", null, 15000, null },
-                    { 3, 1, new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5052), null, "Manager", "New York", 15000, 25000, new DateTime(2019, 11, 9, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5069) },
-                    { 6, 1, new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5122), null, "Manager", "Venice", 15000, 25000, null },
-                    { 2, 2, new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(3458), "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "Frontend Developer", "Warsaw", 10000, null, new DateTime(2019, 11, 14, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(3528) },
-                    { 4, 3, new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5096), "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "Teacher", "Paris", 10000, 15000, null },
-                    { 5, 4, new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5111), "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "Cook", "Venice", 10000, 15000, null }
+                    { 1, 1, new DateTime(2019, 12, 4, 1, 25, 23, 297, DateTimeKind.Local).AddTicks(2087), "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "Backend Developer", "Warsaw", null, 15000, null },
+                    { 3, 1, new DateTime(2019, 12, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5052), null, "Manager", "New York", 15000, 25000, new DateTime(2019, 11, 9, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5069) },
+                    { 6, 1, new DateTime(2019, 12, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5122), null, "Manager", "Venice", 15000, 25000, null },
+                    { 2, 2, new DateTime(2019, 12, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(3458), "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "Frontend Developer", "Warsaw", 10000, null, new DateTime(2019, 11, 14, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(3528) },
+                    { 4, 3, new DateTime(2019, 12, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5096), "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "Teacher", "Paris", 10000, 15000, null },
+                    { 5, 4, new DateTime(2019, 12, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5111), "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "Cook", "Venice", 10000, 15000, null }
                 });
 
             migrationBuilder.InsertData(

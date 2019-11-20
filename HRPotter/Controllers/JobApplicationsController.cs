@@ -75,17 +75,17 @@ namespace HRPotter.Controllers
                 return BadRequest();
             }
 
-
             JobApplication app = await _context.JobApplications.FirstOrDefaultAsync(app => app.Id == id);
             if(app == null)
             {
                 return NotFound();
             }
+
             app.Status = (ApplicationStatus)status.Value;
             _context.Update(app);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(DetailsHR), new { id = id.Value });
+            return RedirectToAction(nameof(DetailsHR), "JobOffers", new { id = app.JobOfferId });
         }
 
 
