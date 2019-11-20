@@ -72,38 +72,7 @@
 
     @if (Model.JobApplications.Any())
     {
-        <table class="mt-5 ml-0 table table-striped table-hover">
-            <thead class="thead-dark">
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Email
-                    </th>
-                    <th>
-                        Status
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.JobApplications)
-                {
-                    <tr>
-                        <td>
-                            <a asp-controller="JobApplications" asp-action="DetailsHR" asp-route-id="@item.Id"> @item.FirstName @item.LastName </a>
-                        </td>
-                        <td>
-                            @item.Email
-                        </td>
-                        <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" : item.Status==ApplicationStatus.Rejected ? "text-danger" : "")>
-                            @item.Status.GetDescription()
-                        </td>
-                    </tr>
-                }
-            </tbody>
-
-        </table>
+        <partial name="/Views/JobApplications/_IndexHR.cshtml" model="@Model.JobApplications"/>
     }
 </div>
 

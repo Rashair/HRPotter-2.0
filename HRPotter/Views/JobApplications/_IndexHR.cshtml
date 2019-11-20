@@ -1,0 +1,58 @@
+﻿@using HRPotter.Helpers;
+@model IEnumerable<HRPotter.Models.JobApplication>
+
+<div class="">
+    <div class="row mt-4">
+        <div class="col-12 col-md-6 pt-2">
+            @using (Html.BeginForm("IndexHR", "JobApplications", FormMethod.Get))
+            {
+                <div class="input-group search-input">
+                    <input name="search"
+                           type="text"
+                           class="form-control"
+                           placeholder="Search by name"
+                           aria-label="Search by name"
+                           aria-describedby="button-search">
+                    <div class="input-group-append">
+                        <button id="button-search"
+                                class="btn btn-primary"
+                                type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <table class="mt-2 ml-0 table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="JobApplications" asp-action="DetailsHR" asp-route-id="@item.Id"> @item.FirstName @item.LastName </a>
+                    </td>
+                    <td>
+                        @item.Email
+                    </td>
+                    <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" : item.Status==ApplicationStatus.Rejected ? "text-danger" : "")>
+                        @item.Status.GetDescription()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
