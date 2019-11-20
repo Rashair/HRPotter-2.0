@@ -27,20 +27,15 @@
                 <td>
                     <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId"> @item.JobOffer.JobTitle </a>
                 </td>
-                <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" : 
+                <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" :
                             item.Status == ApplicationStatus.Rejected ? "text-danger" : "")>
                     @item.Status.GetDescription()
                 </td>
                 <td>
-                    @if (item.Status == ApplicationStatus.ToBeReviewed)
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit |</a>
-                    }
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    @if (item.Status == ApplicationStatus.ToBeReviewed)
-                    {
-                        <a asp-action="Delete" asp-route-id="@item.Id">| Delete</a>
-                    }
+                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.Id">
+                        <i class="fas fa-info pr-2"></i>
+                        Details
+                    </a>
                 </td>
             </tr>
         }
