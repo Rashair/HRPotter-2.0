@@ -21,7 +21,9 @@ namespace HRPotter.Models
         public string LastName { get; set; }
 
         [Required]
+        [RegularExpression("^([a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*)+@[a-zA-Z0-9]+(\\.[A-Za-z]+)+$", ErrorMessage = "Input should be valid e-mail")]
         public string Email { get; set; }
+        [RegularExpression("^[0-9]{9}$", ErrorMessage ="Phone number should only contain 9 digits")]
         public string Phone { get; set; }
         public Uri CvUrl { get; set; }
 
