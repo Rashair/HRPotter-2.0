@@ -5,12 +5,9 @@
     ViewData["Title"] = "Details";
 }
 
-<style>
-    label {
-        font-weight: bold;
-    }
-</style>
+<link rel="stylesheet" href="~/css/jobOfferDetails.css" />
 
+<div class="panel panel-default">
     <div class="row ml-0">
         <h1 class="col-sm-12">@Model.JobTitle</h1>
         <div class="col-sm-8">
@@ -31,7 +28,7 @@
                 @if (Model.SalaryFrom.HasValue || Model.SalaryTo.HasValue)
                 {
                     <div>
-                        <label>Salary</label>
+                        <label>Salary:</label>
                         <span>
                             @Html.DisplayFor(item => item.SalaryFrom)
 
@@ -53,16 +50,24 @@
                     </div>
                 }
                 <div>
-                    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
-                    @using (Html.BeginForm("Delete", "JobOffers", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    }
+                    <div class="pt-4">
+                        <a asp-action="Edit" asp-route-id="@Model.Id"
+                           class="btn btn-rounded btn-primary mx-2">
+                            <i class="fas fa-edit pr-2"></i>
+                            Edit
+                        </a>
+
+                        <button class="btn btn-danger mx-2"
+                                data-toggle="modal"
+                                data-target="#confirm-delete">
+                            <i class="fas fa-trash-alt pr-2"></i>
+                            Delete
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        @Html.ActionLink("Go back to Job Offers", "IndexHR", "JobOffers", null, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Go back to job offers", "IndexHR", "JobOffers", null, new { @class = "btn btn-primary" })
     </div>
 
     @if (Model.JobApplications.Any())
@@ -100,3 +105,37 @@
 
         </table>
     }
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Delete job offer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p class="font-weight-bold mb-0">Are you sure you want to delete this?</p>
+                <p class="text-danger mb-0"><small>This action cannot be undone.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-chevron-left pr-2"></i>
+                    Cancel
+                </button>
+                @using (Html.BeginForm("Delete", "JobOffers", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt pr-2"></i>
+                        Delete
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
