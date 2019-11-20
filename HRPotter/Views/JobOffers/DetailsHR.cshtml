@@ -72,39 +72,8 @@
 
     @if (Model.JobApplications.Any())
     {
-        <partial name="/Views/JobApplications/_IndexHR.cshtml" model="@Model.JobApplications"/>
+        await Html.RenderPartialAsync("/Views/JobApplications/_IndexHR.cshtml", Model.JobApplications);
     }
 </div>
 
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="modal-title">Delete job offer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <p class="font-weight-bold mb-0">Are you sure you want to delete this?</p>
-                <p class="text-danger mb-0"><small>This action cannot be undone.</small></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i class="fas fa-chevron-left pr-2"></i>
-                    Cancel
-                </button>
-                @using (Html.BeginForm("Delete", "JobOffers", new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash-alt pr-2"></i>
-                        Delete
-                    </button>
-                }
-            </div>
-        </div>
-    </div>
-</div>
+@await Html.PartialAsync("/Views/Shared/_DeleteModal.cshtml", (Title: "Delete job offer", Id: Model.Id, Controller: "JobOffers"))
