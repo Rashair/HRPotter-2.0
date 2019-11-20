@@ -8,7 +8,21 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Application for  <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@Model.JobOfferId"> @Model.JobOffer.JobTitle </a> </h4>
+    <h4>
+        @if (Model.JobOffer != null)
+        {
+            <span>
+                Application for 
+                <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@Model.JobOfferId">
+                    @Model.JobOffer.JobTitle
+                </a>
+            </span>
+        }
+        else
+        {
+            <span>This offer is no longer valid</span>
+        }
+    </h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">

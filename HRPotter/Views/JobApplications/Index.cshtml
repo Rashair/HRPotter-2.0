@@ -46,7 +46,7 @@
             <thead class="thead-dark">
                 <tr>
                     <th>
-                        Link to job offer
+                        Application for
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Status)
@@ -59,7 +59,16 @@
                 {
                     <tr>
                         <td>
-                            <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId"> @item.JobOffer.JobTitle </a>
+                            @if (item.JobOffer != null)
+                            {
+                                <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId">
+                                    @(item.JobOffer.JobTitle)
+                                </a>
+                            }
+                            else
+                            {
+                                <span>This offer is no longer valid</span>
+                            }
                         </td>
                         <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" :
                             item.Status == ApplicationStatus.Rejected ? "text-danger" : "")>
