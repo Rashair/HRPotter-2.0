@@ -53,6 +53,7 @@
                     <th scope="col">Company</th>
                     <th scope="col">Location</th>
                     <th scope="col">Created</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -70,6 +71,11 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Created)
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
+                                <i class="fas fa-edit"></i>
+                            </a>
                         </td>
                     </tr>
                 }
