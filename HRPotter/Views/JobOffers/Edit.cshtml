@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form id="JobOfferForm" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -19,7 +19,7 @@
                 <span asp-validation-for="JobTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CompanyId" class="control-label"></label>
+                <label asp-for="CompanyId" class="control-label">Company</label>
                 <select asp-for="CompanyId" class="form-control"
                         asp-items="@(new SelectList(Model.Companies, "Id","Name", Model.CompanyId))">
                 </select>
@@ -31,19 +31,30 @@
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SalaryFrom" class="control-label"></label>
-                <input asp-for="SalaryFrom" class="form-control" />
+                <label class="control-label">Salary range</label>
+                <div class="form-row">
+                    <div class="col">
+                        <input asp-for="SalaryFrom" class="form-control" />
+                    </div>
+                    -
+                    <div class="col">
+                        <input asp-for="SalaryTo" class="form-control" />
+                    </div>
+                </div>
+                <span id="SalaryRange-Error" class="text-danger"></span>
                 <span asp-validation-for="SalaryFrom" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SalaryTo" class="control-label"></label>
-                <input asp-for="SalaryTo" class="form-control" />
                 <span asp-validation-for="SalaryTo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ValidUntil" class="control-label"> Expiration date </label>
+                <input asp-for="ValidUntil" class="form-control" />
+                <span id="PastDate-Error" class="text-danger"></span>
+                <span asp-validation-for="ValidUntil" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -58,4 +69,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/jobOfferValidation.js"></script>
 }
