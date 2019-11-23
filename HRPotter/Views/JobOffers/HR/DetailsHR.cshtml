@@ -58,7 +58,7 @@
 
                         <button class="btn btn-danger mx-2"
                                 data-toggle="modal"
-                                data-target="#confirm-delete">
+                                data-target="#confirmDelete">
                             <i class="fas fa-trash-alt pr-2"></i>
                             Delete
                         </button>
@@ -75,7 +75,7 @@
     }
 </div>
 
-@await Html.PartialAsync("/Views/Shared/_DeleteModal.cshtml", (Title: "Delete job offer", Id: Model.Id, Controller: "JobOffers"))
+@await Html.PartialAsync("/Views/Shared/_DeleteModal.cshtml", (Title: Model.JobTitle , Id: Model.Id, Controller: "JobOffers"))
 
 @section Scripts {
     <script src="~/js/JobApplicationIndexHR.js"></script>

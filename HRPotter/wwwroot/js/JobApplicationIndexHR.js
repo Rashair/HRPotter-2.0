@@ -1,5 +1,4 @@
-﻿// TODO: Asynchronous request to server for list of searched applications
-// TODO: Asynchronous request to sort list by status
+﻿// TODO: Asynchronous request to sort list by status
 
 $(document).ready(() => {
     $loading = $('#loadingSpinner');
@@ -11,7 +10,7 @@ $(document).ready(() => {
         $('#updatePanel').html("");
         $loading.show();
         let id = $(this).children('input#idInput').val();
-        var val = $(this).find('input#searchInput').val();
+        let val = $(this).find('input#searchInput').val();
         $.ajax({
             url: '/JobApplications/ApplicationsForOffer/' + id + '?query=' + val,
             type: 'GET',
