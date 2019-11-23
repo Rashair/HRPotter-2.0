@@ -1,0 +1,18 @@
+﻿@using HRPotter.Helpers;
+@model IEnumerable<HRPotter.Models.JobApplication>
+
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            <a asp-controller="JobApplications" asp-action="DetailsHR" asp-route-id="@item.Id"> @item.FirstName @item.LastName </a>
+        </td>
+        <td>
+            @item.Email
+        </td>
+        <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" : item.Status == ApplicationStatus.Rejected ? "text-danger" : "")>
+            @item.Status.GetDescription()
+        </td>
+    </tr>
+}

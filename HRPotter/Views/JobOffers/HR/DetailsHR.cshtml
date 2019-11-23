@@ -1,5 +1,4 @@
-﻿@using HRPotter.Helpers;
-@model HRPotter.Models.JobOffer
+﻿@model HRPotter.Models.JobOffer
 
 @{
     ViewData["Title"] = "Details";
@@ -72,8 +71,12 @@
 
     @if (Model.JobApplications.Any())
     {
-        await Html.RenderPartialAsync("/Views/JobApplications/HR/_IndexHR.cshtml", Model.JobApplications);
+        await Html.RenderPartialAsync("/Views/JobApplications/HR/_IndexHR.cshtml", Model);
     }
 </div>
 
 @await Html.PartialAsync("/Views/Shared/_DeleteModal.cshtml", (Title: "Delete job offer", Id: Model.Id, Controller: "JobOffers"))
+
+@section Scripts {
+    <script src="~/js/JobApplicationIndexHR.js"></script>
+}

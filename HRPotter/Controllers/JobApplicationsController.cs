@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
@@ -76,7 +77,7 @@ namespace HRPotter.Controllers
             }
 
             JobApplication app = await _context.JobApplications.FirstOrDefaultAsync(app => app.Id == id);
-            if(app == null)
+            if (app == null)
             {
                 return NotFound();
             }
@@ -197,6 +198,29 @@ namespace HRPotter.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ApplicationsForOffer(int? id, [FromQuery(Name = "query")] string searchString)
+        {
+            if (id == null)
+            {
+                return BadRequest("Id cannot be null");
+            }
+
+            List<JobApplication> result;
+            if (String.IsNullOrEmpty(searchString))
+            {
+                result = await _context.JobApplications.Where(app => app.JobOfferId == id).ToListAsync();
+            }
+            else
+            {
+                result = await _context.JobApplications.Where(app => app.JobOfferId == id &&
+                   (app.FirstName.Contains(searchString) || app.LastName.Contains(searchString))).
+                   ToListAsync();
+            }
+
+            return PartialView("_ApplicationsTable", result);
         }
     }
 }
