@@ -36,16 +36,19 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexHR([FromQuery(Name = "search")] string searchString)
         {
+            List<JobOffer> offers;
             if (string.IsNullOrEmpty(searchString))
             {
-                List<JobOffer> offers = await _context.JobOffers.Include(x => x.Company).ToListAsync();
-                return View(offers);
+                offers = await _context.JobOffers.Include(x => x.Company).ToListAsync();
+            }
+            else
+            {
+                offers = await _context.JobOffers.Include(x => x.Company).
+                     Where(offer => offer.JobTitle.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).
+                     ToListAsync();
             }
 
-            List<JobOffer> searchResult = await _context.JobOffers.Include(x => x.Company).
-                Where(offer => offer.JobTitle.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).
-                ToListAsync();
-            return View(searchResult);
+            return View(offers);
         }
 
         public async Task<IActionResult> Details(int? id)

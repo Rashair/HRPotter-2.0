@@ -1,6 +1,7 @@
 ﻿using HRPotter.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,12 @@ namespace HRPotter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.Configure<RazorViewEngineOptions>(o =>
+            {
+                o.ViewLocationFormats.Add("/Views/{1}/HR/{0}" + RazorViewEngine.ViewExtension);
+            });
+
+
             services.AddDbContext<HRPotterContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
