@@ -14,6 +14,22 @@
     });
 };
 
+function refreshContent() {
+    $.ajax({
+        url: '/Companies/CompaniesTable/',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data) {
+            $('#contentWrapper').html(data);
+        },
+        error: function () {
+            alert('Error! Please try again.');
+        }
+    }).done(function () {
+
+    });
+}
+
 $(document).ready(() => {
     $('#createForm').submit(function (e) {
         e.preventDefault();
@@ -33,23 +49,7 @@ $(document).ready(() => {
                 alert('Error! Please try again.');
             }
         }).done(function () {
-            getCompaniesTable();
+            refreshContent();
         });
     });
-
-    function getCompaniesTable() {
-        $.ajax({
-            url: '/Companies/CompaniesTable/',
-            type: 'GET',
-            dataType: 'html',
-            success: function (data) {
-                $('#contentWrapper').html(data);
-            },
-            error: function () {
-                alert('Error! Please try again.');
-            }
-        }).done(function () {
-
-        });
-    }
 });

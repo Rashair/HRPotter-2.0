@@ -20,7 +20,7 @@
                     <i class="fas fa-chevron-left pr-2"></i>
                     Cancel
                 </button>
-                @using (Html.BeginForm("Delete", Model.Controller, new { Model.Id }, FormMethod.Post, null, new { style = "display:inline;" }))
+                @using (Html.BeginForm("Delete", Model.Controller, new { Model.Id }, FormMethod.Post, null, new { id = "deleteFormModal", style = "display:inline;" }))
                 {
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-danger">
@@ -32,3 +32,26 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(() => {
+        $('#deleteFormModal').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '@Model.Controller/Delete/@Model.Id',
+                headers: { "RequestVerificationToken": $(this).find('input[name="__RequestVerificationToken"]').val() },
+                dataType: 'html',
+                success: function (result) {
+                    $('#confirmDelete').modal("hide");
+                },
+                error: function () {
+                    alert('Error! Please try again.');
+                }
+            }).done(function () {
+                // Important - must be defined in full view
+                refreshContent();
+            });
+        });
+    });
+</script>
