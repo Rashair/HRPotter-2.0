@@ -21,6 +21,7 @@
                 <div class="col-12 col-md-4 py-2">
                     @using (Html.BeginForm("Index", "JobOffers", FormMethod.Get, new { id = "searchForm" }))
                     {
+                        <input type="hidden" value="0" id="author" />
                         <div class="input-group search-input">
                             <input id="searchInput"
                                    name="search"
@@ -52,7 +53,7 @@
                 </tr>
             </thead>
             <tbody id="tableContent">
-                @await Html.PartialAsync("_OffersTable", Model)
+                @await Html.PartialAsync("_OffersTable", (Model, edit: false))
             </tbody>
         </table>
         <div class="d-flex justify-content-center">
@@ -62,5 +63,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/JobOffersIndex.js"></script>
+    <script src="~/js/OffersIndex.js"></script>
 }

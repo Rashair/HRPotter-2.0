@@ -24,8 +24,14 @@ namespace HRPotter.Controllers
             return View(await _context.JobOffers.Include(x => x.Company).ToListAsync());
         }
 
-        public async Task<IActionResult> GetOffersTable([FromQuery(Name = "query")] string searchString)
+        [HttpGet]
+        public async Task<IActionResult> GetOffersTable([FromQuery(Name = "e")]int author = -1, [FromQuery(Name = "query")] string searchString = "")
         {
+            if (author == -1)
+            {
+                return StatusCode(403);
+            }
+
             List<JobOffer> result;
             if (string.IsNullOrEmpty(searchString))
             {
@@ -38,7 +44,8 @@ namespace HRPotter.Controllers
                     ToListAsync();
             }
 
-            return PartialView("_OffersTable", result);
+            // Watch it - different types inside throws error
+            return PartialView("_OffersTable", new ValueTuple<IEnumerable<JobOffer>, bool>(result, author == 1));
         }
 
 

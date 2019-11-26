@@ -1,5 +1,4 @@
-﻿@using HRPotter.Helpers;
-@model IEnumerable<JobApplication>
+﻿@model IEnumerable<JobApplication>
 
 @{
     ViewData["Title"] = "Job applications";
@@ -20,10 +19,11 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-4 py-2">
-                    @using (Html.BeginForm("Index", "JobApplications", FormMethod.Get))
+                    @using (Html.BeginForm("Index", "JobOffers", FormMethod.Get, new { id = "searchForm" }))
                     {
                         <div class="input-group search-input">
-                            <input name="search"
+                            <input id="searchInput"
+                                   name="search"
                                    type="text"
                                    class="form-control"
                                    placeholder="Search by offer title.."
@@ -54,37 +54,16 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @if (item.JobOffer != null)
-                            {
-                                <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId">
-                                    @(item.JobOffer.JobTitle)
-                                </a>
-                            }
-                            else
-                            {
-                                <span>This offer is no longer valid</span>
-                            }
-                        </td>
-                        <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" :
-                            item.Status == ApplicationStatus.Rejected ? "text-danger" : "")>
-                            @item.Status.GetDescription()
-                        </td>
-                        <td>
-                            <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.Id">
-                                <i class="fas fa-info pr-2"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
+            <tbody id="tableContent">
+                @await Html.PartialAsync("_ApplicationsTable.cshtml", Model)
             </tbody>
         </table>
+        <div class="d-flex justify-content-center">
+            <div id="loadingSpinner" class="spinner-border" role="status"> <span class="sr-only"> Loading... </span> </div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/ApplicationsIndex.js"></script>
+}

@@ -8,8 +8,9 @@
         $('#tableContent').html("");
         $loading.show();
         let val = $(this).find('input#searchInput').val();
+        let author = $(this).find('input#author').val();
         $.ajax({
-            url: '/JobOffers/GetOffersTable?query=' + val,
+            url: '/JobOffers/GetOffersTable?e=' + author + '&query=' + val,
             type: 'GET',
             dataType: 'html',
             success: function (data) {

@@ -1,7 +1,7 @@
-﻿@model IEnumerable<HRPotter.Models.JobOffer>;
+﻿@model (IEnumerable<HRPotter.Models.JobOffer> offers, bool edit);
 
 
-@foreach (var item in Model)
+@foreach (var item in Model.offers)
 {
     <tr>
         <td>
@@ -16,5 +16,13 @@
         <td>
             @Html.DisplayFor(modelItem => item.Created)
         </td>
+        @if (Model.edit)
+        {
+            <td>
+                <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </td>
+        }
     </tr>
 }
