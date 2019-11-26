@@ -19,10 +19,11 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-4 py-2">
-                    @using (Html.BeginForm("Index", "JobOffers", FormMethod.Get))
+                    @using (Html.BeginForm("Index", "JobOffers", FormMethod.Get, new { id = "searchForm" }))
                     {
                         <div class="input-group search-input">
-                            <input name="search"
+                            <input id="searchInput"
+                                   name="search"
                                    type="text"
                                    class="form-control"
                                    placeholder="Search by offer title.."
@@ -50,25 +51,16 @@
                     <th scope="col">Created</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.JobTitle)</a>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Company.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Location)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Created)
-                        </td>
-                    </tr>
-                }
+            <tbody id="tableContent">
+                @await Html.PartialAsync("_OffersTable", Model)
             </tbody>
         </table>
+        <div class="d-flex justify-content-center">
+            <div id="loadingSpinner" class="spinner-border" role="status"> <span class="sr-only"> Loading... </span> </div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/JobOffersIndex.js"></script>
+}

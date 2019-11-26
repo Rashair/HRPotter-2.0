@@ -19,36 +19,33 @@ namespace HRPotter.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery(Name = "search")] string searchString)
+        public async Task<IActionResult> Index()
         {
-            if (string.IsNullOrEmpty(searchString))
-            {
-                List<JobOffer> offers = await _context.JobOffers.Include(x => x.Company).ToListAsync();
-                return View(offers);
-            }
-
-            List<JobOffer> searchResult = await _context.JobOffers.Include(x => x.Company).
-                Where(offer => offer.JobTitle.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).
-                ToListAsync();
-            return View(searchResult);
+            return View(await _context.JobOffers.Include(x => x.Company).ToListAsync());
         }
 
-        [HttpGet]
-        public async Task<IActionResult> IndexHR([FromQuery(Name = "search")] string searchString)
+        public async Task<IActionResult> GetOffersTable([FromQuery(Name = "query")] string searchString)
         {
-            List<JobOffer> offers;
+            List<JobOffer> result;
             if (string.IsNullOrEmpty(searchString))
             {
-                offers = await _context.JobOffers.Include(x => x.Company).ToListAsync();
+                result = await _context.JobOffers.Include(x => x.Company).ToListAsync();
             }
             else
             {
-                offers = await _context.JobOffers.Include(x => x.Company).
-                     Where(offer => offer.JobTitle.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).
-                     ToListAsync();
+                result = await _context.JobOffers.Include(x => x.Company).
+                    Where(offer => offer.JobTitle.Contains(searchString)).
+                    ToListAsync();
             }
 
-            return View(offers);
+            return PartialView("_OffersTable", result);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> IndexHR()
+        {
+            return View(await _context.JobOffers.Include(x => x.Company).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)

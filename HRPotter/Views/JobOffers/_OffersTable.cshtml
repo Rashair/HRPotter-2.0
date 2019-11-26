@@ -1,0 +1,20 @@
+﻿@model IEnumerable<HRPotter.Models.JobOffer>;
+
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.JobTitle)</a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Company.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Location)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Created)
+        </td>
+    </tr>
+}
