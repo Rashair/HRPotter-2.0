@@ -5,7 +5,7 @@
 {
     <tr>
         <td>
-            <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.JobTitle)</a>
+            <a asp-action=@(Model.edit ? "DetailsHR": "Details") asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.JobTitle)</a>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Company.Name)
