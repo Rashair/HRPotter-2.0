@@ -25,26 +25,26 @@ namespace HRPotter.Controllers
             return View(await _context.Companies.ToListAsync());
         }
 
-        // GET: Companies/Create
-        public IActionResult Create()
+        // GET: CompaniesTables
+        public async Task<IActionResult> CompaniesTable()
         {
-            return View();
+            return PartialView("_CompaniesTable", await _context.Companies.ToListAsync());
         }
 
         // POST: Companies/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Company company)
+        public async Task<IActionResult> Create(Company company)
         {
+           
             if (ModelState.IsValid)
             {
                 _context.Add(company);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(company);
+
+            return BadRequest();
         }
 
         // GET: Companies/Edit/5
@@ -64,8 +64,6 @@ namespace HRPotter.Controllers
         }
 
         // POST: Companies/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Company company)
@@ -106,14 +104,13 @@ namespace HRPotter.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Companies
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var company = await _context.Companies.FirstOrDefaultAsync(m => m.Id == id);
             if (company == null)
             {
                 return NotFound();
             }
 
-            return View(company);
+            return PartialView("_DeleteModal", (company.Name, company.Id, "Companies"));
         }
 
         // POST: Companies/Delete/5

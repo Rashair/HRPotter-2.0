@@ -1,0 +1,48 @@
+﻿@model HRPotter.Models.JobOffer
+
+<div id="appsTable">
+    <div class="row mt-4">
+        <div class="col-12 col-md-6 pt-2">
+            @using (Html.BeginForm("ApplicationsForOffer", "JobApplications", FormMethod.Get, new { id = "searchForm" }))
+            {
+                <input id="idInput" type="hidden" value="@Model.Id" />
+                <div class="input-group search-input">
+                    <input id="searchInput"
+                           type="text"
+                           class="form-control"
+                           placeholder="Search by name"
+                           aria-label="Search by name"
+                           aria-describedby="button-search">
+                    <div class="input-group-append">
+                        <button id="button-search"
+                                class="btn btn-primary"
+                                type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <table class="mt-2 ml-0 table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Status 
+                </th>
+            </tr>
+        </thead>
+        <tbody id="updatePanel">
+            @await Html.PartialAsync("/Views/JobApplications/HR/_ApplicationsTable.cshtml", Model.JobApplications)
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <div id="loadingSpinner" class="spinner-border" role="status"> <span class="sr-only"> Loading... </span> </div>
+    </div>
+</div>

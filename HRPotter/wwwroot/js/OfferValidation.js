@@ -28,7 +28,6 @@ function validateSalary() {
         $('#SalaryRange-Error').text("");
     }
 
-
     return result;
 }
 

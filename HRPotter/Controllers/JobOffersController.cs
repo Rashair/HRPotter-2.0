@@ -19,33 +19,40 @@ namespace HRPotter.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery(Name = "search")] string searchString)
+        public async Task<IActionResult> Index()
         {
-            if (string.IsNullOrEmpty(searchString))
-            {
-                List<JobOffer> offers = await _context.JobOffers.Include(x => x.Company).ToListAsync();
-                return View(offers);
-            }
-
-            List<JobOffer> searchResult = await _context.JobOffers.Include(x => x.Company).
-                Where(offer => offer.JobTitle.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).
-                ToListAsync();
-            return View(searchResult);
+            return View(await _context.JobOffers.Include(x => x.Company).ToListAsync());
         }
 
         [HttpGet]
-        public async Task<IActionResult> IndexHR([FromQuery(Name = "search")] string searchString)
+        public async Task<IActionResult> GetOffersTable([FromQuery(Name = "e")]int author = -1, [FromQuery(Name = "query")] string searchString = "")
         {
-            if (string.IsNullOrEmpty(searchString))
+            if (author == -1)
             {
-                List<JobOffer> offers = await _context.JobOffers.Include(x => x.Company).ToListAsync();
-                return View(offers);
+                return StatusCode(403);
             }
 
-            List<JobOffer> searchResult = await _context.JobOffers.Include(x => x.Company).
-                Where(offer => offer.JobTitle.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).
-                ToListAsync();
-            return View(searchResult);
+            List<JobOffer> result;
+            if (string.IsNullOrEmpty(searchString))
+            {
+                result = await _context.JobOffers.Include(x => x.Company).ToListAsync();
+            }
+            else
+            {
+                result = await _context.JobOffers.Include(x => x.Company).
+                    Where(offer => offer.JobTitle.Contains(searchString)).
+                    ToListAsync();
+            }
+
+            // Watch it - different types inside throws error
+            return PartialView("_OffersTable", new ValueTuple<IEnumerable<JobOffer>, bool>(result, author == 1));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> IndexHR()
+        {
+            return View(await _context.JobOffers.Include(x => x.Company).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)

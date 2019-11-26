@@ -1,0 +1,28 @@
+﻿@model (IEnumerable<HRPotter.Models.JobOffer> offers, bool edit);
+
+
+@foreach (var item in Model.offers)
+{
+    <tr>
+        <td>
+            <a asp-action=@(Model.edit ? "DetailsHR": "Details") asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.JobTitle)</a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Company.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Location)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Created)
+        </td>
+        @if (Model.edit)
+        {
+            <td>
+                <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </td>
+        }
+    </tr>
+}

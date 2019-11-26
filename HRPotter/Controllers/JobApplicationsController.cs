@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
@@ -18,19 +19,29 @@ namespace HRPotter.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery(Name = "search")] string searchString)
+        public async Task<IActionResult> Index()
         {
+            return View(await _context.JobApplications.Include(x => x.JobOffer).ToListAsync());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetApplicationsTable([FromQuery(Name = "query")] string searchString)
+        {
+            List<JobApplication> applications;
             if (string.IsNullOrEmpty(searchString))
             {
-                List<JobApplication> applications = await _context.JobApplications.Include(x => x.JobOffer).ToListAsync();
-                return View(applications);
+                applications = await _context.JobApplications.Include(x => x.JobOffer).ToListAsync();
+            }
+            else
+            {
+                applications = await _context.JobApplications.Include(x => x.JobOffer).
+                    Where(app => app.JobOffer.JobTitle.Contains(searchString)).
+                    ToListAsync();
             }
 
-            List<JobApplication> searchResult = await _context.JobApplications.Include(x => x.JobOffer).
-                Where(app => app.JobOffer.JobTitle.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).
-                ToListAsync();
-            return View(searchResult);
+            return PartialView("_ApplicationsTable", applications);
         }
+
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -76,7 +87,7 @@ namespace HRPotter.Controllers
             }
 
             JobApplication app = await _context.JobApplications.FirstOrDefaultAsync(app => app.Id == id);
-            if(app == null)
+            if (app == null)
             {
                 return NotFound();
             }
@@ -197,6 +208,29 @@ namespace HRPotter.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ApplicationsForOffer(int? id, [FromQuery(Name = "query")] string searchString)
+        {
+            if (id == null)
+            {
+                return BadRequest("Id cannot be null");
+            }
+
+            List<JobApplication> result;
+            if (String.IsNullOrEmpty(searchString))
+            {
+                result = await _context.JobApplications.Where(app => app.JobOfferId == id).ToListAsync();
+            }
+            else
+            {
+                result = await _context.JobApplications.Where(app => app.JobOfferId == id &&
+                   (app.FirstName.Contains(searchString) || app.LastName.Contains(searchString))).
+                   ToListAsync();
+            }
+
+            return PartialView("_ApplicationsTable", result);
         }
     }
 }

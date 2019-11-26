@@ -19,10 +19,12 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-4 py-2">
-                    @using (Html.BeginForm("Index", "JobOffers", FormMethod.Get))
+                    @using (Html.BeginForm("Index", "JobOffers", FormMethod.Get, new { id = "searchForm" }))
                     {
+                        <input type="hidden" value="1" id="author"/>
                         <div class="input-group search-input">
-                            <input name="search"
+                            <input id="searchInput"
+                                   name="search"
                                    type="text"
                                    class="form-control"
                                    placeholder="Search by offer title.."
@@ -56,30 +58,16 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            <a asp-action="DetailsHR" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.JobTitle)</a>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Company.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Location)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Created)
-                        </td>
-                        <td>
-                            <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
+            <tbody id="tableContent">
+                @await Html.PartialAsync("_OffersTable", (Model, edit: true))
             </tbody>
         </table>
+        <div class="d-flex justify-content-center">
+            <div id="loadingSpinner" class="spinner-border" role="status"> <span class="sr-only"> Loading... </span> </div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/OffersIndex.js"></script>
+}
