@@ -22,6 +22,11 @@ namespace HRPotter.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<JobApplication>().HasIndex(x => x.JobOfferId);
+            modelBuilder.Entity<JobApplication>().HasIndex(x => x.LastName);
+            modelBuilder.Entity<JobOffer>().HasIndex(x => x.JobTitle);
+
+            // Data
             modelBuilder.Entity<JobApplication>().HasData(
                 new JobApplication
                 {
@@ -85,7 +90,7 @@ namespace HRPotter.Data
             );
 
             modelBuilder.Entity<JobOffer>().HasData(
-                 new JobOffer
+                new JobOffer
                  {
                      Id = 1,
                      JobTitle = "Backend Developer",
