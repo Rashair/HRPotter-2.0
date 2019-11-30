@@ -15,7 +15,7 @@ namespace HRPotter.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Main page
         /// </summary>
         /// <returns></returns>
         public IActionResult Index()

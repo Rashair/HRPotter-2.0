@@ -10,24 +10,17 @@ using HRPotter.Models;
 
 namespace HRPotter.Controllers
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class CompaniesController : Controller
     {
         private readonly HRPotterContext _context;
 
-        /// <summary>
-        /// My_summary
-        /// </summary>
-        /// <param name="context"></param>
         public CompaniesController(HRPotterContext context)
         {
             _context = context;
         }
 
         /// <summary>
-        /// 
+        /// Main companies page
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -37,20 +30,23 @@ namespace HRPotter.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        /// <returns></returns>
+        /// <returns> Partial view with list of companies</returns>
         public async Task<IActionResult> CompaniesTable()
         {
             return PartialView("_CompaniesTable", await _context.Companies.ToListAsync());
         }
 
-        // POST: Companies/Create
+        /// <summary>
+        ///     Create new company
+        /// </summary>
+        /// <param name="company"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Company company)
         {
-           
             if (ModelState.IsValid)
             {
                 _context.Add(company);
@@ -61,7 +57,12 @@ namespace HRPotter.Controllers
             return BadRequest();
         }
 
-        // GET: Companies/Edit/5
+        /// <summary>
+        ///     Edit company
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> Redirection to edit form</returns>
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,10 +75,16 @@ namespace HRPotter.Controllers
             {
                 return NotFound();
             }
+
             return View(company);
         }
 
-        // POST: Companies/Edit/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"> Id of company </param>
+        /// <param name="company"> New company </param>
+        /// <returns> Redirection to index </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Company company)
@@ -110,7 +117,12 @@ namespace HRPotter.Controllers
             return View(company);
         }
 
-        // GET: Companies/Delete/5
+        /// <summary>
+        ///     Delete company - get
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -127,7 +139,11 @@ namespace HRPotter.Controllers
             return PartialView("_DeleteModal", (company.Name, company.Id, "Companies"));
         }
 
-        // POST: Companies/Delete/5
+        /// <summary>
+        ///     Delete company - post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
