@@ -15,7 +15,7 @@ namespace HRPotter.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0")
+                .HasAnnotation("ProductVersion", "3.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -27,7 +27,9 @@ namespace HRPotter.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.HasKey("Id");
 
@@ -85,7 +87,7 @@ namespace HRPotter.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
@@ -96,6 +98,8 @@ namespace HRPotter.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("JobOfferId");
+
+                    b.HasIndex("LastName");
 
                     b.ToTable("JobApplications");
 
@@ -184,7 +188,7 @@ namespace HRPotter.Migrations
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -203,6 +207,8 @@ namespace HRPotter.Migrations
 
                     b.HasIndex("CompanyId");
 
+                    b.HasIndex("JobTitle");
+
                     b.ToTable("JobOffers");
 
                     b.HasData(
@@ -210,7 +216,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 1,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 11, 4, 1, 25, 23, 297, DateTimeKind.Local).AddTicks(2087),
+                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 71, DateTimeKind.Local).AddTicks(9384),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Backend Developer",
                             Location = "Warsaw",
@@ -220,29 +226,29 @@ namespace HRPotter.Migrations
                         {
                             Id = 2,
                             CompanyId = 2,
-                            Created = new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(3458),
+                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(5541),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Frontend Developer",
                             Location = "Warsaw",
                             SalaryFrom = 10000,
-                            ValidUntil = new DateTime(2019, 11, 14, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(3528)
+                            ValidUntil = new DateTime(2019, 12, 10, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(5586)
                         },
                         new
                         {
                             Id = 3,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5052),
+                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6768),
                             JobTitle = "Manager",
                             Location = "New York",
                             SalaryFrom = 15000,
                             SalaryTo = 25000,
-                            ValidUntil = new DateTime(2019, 11, 9, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5069)
+                            ValidUntil = new DateTime(2019, 12, 5, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6782)
                         },
                         new
                         {
                             Id = 4,
                             CompanyId = 3,
-                            Created = new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5096),
+                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6810),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Teacher",
                             Location = "Paris",
@@ -253,7 +259,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 5,
                             CompanyId = 4,
-                            Created = new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5111),
+                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6821),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Cook",
                             Location = "Venice",
@@ -264,7 +270,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 6,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 11, 4, 1, 25, 23, 300, DateTimeKind.Local).AddTicks(5122),
+                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6830),
                             JobTitle = "Manager",
                             Location = "Venice",
                             SalaryFrom = 15000,
