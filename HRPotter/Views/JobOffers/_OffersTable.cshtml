@@ -1,6 +1,5 @@
 ﻿@model (IEnumerable<HRPotter.Models.JobOffer> offers, bool edit);
 
-
 @foreach (var item in Model.offers)
 {
     <tr>
@@ -26,3 +25,7 @@
         }
     </tr>
 }
+
+<script>
+    viewModel.count(@Model.offers.Count());
+</script>
