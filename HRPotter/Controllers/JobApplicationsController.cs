@@ -43,6 +43,7 @@ namespace HRPotter.Controllers
         }
 
 
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -59,6 +60,7 @@ namespace HRPotter.Controllers
             return View(app);
         }
 
+        [HttpGet]
         public async Task<IActionResult> DetailsHR(int? id)
         {
             if (id == null)
@@ -153,6 +155,7 @@ namespace HRPotter.Controllers
         }
 
         // GET: JobApplications/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

@@ -33,6 +33,7 @@ namespace HRPotter.Controllers
         ///
         /// </summary>
         /// <returns> Partial view with list of companies</returns>
+        [HttpGet]
         public async Task<IActionResult> CompaniesTable()
         {
             return PartialView("_CompaniesTable", await _context.Companies.ToListAsync());

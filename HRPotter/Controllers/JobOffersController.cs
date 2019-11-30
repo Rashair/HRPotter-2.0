@@ -113,6 +113,7 @@ namespace HRPotter.Controllers
             return View(offer);
         }
 
+        [HttpGet]
         public async Task<ActionResult> Create()
         {
             var model = new JobOfferCreateView
@@ -151,7 +152,7 @@ namespace HRPotter.Controllers
             return RedirectToAction("IndexHR");
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

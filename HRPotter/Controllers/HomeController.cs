@@ -18,11 +18,13 @@ namespace HRPotter.Controllers
         /// Main page
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
