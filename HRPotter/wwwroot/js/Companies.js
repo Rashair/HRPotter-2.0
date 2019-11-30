@@ -31,6 +31,7 @@ function refreshContent() {
 }
 
 $(document).ready(() => {
+    refreshContent();
     $('#createForm').submit(function (e) {
         e.preventDefault();
 

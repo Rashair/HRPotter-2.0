@@ -1,5 +1,4 @@
 ﻿// TODO: Asynchronous request to sort list by status
-
 $(document).ready(() => {
     $loading = $('#loadingSpinner');
     $loading.hide();

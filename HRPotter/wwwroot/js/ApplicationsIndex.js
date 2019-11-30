@@ -1,13 +1,18 @@
 ﻿$(document).ready(() => {
-    $loading = $('#loadingSpinner');
-    $loading.hide();
+    var $loading = $('#loadingSpinner');
+    getApplications("");
 
     $('#searchForm').submit(function searchApplications(e) {
         e.preventDefault();
 
         $('#tableContent').html("");
         $loading.show();
+
         let val = $(this).find('input#searchInput').val();
+        getApplications(val);
+    });
+
+    function getApplications(val) {
         $.ajax({
             url: '/JobApplications/GetApplicationsTable?query=' + val,
             type: 'GET',
@@ -21,5 +26,5 @@
         }).done(function () {
             $loading.hide();
         });
-    });
+    }
 });

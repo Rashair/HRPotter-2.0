@@ -12,30 +12,10 @@
                 Companies
             </h3>
             <div>
-                <span class="badge badge-pill badge-primary align-top">
-                    @Model.Count()
-                </span>
+                <span data-bind="text: viewModel.count()" class="badge badge-pill badge-primary align-top" />
             </div>
         </div>
         <div class="col-12 col-md-4 py-2">
-            @*    @using (Html.BeginForm("Index", "JobOffers", FormMethod.Get))
-                {
-                    <div class="input-group search-input">
-                        <input name="search"
-                               type="text"
-                               class="form-control"
-                               placeholder="Search by offer title.."
-                               aria-label="Search by offer title"
-                               aria-describedby="button-search">
-                        <div class="input-group-append">
-                            <button id="button-search"
-                                    class="btn btn-primary"
-                                    type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                }*@
         </div>
         <div class="col-12 col-sm-4 text-right py-2">
             <button class="btn btn-outline-primary"
@@ -49,7 +29,6 @@
 </div>
 
 <div id="contentWrapper">
-    @await Html.PartialAsync("_CompaniesTable.cshtml", Model)
 </div>
 
 <div class="modal fade" id="createCompany" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -83,6 +62,7 @@
                     Create
                 </button>
             </div>
+
         </div>
     </div>
 </div>
