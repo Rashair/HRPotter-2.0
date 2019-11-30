@@ -1,5 +1,6 @@
 ﻿using HRPotter.Data;
 using HRPotter.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -48,6 +49,26 @@ namespace HRPotter.Controllers
             return PartialView("_OffersTable", new ValueTuple<IEnumerable<JobOffer>, bool>(result, author == 1));
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ApplicationsCount(int? id)
+        {
+            if(id == null)
+            {
+                return BadRequest();
+            }
+
+            var offer = await _context.JobOffers.Include(off => off.JobApplications).FirstOrDefaultAsync(off => off.Id == id);
+            if(offer == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(offer.JobApplications.Count);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> IndexHR()
@@ -55,6 +76,7 @@ namespace HRPotter.Controllers
             return View(await _context.JobOffers.Include(x => x.Company).ToListAsync());
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -71,6 +93,7 @@ namespace HRPotter.Controllers
             return View(offer);
         }
 
+        [HttpGet]
         public async Task<IActionResult> DetailsHR(int? id)
         {
             if (id == null)

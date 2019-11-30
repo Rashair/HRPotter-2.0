@@ -17,7 +17,7 @@
             }
         </td>
         <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" :
-                            item.Status == ApplicationStatus.Rejected ? "text-danger" : "")>
+                    item.Status == ApplicationStatus.Rejected ? "text-danger" : "")>
             @item.Status.GetDescription()
         </td>
         <td>
@@ -30,3 +30,7 @@
         </td>
     </tr>
 }
+
+<script>
+    viewModel.count(@Model.Count());
+</script>

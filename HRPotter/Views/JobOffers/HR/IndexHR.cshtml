@@ -13,9 +13,7 @@
                         Your job offers list
                     </h3>
                     <div>
-                        <span class="badge badge-pill badge-primary align-top">
-                            @Model.Count()
-                        </span>
+                        <span data-bind="text: viewModel.count()" class="badge badge-pill badge-primary align-top" />
                     </div>
                 </div>
                 <div class="col-12 col-md-4 py-2">
@@ -59,7 +57,6 @@
                 </tr>
             </thead>
             <tbody id="tableContent">
-                @await Html.PartialAsync("_OffersTable", (Model, edit: true))
             </tbody>
         </table>
         <div class="d-flex justify-content-center">

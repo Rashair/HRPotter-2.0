@@ -13,9 +13,7 @@
                         List of your applications
                     </h3>
                     <div>
-                        <span class="badge badge-pill badge-primary align-top">
-                            @Model.Count()
-                        </span>
+                        <span data-bind="text: viewModel.count()" class="badge badge-pill badge-primary align-top" />
                     </div>
                 </div>
                 <div class="col-12 col-md-4 py-2">
@@ -54,8 +52,8 @@
                     <th></th>
                 </tr>
             </thead>
+
             <tbody id="tableContent">
-                @await Html.PartialAsync("_ApplicationsTable.cshtml", Model)
             </tbody>
         </table>
         <div class="d-flex justify-content-center">

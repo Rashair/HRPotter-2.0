@@ -1,14 +1,18 @@
 ﻿$(document).ready(() => {
-    $loading = $('#loadingSpinner');
-    $loading.hide();
+    var $loading = $('#loadingSpinner');
+    getOffers($('#author').val(), "");
 
     $('#searchForm').submit(function searchApplications(e) {
         e.preventDefault();
-
         $('#tableContent').html("");
         $loading.show();
+
         let val = $(this).find('input#searchInput').val();
         let author = $(this).find('input#author').val();
+        getOffers(author, val);
+    });
+
+    function getOffers(author, val) {
         $.ajax({
             url: '/JobOffers/GetOffersTable?e=' + author + '&query=' + val,
             type: 'GET',
@@ -22,5 +26,5 @@
         }).done(function () {
             $loading.hide();
         });
-    });
+    }
 });
