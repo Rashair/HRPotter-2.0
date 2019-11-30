@@ -5,7 +5,7 @@
     <tr>
         <td>
             <a id="@item.Id" asp-action=@(Model.edit ? "DetailsHR": "Details") asp-route-id="@item.Id"
-               data-toggle="tooltip" title=" ">
+               data-toggle="tooltip">
                 @Html.DisplayFor(modelItem => item.JobTitle)
             </a>
         </td>
@@ -34,30 +34,48 @@
 
     @if (Model.edit)
     {
-        <text>
+        @: handleTooltips();
+    };
+
+    function handleTooltips() {
         var toolTips = $('[data-toggle="tooltip"]');
         toolTips.tooltip({ trigger: 'manual' });
+
+        var lockMap = $.makeArray(toolTips).reduce(function (map, obj) {
+            map[obj.v] = false;
+            return map;
+        }, {});
+
         toolTips.on('mouseenter', function () {
-            var thisElem = this;
-            var val = this.id;
+            if (lockMap[this] === true) {
+                return;
+            }
+            lockMap[this] = true;
+
+            let val = this.id;
+            let thisElem = this;
             $.ajax({
                 url: '/JobOffers/ApplicationsCount/' + val,
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    // TODO : if mouseleave happens before request is finished then tooltip will remain visible
                     $(thisElem).attr('data-original-title', "Applications: " + data);
-                    $(thisElem).tooltip('show');
+                    // Solution for mouseleave before request is finished
+                    if (lockMap[thisElem] == true) {
+                         $(thisElem).tooltip('show');
+                    }
                 },
                 error: function () {
+                    console.log("Error processing request");
                 }
             }).done(function () {
+                lockMap[thisElem] = false;
             });
         });
 
         toolTips.on('mouseleave', function () {
             $(this).tooltip('hide');
+            lockMap[this] = false;
         });
-        </text>
     }
 </script>
