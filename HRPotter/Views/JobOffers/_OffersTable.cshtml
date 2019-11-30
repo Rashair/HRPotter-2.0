@@ -4,7 +4,10 @@
 {
     <tr>
         <td>
-            <a asp-action=@(Model.edit ? "DetailsHR": "Details") asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.JobTitle)</a>
+            <a id="@item.Id" asp-action=@(Model.edit ? "DetailsHR": "Details") asp-route-id="@item.Id"
+               data-toggle="tooltip" title=" ">
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </a>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Company.Name)
@@ -28,4 +31,33 @@
 
 <script>
     viewModel.count(@Model.offers.Count());
+
+    var toolTips = $('[data-toggle="tooltip"]');
+    @if (Model.edit)
+    {
+       @:toolTips.tooltip({trigger: 'manual'});
+    }
+
+    toolTips.on('mouseenter', function () {
+        var thisElem = this;
+        var val = this.id;
+        $.ajax({
+            url: '/JobOffers/ApplicationsCount/' + val,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // TODO : if mouseleave happens before request is finished then tooltip will remain visible
+                $(thisElem).attr('data-original-title', "Applications: " + data);
+                $(thisElem).tooltip('show');
+            },
+            error: function () {
+            }
+        }).done(function () {
+        });
+    });
+
+    toolTips.on('mouseleave', function () {
+        $(this).tooltip('hide');
+    });
+
 </script>

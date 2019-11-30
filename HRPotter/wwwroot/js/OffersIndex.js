@@ -7,7 +7,6 @@ ko.applyBindings(viewModel);
 
 $(document).ready(() => {
     $loading = $('#loadingSpinner');
-    $loading.hide();
 
     var getOffers = function (author, val) {
         $.ajax({
@@ -24,6 +23,7 @@ $(document).ready(() => {
             $loading.hide();
         });
     }
+    getOffers($('#author').val(), "");
 
     $('#searchForm').submit(function searchApplications(e) {
         e.preventDefault();
@@ -34,6 +34,4 @@ $(document).ready(() => {
         let author = $(this).find('input#author').val();
         getOffers(author, val);
     });
-
-    getOffers($('#author').val(), "");
 });
