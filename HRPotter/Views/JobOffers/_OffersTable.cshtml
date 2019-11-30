@@ -32,32 +32,32 @@
 <script>
     viewModel.count(@Model.offers.Count());
 
-    var toolTips = $('[data-toggle="tooltip"]');
     @if (Model.edit)
     {
-       @:toolTips.tooltip({trigger: 'manual'});
-    }
-
-    toolTips.on('mouseenter', function () {
-        var thisElem = this;
-        var val = this.id;
-        $.ajax({
-            url: '/JobOffers/ApplicationsCount/' + val,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                // TODO : if mouseleave happens before request is finished then tooltip will remain visible
-                $(thisElem).attr('data-original-title', "Applications: " + data);
-                $(thisElem).tooltip('show');
-            },
-            error: function () {
-            }
-        }).done(function () {
+        <text>
+        var toolTips = $('[data-toggle="tooltip"]');
+        toolTips.tooltip({ trigger: 'manual' });
+        toolTips.on('mouseenter', function () {
+            var thisElem = this;
+            var val = this.id;
+            $.ajax({
+                url: '/JobOffers/ApplicationsCount/' + val,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // TODO : if mouseleave happens before request is finished then tooltip will remain visible
+                    $(thisElem).attr('data-original-title', "Applications: " + data);
+                    $(thisElem).tooltip('show');
+                },
+                error: function () {
+                }
+            }).done(function () {
+            });
         });
-    });
 
-    toolTips.on('mouseleave', function () {
-        $(this).tooltip('hide');
-    });
-
+        toolTips.on('mouseleave', function () {
+            $(this).tooltip('hide');
+        });
+        </text>
+    }
 </script>
