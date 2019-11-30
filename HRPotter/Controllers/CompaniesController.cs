@@ -10,22 +10,36 @@ using HRPotter.Models;
 
 namespace HRPotter.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CompaniesController : Controller
     {
         private readonly HRPotterContext _context;
 
+        /// <summary>
+        /// My_summary
+        /// </summary>
+        /// <param name="context"></param>
         public CompaniesController(HRPotterContext context)
         {
             _context = context;
         }
 
-        // GET: Companies
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Companies.ToListAsync());
         }
 
-        // GET: CompaniesTables
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> CompaniesTable()
         {
             return PartialView("_CompaniesTable", await _context.Companies.ToListAsync());
