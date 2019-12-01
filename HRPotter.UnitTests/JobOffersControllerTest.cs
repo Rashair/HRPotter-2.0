@@ -1,15 +1,13 @@
-﻿using HRPotter.Data;
-using NUnit.Framework;
-using Moq;
-using HRPotter.Controllers;
+﻿using HRPotter.Controllers;
+using HRPotter.Data;
 using HRPotter.Models;
-using System.Collections.Generic;
-using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System.Threading;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace HRPotter.UnitTests
 {

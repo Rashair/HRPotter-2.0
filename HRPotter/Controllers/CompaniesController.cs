@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HRPotter.Data;
+using HRPotter.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HRPotter.Data;
-using HRPotter.Models;
 
 namespace HRPotter.Controllers
 {
@@ -36,7 +33,7 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Company company)
         {
-           
+
             if (ModelState.IsValid)
             {
                 _context.Add(company);

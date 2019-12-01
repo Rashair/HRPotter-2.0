@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace HRPotter.Models
 {
     public class JobOfferCreateView : JobOffer
-    { 
+    {
         public JobOfferCreateView() { }
 
         public JobOfferCreateView(JobOffer offer)

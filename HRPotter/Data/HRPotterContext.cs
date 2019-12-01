@@ -1,9 +1,7 @@
 ﻿using HRPotter.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace HRPotter.Data
 {
@@ -89,15 +87,15 @@ namespace HRPotter.Data
 
             modelBuilder.Entity<JobOffer>().HasData(
                 new JobOffer
-                 {
-                     Id = 1,
-                     JobTitle = "Backend Developer",
-                     CompanyId = 1,
-                     Created = DateTime.Now,
-                     Location = "Warsaw",
-                     SalaryTo = 15000,
-                     Description = String.Join(' ', Enumerable.Repeat("lorem ipsum", 10))
-                 },
+                {
+                    Id = 1,
+                    JobTitle = "Backend Developer",
+                    CompanyId = 1,
+                    Created = DateTime.Now,
+                    Location = "Warsaw",
+                    SalaryTo = 15000,
+                    Description = String.Join(' ', Enumerable.Repeat("lorem ipsum", 10))
+                },
                 new JobOffer
                 {
                     Id = 2,
