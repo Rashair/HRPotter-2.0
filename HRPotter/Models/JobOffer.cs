@@ -14,7 +14,7 @@ namespace HRPotter.Models
         public string JobTitle { get; set; }
 
         [Required]
-        [Range(1, long.MaxValue, ErrorMessage ="Company field is required")]
+        [Range(1, long.MaxValue, ErrorMessage = "Company field is required")]
         public virtual int CompanyId { get; set; }
         public virtual Company Company { get; set; }
 
@@ -43,12 +43,12 @@ namespace HRPotter.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if(SalaryFrom != null && SalaryTo != null && SalaryFrom > SalaryTo)
+            if (SalaryFrom != null && SalaryTo != null && SalaryFrom > SalaryTo)
             {
                 yield return new ValidationResult("Lower bound of salary cannot be greater than upper bound.", new[] { "Salary" });
             }
 
-            if(ValidUntil != null && ValidUntil < DateTime.Now.Date)
+            if (ValidUntil != null && ValidUntil < DateTime.Now.Date)
             {
                 yield return new ValidationResult("Offer expiration date cannot be past date.", new[] { "Expiration date" });
             }

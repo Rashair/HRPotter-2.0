@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 
 namespace HRPotter.Helpers
@@ -41,8 +40,11 @@ namespace HRPotter.Helpers
             {
                 Enum enumObj = Enum.Parse(typeof(T), obj.ToString()) as Enum;
                 int enumInt = Convert.ToInt32(enumObj, CultureInfo.InvariantCulture);
-                yield return new SelectListItem() { Value = enumInt.ToString(CultureInfo.InvariantCulture), 
-                    Text = enumObj.GetDescription() };
+                yield return new SelectListItem()
+                {
+                    Value = enumInt.ToString(CultureInfo.InvariantCulture),
+                    Text = enumObj.GetDescription()
+                };
             }
         }
     }

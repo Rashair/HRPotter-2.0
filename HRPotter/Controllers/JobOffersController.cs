@@ -55,13 +55,13 @@ namespace HRPotter.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ApplicationsCount(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return BadRequest();
             }
 
             var offer = await _context.JobOffers.Include(off => off.JobApplications).FirstOrDefaultAsync(off => off.Id == id);
-            if(offer == null)
+            if (offer == null)
             {
                 return NotFound();
             }
