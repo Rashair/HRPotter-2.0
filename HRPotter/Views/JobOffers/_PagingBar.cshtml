@@ -1,4 +1,4 @@
-﻿@model (int Current, int TotalPages);
+﻿@model (int Current, int TotalPages, int TotalCount);
 
 <ul class="pagination">
     @if (Model.Current == 1)
@@ -60,3 +60,7 @@
         </li>
     }
 </ul>
+
+<script>
+    viewModel.count(@Model.TotalCount);
+</script>

@@ -149,6 +149,96 @@ namespace HRPotter.Data
                     Location = "Venice",
                     SalaryFrom = 15000,
                     SalaryTo = 25000
+                },
+                new JobOffer
+                {
+                    Id = 7,
+                    JobTitle = "Tst1",
+                    CompanyId = 2,
+                    Created = DateTime.Now,
+                    Location = "Venice",
+                    SalaryFrom = 4000,
+                    SalaryTo = 25000
+                },
+                new JobOffer
+                {
+                    Id = 8,
+                    JobTitle = "Tst2",
+                    CompanyId = 1,
+                    Created = DateTime.Now,
+                    Location = "Venice",
+                    SalaryFrom = 15000,
+                    SalaryTo = 25000
+                },
+                new JobOffer
+                {
+                    Id = 9,
+                    JobTitle = "Tst3",
+                    CompanyId = 1,
+                    Created = DateTime.Now,
+                    Location = "Venice",
+                    SalaryFrom = 15000,
+                    SalaryTo = 25000
+                },
+                new JobOffer
+                {
+                    Id = 10,
+                    JobTitle = "Tst4",
+                    CompanyId = 1,
+                    Created = DateTime.Now,
+                    Location = "Venice",
+                    SalaryFrom = 15000,
+                    SalaryTo = 25000
+                },
+                new JobOffer
+                {
+                    Id = 11,
+                    JobTitle = "Tst5",
+                    CompanyId = 1,
+                    Created = DateTime.Now,
+                    Location = "Venice",
+                    SalaryFrom = 15000,
+                    SalaryTo = 25000
+                },
+                new JobOffer
+                {
+                    Id = 12,
+                    JobTitle = "Tst6",
+                    CompanyId = 1,
+                    Created = DateTime.Now,
+                    Location = "Venice",
+                    SalaryFrom = 15000,
+                    SalaryTo = 25000
+                },
+                new JobOffer
+                {
+                    Id = 13,
+                    JobTitle = "Tst7",
+                    CompanyId = 1,
+                    Created = DateTime.Now,
+                    Location = "Venice",
+                    SalaryFrom = 15000,
+                    SalaryTo = 25000
+                },
+                new JobOffer
+                {
+                    Id = 14,
+                    JobTitle = "Tst8",
+                    CompanyId = 1,
+                    Created = DateTime.Now,
+                    Location = "Venice",
+                    SalaryFrom = 15000,
+                    SalaryTo = 25000
+                }, 
+                new JobOffer
+                {
+                    Id = 15,
+                    JobTitle = "Tst9",
+                    CompanyId = 1,
+                    Created = DateTime.Now,
+                    Location = "Venice",
+                    SalaryFrom = 15000,
+                    SalaryTo = 25000
                 }
             );
 

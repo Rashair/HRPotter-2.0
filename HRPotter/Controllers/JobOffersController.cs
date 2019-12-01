@@ -68,6 +68,7 @@ namespace HRPotter.Controllers
             JobOfferPagingView offersData = new JobOfferPagingView
             {
                 Offers = record,
+                TotalCount = pageNo * pageSize
             };
 
             return offersData;
@@ -82,19 +83,20 @@ namespace HRPotter.Controllers
                 return BadRequest();
             }
 
+            int totalRecords;
             int totalPages;
             if (String.IsNullOrEmpty(searchString))
             {
-                int totalRecords = await _context.JobOffers.CountAsync();
+                totalRecords = await _context.JobOffers.CountAsync();
                 totalPages = (totalRecords / pageSize) + ((totalRecords % pageSize) > 0 ? 1 : 0);
             }
             else
             {
-                int totalRecords = await _context.JobOffers.Where(x => x.JobTitle.Contains(searchString)).CountAsync();
+                totalRecords = await _context.JobOffers.Where(x => x.JobTitle.Contains(searchString)).CountAsync();
                 totalPages = (totalRecords / pageSize) + ((totalRecords % pageSize) > 0 ? 1 : 0);
             }
 
-            return PartialView("_PagingBar", (pageNo, totalPages));
+            return PartialView("_PagingBar", (pageNo, totalPages, totalRecords));
         }
 
         [HttpGet]
