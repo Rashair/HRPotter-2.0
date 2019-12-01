@@ -1,6 +1,4 @@
-﻿@model IEnumerable<HRPotter.Models.JobOffer>
-
-@{
+﻿@{
     ViewData["Title"] = "Job offers list";
 }
 
@@ -16,10 +14,11 @@
                         <span data-bind="text: viewModel.count()" class="badge badge-pill badge-primary align-top" />
                     </div>
                 </div>
+
                 <div class="col-12 col-md-4 py-2">
                     @using (Html.BeginForm("Index", "JobOffers", FormMethod.Get, new { id = "searchForm" }))
                     {
-                        <input type="hidden" value="1" id="author"/>
+                        <input type="hidden" value="1" id="author" />
                         <div class="input-group search-input">
                             <input id="searchInput"
                                    name="search"
@@ -38,6 +37,7 @@
                         </div>
                     }
                 </div>
+
                 <div class="col-12 col-sm-4 text-right py-2">
                     <a asp-action="Create" class="btn btn-outline-primary">
                         <i class="fa fa-plus pr-3"></i>
@@ -46,6 +46,7 @@
                 </div>
             </div>
         </div>
+
         <table class="table table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
@@ -59,6 +60,9 @@
             <tbody id="tableContent">
             </tbody>
         </table>
+
+        <nav id="pagingContent" aria-label="offers-navigation"></nav>
+
         <div class="d-flex justify-content-center">
             <div id="loadingSpinner" class="spinner-border" role="status"> <span class="sr-only"> Loading... </span> </div>
         </div>
