@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace HRPotter.Data
 {
-
-
     public class HRPotterContext : DbContext
     {
         public HRPotterContext(DbContextOptions<HRPotterContext> options) : base(options) { }
