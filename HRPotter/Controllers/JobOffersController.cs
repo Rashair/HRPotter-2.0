@@ -20,25 +20,23 @@ namespace HRPotter.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOffersTable([FromQuery(Name = "e")]int author = -1, [FromQuery(Name = "query")] string searchString = "",
-            int pageNo = 1, int pageSize = 4)
+        public async Task<IActionResult> GetOffersTable(int author = -1,  int pageNo = 1, int pageSize = 4, string searchString = "")
         {
             if (author == -1)
             {
                 return StatusCode(403);
             }
 
-
             JobOfferPagingView result;
             try
             {
-                result = await GetOffersPage(searchString, pageNo, pageSize);
+                result = await GetOffersPage(pageNo, pageSize, searchString);
             }
             catch (InvalidOperationException)
             {
@@ -48,7 +46,7 @@ namespace HRPotter.Controllers
             return PartialView("_OffersTable", (result, author == 1));
         }
 
-        private async Task<JobOfferPagingView> GetOffersPage(string searchString = "", int pageNo = 1, int pageSize = 4)
+        private async Task<JobOfferPagingView> GetOffersPage(int pageNo = 1, int pageSize = 4, string searchString = "")
         {
             if (pageNo <= 0 || pageSize < 1)
             {
@@ -68,12 +66,10 @@ namespace HRPotter.Controllers
             JobOfferPagingView offersData = new JobOfferPagingView
             {
                 Offers = record,
-                TotalCount = pageNo * pageSize
             };
 
             return offersData;
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetPagingBar(int pageNo = 1, int pageSize = 4, string searchString = "")

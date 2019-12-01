@@ -21,9 +21,9 @@ function getOffers(pageNo) {
 
 function _getOffers(author, val, pageSize, pageNo) {
     $.ajax({
-        url: '/JobOffers/GetOffersTable?e=' + author + '&query=' + val,
+        url: '/JobOffers/GetOffersTable',
         type: 'GET',
-        data: { pageNo: pageNo, pageSize: pageSize },
+        data: { author: author, pageNo: pageNo, pageSize: pageSize, searchString: val },
         dataType: 'html',
         success: function (data) {
             $.ajax({

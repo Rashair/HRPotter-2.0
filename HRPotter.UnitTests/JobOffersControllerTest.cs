@@ -76,17 +76,11 @@ namespace HRPotter.UnitTests
         public void Index_WhenItsCalled_ShouldReturnView()
         {
             // Act
-            var result = controller.Index().Result;
+            var result = controller.Index();
 
             // Assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<ViewResult>(result);
-
-            var viewResult = (ViewResult)result;
-            Assert.IsInstanceOf<IEnumerable<JobOffer>>(viewResult.Model);
-
-            var modelResult = (IEnumerable<JobOffer>)viewResult.Model;
-            Assert.IsTrue(modelResult.Contains(jobOffers[0]));
         }
 
         [Test]
