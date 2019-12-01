@@ -1,6 +1,6 @@
-﻿@model (IEnumerable<JobOffer> offers, bool edit);
+﻿@model (JobOfferPagingView view, bool edit);
 
-@foreach (var item in Model.offers)
+@foreach (var item in Model.view.Offers)
 {
     <tr>
         <td>
@@ -30,7 +30,7 @@
 }
 
 <script>
-    viewModel.count(@Model.offers.Count());
+    viewModel.count(@Model.view.Offers.Count());
 
     @if (Model.edit)
     {
