@@ -29,7 +29,7 @@ function _getOffers(author, val, pageSize, pageNo) {
             $.ajax({
                 url: '/JobOffers/GetPagingBar',
                 type: 'GET',
-                data: { pageNo: pageNo, pageSize: pageSize },
+                data: { pageNo: pageNo, pageSize: pageSize, searchString: val },
                 dataType: 'html',
                 success: function (pagingData) {
                     $('#tableContent').html(data);
