@@ -1,0 +1,62 @@
+﻿@model (int Current, int TotalPages);
+
+<ul class="pagination">
+    @if (Model.Current == 1)
+    {
+        <li class="page-item disabled">
+            <button class="page-link" aria-label="Previous" tabindex="-1">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </button>
+        </li>
+    }
+    else
+    {
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+    }
+
+    @for (int i = 1; i <= Model.TotalPages; ++i)
+    {
+        if (i == Model.Current)
+        {
+            <li class="page-item active">
+                <button class="page-link" onclick="getOffers(@i)">
+                    @i
+                    <span class="sr-only">(current)</span>
+                </button>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <button class="page-link" onclick="getOffers(@i)">
+                    @i
+                </button>
+            </li>
+        }
+    }
+
+    @if (Model.Current == Model.TotalPages)
+    {
+        <li class="page-item disabled">
+            <button class="page-link" tabindex="-1" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </button>
+        </li>
+    }
+    else
+    {
+        <li class="page-item">
+            <button class="page-link" onclick="getOffers(@Model.Current + 1)" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </button>
+        </li>
+    }
+</ul>

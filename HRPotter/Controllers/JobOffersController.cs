@@ -19,38 +19,6 @@ namespace HRPotter.Controllers
             _context = context;
         }
 
-        public async Task<JobOfferPagingView> GetOffersPage(string searchString = "", int pageNo = 1, int pageSize = 4)
-        {
-            if (pageNo <= 0 || pageSize < 1)
-            {
-                throw new InvalidOperationException();
-            }
-
-            int totalRecord;
-            int totalPage;
-            IEnumerable<JobOffer> record;
-            if (String.IsNullOrEmpty(searchString))
-            {
-                totalRecord = await _context.JobOffers.CountAsync();
-                totalPage = (totalRecord / pageSize) + ((totalRecord % pageSize) > 0 ? 1 : 0);
-                record = await _context.JobOffers.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
-            }
-            else
-            {
-                totalRecord = await _context.JobOffers.Where(x => x.JobTitle.Contains(searchString)).CountAsync();
-                totalPage = (totalRecord / pageSize) + ((totalRecord % pageSize) > 0 ? 1 : 0);
-                record = await _context.JobOffers.Where(x => x.JobTitle.Contains(searchString)).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
-            }
-
-            JobOfferPagingView offersData = new JobOfferPagingView
-            {
-                Offers = record,
-                TotalPage = totalPage
-            };
-
-            return offersData;
-        }
-
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -58,18 +26,19 @@ namespace HRPotter.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOffersTable([FromQuery(Name = "e")]int author = -1, [FromQuery(Name = "query")] string searchString = "")
+        public async Task<IActionResult> GetOffersTable([FromQuery(Name = "e")]int author = -1, [FromQuery(Name = "query")] string searchString = "",
+            int pageNo = 1, int pageSize = 4)
         {
             if (author == -1)
             {
                 return StatusCode(403);
             }
 
-            // Watch it - different types inside throws error
+
             JobOfferPagingView result;
             try
             {
-                result = await GetOffersPage(searchString);
+                result = await GetOffersPage(searchString, pageNo, pageSize);
             }
             catch (InvalidOperationException)
             {
@@ -79,10 +48,56 @@ namespace HRPotter.Controllers
             return PartialView("_OffersTable", (result, author == 1));
         }
 
+        private async Task<JobOfferPagingView> GetOffersPage(string searchString = "", int pageNo = 1, int pageSize = 4)
+        {
+            if (pageNo <= 0 || pageSize < 1)
+            {
+                throw new InvalidOperationException();
+            }
+
+            IEnumerable<JobOffer> record;
+            if (String.IsNullOrEmpty(searchString))
+            {
+                record = await _context.JobOffers.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            }
+            else
+            {
+                record = await _context.JobOffers.Where(x => x.JobTitle.Contains(searchString)).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            }
+
+            JobOfferPagingView offersData = new JobOfferPagingView
+            {
+                Offers = record,
+            };
+
+            return offersData;
+        }
+
+
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetPagingBar(int pageNo = 1, int pageSize = 4, string searchString = "")
+        {
+            if (pageNo <= 0 || pageSize < 1)
+            {
+                return BadRequest();
+            }
+
+            int totalPages;
+            if (String.IsNullOrEmpty(searchString))
+            {
+                int totalRecords = await _context.JobOffers.CountAsync();
+                totalPages = (totalRecords / pageSize) + ((totalRecords % pageSize) > 0 ? 1 : 0);
+            }
+            else
+            {
+                int totalRecords = await _context.JobOffers.Where(x => x.JobTitle.Contains(searchString)).CountAsync();
+                totalPages = (totalRecords / pageSize) + ((totalRecords % pageSize) > 0 ? 1 : 0);
+            }
+
+            return PartialView("_PagingBar", (pageNo, totalPages));
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ApplicationsCount(int? id)
         {
             if (id == null)
