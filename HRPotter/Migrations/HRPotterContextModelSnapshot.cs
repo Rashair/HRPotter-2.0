@@ -216,7 +216,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 1,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 71, DateTimeKind.Local).AddTicks(9384),
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 888, DateTimeKind.Local).AddTicks(9085),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Backend Developer",
                             Location = "Warsaw",
@@ -226,29 +226,29 @@ namespace HRPotter.Migrations
                         {
                             Id = 2,
                             CompanyId = 2,
-                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(5541),
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(3159),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Frontend Developer",
                             Location = "Warsaw",
                             SalaryFrom = 10000,
-                            ValidUntil = new DateTime(2019, 12, 10, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(5586)
+                            ValidUntil = new DateTime(2019, 12, 11, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(3203)
                         },
                         new
                         {
                             Id = 3,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6768),
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4453),
                             JobTitle = "Manager",
                             Location = "New York",
                             SalaryFrom = 15000,
                             SalaryTo = 25000,
-                            ValidUntil = new DateTime(2019, 12, 5, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6782)
+                            ValidUntil = new DateTime(2019, 12, 6, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4468)
                         },
                         new
                         {
                             Id = 4,
                             CompanyId = 3,
-                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6810),
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4498),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Teacher",
                             Location = "Paris",
@@ -259,7 +259,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 5,
                             CompanyId = 4,
-                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6821),
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4509),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Cook",
                             Location = "Venice",
@@ -270,8 +270,98 @@ namespace HRPotter.Migrations
                         {
                             Id = 6,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 11, 30, 22, 26, 42, 74, DateTimeKind.Local).AddTicks(6830),
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4517),
                             JobTitle = "Manager",
+                            Location = "Venice",
+                            SalaryFrom = 15000,
+                            SalaryTo = 25000
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CompanyId = 2,
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4521),
+                            JobTitle = "Tst1",
+                            Location = "Venice",
+                            SalaryFrom = 4000,
+                            SalaryTo = 25000
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CompanyId = 1,
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4525),
+                            JobTitle = "Tst2",
+                            Location = "Venice",
+                            SalaryFrom = 15000,
+                            SalaryTo = 25000
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CompanyId = 1,
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4528),
+                            JobTitle = "Tst3",
+                            Location = "Venice",
+                            SalaryFrom = 15000,
+                            SalaryTo = 25000
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CompanyId = 1,
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4532),
+                            JobTitle = "Tst4",
+                            Location = "Venice",
+                            SalaryFrom = 15000,
+                            SalaryTo = 25000
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CompanyId = 1,
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4536),
+                            JobTitle = "Tst5",
+                            Location = "Venice",
+                            SalaryFrom = 15000,
+                            SalaryTo = 25000
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CompanyId = 1,
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4540),
+                            JobTitle = "Tst6",
+                            Location = "Venice",
+                            SalaryFrom = 15000,
+                            SalaryTo = 25000
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CompanyId = 1,
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4543),
+                            JobTitle = "Tst7",
+                            Location = "Venice",
+                            SalaryFrom = 15000,
+                            SalaryTo = 25000
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CompanyId = 1,
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4548),
+                            JobTitle = "Tst8",
+                            Location = "Venice",
+                            SalaryFrom = 15000,
+                            SalaryTo = 25000
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CompanyId = 1,
+                            Created = new DateTime(2019, 12, 1, 14, 30, 27, 891, DateTimeKind.Local).AddTicks(4551),
+                            JobTitle = "Tst9",
                             Location = "Venice",
                             SalaryFrom = 15000,
                             SalaryTo = 25000
