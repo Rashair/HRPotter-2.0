@@ -28,7 +28,7 @@ namespace HRPotter
             services.AddControllersWithViews();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HRPotter API", Version = "v1" });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -65,7 +65,7 @@ namespace HRPotter
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("../swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("../swagger/v1/swagger.json", "HRPotter API");
             });
 
 
@@ -77,7 +77,7 @@ namespace HRPotter
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}");
             });
         }
     }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace HRPotter.Controllers
 {
+    [Route("Home")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,6 +19,9 @@ namespace HRPotter.Controllers
         /// Main page
         /// </summary>
         /// <returns></returns>
+        [Route("")]
+        [Route("/")]
+        [Route("Index")]
         [HttpGet]
         public IActionResult Index()
         {
