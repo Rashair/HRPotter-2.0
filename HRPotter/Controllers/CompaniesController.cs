@@ -93,7 +93,7 @@ namespace HRPotter.Controllers
         /// <returns> Redirection to index </returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("[action]")]
+        [Route("[action]/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Company company)

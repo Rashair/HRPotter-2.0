@@ -251,7 +251,7 @@ namespace HRPotter.Controllers
             return View(createView);
         }
 
-        [Route("[action]")]
+        [Route("[action]/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(JobOffer model)
