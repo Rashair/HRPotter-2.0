@@ -71,18 +71,21 @@ namespace HRPotter.UnitTests
 
         }
 
+        // Index
         [Test]
         [Timeout(5000)]
         public void Index_WhenItsCalled_ShouldReturnView()
         {
             // Act
-            var result = controller.Index();
+            IActionResult result = controller.Index();
 
             // Assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<ViewResult>(result);
+            Assert.IsInstanceOf<OkResult>(result);
         }
 
+        // AplicationsCount
         [Test]
         [Timeout(5000)]
         public void ApplicationsCountForOfferId_WhenItsCalled_ShouldReturnNumber()
