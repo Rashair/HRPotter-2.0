@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace HRPotter.Controllers
 {
-    [Route("Home")]
+    [Route("[controller]")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,16 +18,16 @@ namespace HRPotter.Controllers
         /// <summary>
         /// Main page
         /// </summary>
-        /// <returns></returns>
         [Route("")]
         [Route("/")]
-        [Route("Index")]
+        [Route("[action]")]
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

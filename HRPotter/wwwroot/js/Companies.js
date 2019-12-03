@@ -1,22 +1,6 @@
-﻿function toggleDeleteModal(id) {
+﻿function refreshContent() {
     $.ajax({
-        url: '/Companies/Delete/' + id,
-        type: 'GET',
-        dataType: 'html',
-        success: function (data) {
-            $('#deleteModalWrapper').html(data);
-        },
-        error: function () {
-            alert('Error! Please try again.');
-        }
-    }).done(function () {
-        $('#confirmDelete').modal("show");
-    });
-};
-
-function refreshContent() {
-    $.ajax({
-        url: '/Companies/CompaniesTable/',
+        url: '/Companies/GetCompaniesTable/',
         type: 'GET',
         dataType: 'html',
         success: function (data) {
@@ -54,3 +38,20 @@ $(document).ready(() => {
         });
     });
 });
+
+// Used in _CompaniesTable
+function toggleDeleteModal(id) {
+    $.ajax({
+        url: '/Companies/GetDeleteModal/' + id,
+        type: 'GET',
+        dataType: 'html',
+        success: function (data) {
+            $('#deleteModalWrapper').html(data);
+        },
+        error: function () {
+            alert('Error! Please try again.');
+        }
+    }).done(function () {
+        $('#confirmDelete').modal("show");
+    });
+};

@@ -65,7 +65,7 @@ namespace HRPotter
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("../swagger/v1/swagger.json", "HRPotter API");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "HRPotter API");
             });
 
 

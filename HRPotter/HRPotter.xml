@@ -10,11 +10,8 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:HRPotter.Controllers.CompaniesController.CompaniesTable">
-             <summary>
-            
-             </summary>
-             <returns> Partial view with list of companies</returns>
+        <member name="M:HRPotter.Controllers.CompaniesController.GetCompaniesTable">
+            <returns> Partial view with list of companies</returns>
         </member>
         <member name="M:HRPotter.Controllers.CompaniesController.Create(HRPotter.Models.Company)">
             <summary>
@@ -31,14 +28,11 @@
             <returns> Redirection to edit form</returns>
         </member>
         <member name="M:HRPotter.Controllers.CompaniesController.Edit(System.Int32,HRPotter.Models.Company)">
-            <summary>
-            
-            </summary>
             <param name="id"> Id of company </param>
             <param name="company"> New company </param>
             <returns> Redirection to index </returns>
         </member>
-        <member name="M:HRPotter.Controllers.CompaniesController.Delete(System.Nullable{System.Int32})">
+        <member name="M:HRPotter.Controllers.CompaniesController.GetDeleteModal(System.Nullable{System.Int32})">
             <summary>
                 Delete company - get
             </summary>
@@ -56,7 +50,6 @@
             <summary>
             Main page
             </summary>
-            <returns></returns>
         </member>
     </members>
 </doc>

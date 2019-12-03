@@ -10,6 +10,7 @@ using HRPotter.Models;
 
 namespace HRPotter.Controllers
 {
+    [Route("[controller]")]
     public class CompaniesController : Controller
     {
         private readonly HRPotterContext _context;
@@ -23,18 +24,19 @@ namespace HRPotter.Controllers
         /// Main companies page
         /// </summary>
         /// <returns></returns>
+        [Route("[action]")]
+        [Route("")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Companies.ToListAsync());
         }
 
-        /// <summary>
-        ///
-        /// </summary>
+
         /// <returns> Partial view with list of companies</returns>
+        [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> CompaniesTable()
+        public async Task<IActionResult> GetCompaniesTable()
         {
             return PartialView("_CompaniesTable", await _context.Companies.ToListAsync());
         }
@@ -44,6 +46,7 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="company"></param>
         /// <returns></returns>
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Company company)
@@ -63,6 +66,7 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns> Redirection to edit form</returns>
+        [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -80,12 +84,11 @@ namespace HRPotter.Controllers
             return View(company);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+
         /// <param name="id"> Id of company </param>
         /// <param name="company"> New company </param>
         /// <returns> Redirection to index </returns>
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Company company)
@@ -123,8 +126,9 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Route("[action]/{id}")]
         [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> GetDeleteModal(int? id)
         {
             if (id == null)
             {
@@ -145,6 +149,7 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Route("[action]/{id}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

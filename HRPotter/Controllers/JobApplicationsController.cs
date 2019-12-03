@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
 {
+    [Route("[controller]")]
     public class JobApplicationsController : Controller
     {
         private HRPotterContext _context;
@@ -18,12 +19,15 @@ namespace HRPotter.Controllers
             _context = context;
         }
 
+        [Route("[action]")]
+        [Route("")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.JobApplications.Include(x => x.JobOffer).ToListAsync());
         }
 
+        [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> GetApplicationsTable([FromQuery(Name = "query")] string searchString)
         {
@@ -42,7 +46,7 @@ namespace HRPotter.Controllers
             return PartialView("_ApplicationsTable", applications);
         }
 
-
+        [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
@@ -60,6 +64,7 @@ namespace HRPotter.Controllers
             return View(app);
         }
 
+        [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> DetailsHR(int? id)
         {
@@ -78,7 +83,7 @@ namespace HRPotter.Controllers
         }
 
 
-        // POST: JobApplications/UpdateStatus
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int? id, int? status)
@@ -102,7 +107,7 @@ namespace HRPotter.Controllers
         }
 
 
-        // GET: JobApplications/Add/1
+        [Route("[action]/{offerId}")]
         [HttpGet]
         public async Task<IActionResult> Create(int? offerId)
         {
@@ -126,6 +131,7 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(JobApplication model)
@@ -154,7 +160,7 @@ namespace HRPotter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: JobApplications/Edit/5
+        [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -173,7 +179,7 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
-        // POST: JobApplications/Edit/5
+        [Route("[action]/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(JobApplication model)
@@ -198,7 +204,7 @@ namespace HRPotter.Controllers
             return RedirectToAction("Details", new { id = model.Id });
         }
 
-        // POST: JobApplications/Delete/5
+        [Route("[action]/{id}")]
         [HttpPost]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -213,6 +219,7 @@ namespace HRPotter.Controllers
             return RedirectToAction("Index");
         }
 
+        [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> ApplicationsForOffer(int? id, [FromQuery(Name = "query")] string searchString)
         {
