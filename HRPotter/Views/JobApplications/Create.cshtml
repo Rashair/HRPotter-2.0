@@ -1,4 +1,4 @@
-﻿@model HRPotter.Models.JobApplication
+﻿@model JobApplication
 
 @{
     ViewData["Title"] = "Create application";
@@ -8,9 +8,10 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" method="post">
+        <form asp-action="Create">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="@Model.JobOfferId" value="@Model.JobOfferId"/>
+            <input type="hidden" asp-for="@Model.JobOfferId" value="@Model.JobOfferId" />
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
@@ -54,7 +55,7 @@
 </div>
 
 <div>
-    <a asp-controller="JobOffers" asp-action="Index" class="btn btn-secondary" >Back to job offers</a>
+    <a asp-controller="JobOffers" asp-action="Index" class="btn btn-secondary">Back to job offers</a>
 </div>
 
 

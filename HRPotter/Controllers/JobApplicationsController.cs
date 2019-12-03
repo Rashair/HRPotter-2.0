@@ -124,7 +124,7 @@ namespace HRPotter.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("[action]/{offerId}")]
+        [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> Create(int? offerId)
         {

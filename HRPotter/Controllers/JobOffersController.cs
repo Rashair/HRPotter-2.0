@@ -82,6 +82,9 @@ namespace HRPotter.Controllers
             return offersData;
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("GetPagingBar")]
         [HttpGet]
         public async Task<IActionResult> GetPagingBar(int pageNo = 1, int pageSize = 4, string searchString = "")
         {
