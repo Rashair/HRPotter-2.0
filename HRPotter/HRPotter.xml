@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HRPotter</name>
+    </assembly>
+    <members>
+        <member name="M:HRPotter.Controllers.CompaniesController.Index">
+            <summary>
+            Main companies page
+            </summary>
+            <returns> Companies list </returns>
+        </member>
+        <member name="M:HRPotter.Controllers.CompaniesController.GetCompaniesTable">
+            <returns> Partial view with list of companies</returns>
+        </member>
+        <member name="M:HRPotter.Controllers.CompaniesController.Create(HRPotter.Models.Company)">
+            <summary>
+                Create new company
+            </summary>
+            <param name="company"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HRPotter.Controllers.CompaniesController.Edit(System.Nullable{System.Int32})">
+            <summary>
+                Edit company
+            </summary>
+            <param name="id"></param>
+            <returns> Redirection to edit form</returns>
+        </member>
+        <member name="M:HRPotter.Controllers.CompaniesController.Edit(System.Int32,HRPotter.Models.Company)">
+            <param name="id"> Id of company </param>
+            <param name="company"> New company </param>
+            <returns> Redirection to index </returns>
+        </member>
+        <member name="M:HRPotter.Controllers.CompaniesController.GetDeleteModal(System.Nullable{System.Int32})">
+            <summary>
+                Delete company - get
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HRPotter.Controllers.CompaniesController.DeleteConfirmed(System.Int32)">
+            <summary>
+                Delete company - post
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HRPotter.Controllers.HomeController.Index">
+            <summary>
+            Main page
+            </summary>
+        </member>
+        <member name="M:HRPotter.Controllers.JobApplicationsController.Index">
+            <summary>
+            Main page
+            </summary>
+            <returns> Job applications list</returns>
+        </member>
+        <member name="M:HRPotter.Controllers.JobOffersController.Index">
+            <summary>
+            Main page
+            </summary>
+            <returns> Job offers list </returns>
+        </member>
+    </members>
+</doc>

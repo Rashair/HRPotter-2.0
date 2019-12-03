@@ -1,5 +1,6 @@
 ﻿using HRPotter.Data;
 using HRPotter.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
 {
+    [Route("[controller]")]
     public class JobApplicationsController : Controller
     {
         private HRPotterContext _context;
@@ -17,12 +19,21 @@ namespace HRPotter.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Main page
+        /// </summary>
+        /// <returns> Job applications list</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]")]
+        [Route("")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.JobApplications.Include(x => x.JobOffer).ToListAsync());
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> GetApplicationsTable([FromQuery(Name = "query")] string searchString)
         {
@@ -41,7 +52,10 @@ namespace HRPotter.Controllers
             return PartialView("_ApplicationsTable", applications);
         }
 
-
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("[action]/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -58,6 +72,11 @@ namespace HRPotter.Controllers
             return View(app);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{id}")]
+        [HttpGet]
         public async Task<IActionResult> DetailsHR(int? id)
         {
             if (id == null)
@@ -75,7 +94,10 @@ namespace HRPotter.Controllers
         }
 
 
-        // POST: JobApplications/UpdateStatus
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int? id, int? status)
@@ -99,7 +121,10 @@ namespace HRPotter.Controllers
         }
 
 
-        // GET: JobApplications/Add/1
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{offerId}")]
         [HttpGet]
         public async Task<IActionResult> Create(int? offerId)
         {
@@ -123,6 +148,8 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(JobApplication model)
@@ -151,7 +178,11 @@ namespace HRPotter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: JobApplications/Edit/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -169,7 +200,8 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
-        // POST: JobApplications/Edit/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(JobApplication model)
@@ -194,7 +226,9 @@ namespace HRPotter.Controllers
             return RedirectToAction("Details", new { id = model.Id });
         }
 
-        // POST: JobApplications/Delete/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{id}")]
         [HttpPost]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -209,6 +243,9 @@ namespace HRPotter.Controllers
             return RedirectToAction("Index");
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> ApplicationsForOffer(int? id, [FromQuery(Name = "query")] string searchString)
         {

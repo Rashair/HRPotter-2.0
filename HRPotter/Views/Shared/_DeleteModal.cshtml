@@ -39,7 +39,7 @@
             e.preventDefault();
             $.ajax({
                 type: 'POST',
-                url: '@Model.Controller/Delete/@Model.Id',
+                url: '/@Model.Controller/Delete/@Model.Id',
                 headers: { "RequestVerificationToken": $(this).find('input[name="__RequestVerificationToken"]').val() },
                 dataType: 'html',
                 success: function (result) {

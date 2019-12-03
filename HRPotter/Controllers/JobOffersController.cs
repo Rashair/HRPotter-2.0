@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
 {
+    [Route("[controller]")]
     public class JobOffersController : Controller
     {
         private readonly HRPotterContext _context;
@@ -19,12 +20,22 @@ namespace HRPotter.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Main page
+        /// </summary>
+        /// <returns> Job offers list </returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]")]
+        [Route("")]
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> GetOffersTable(int author = -1,  int pageNo = 1, int pageSize = 4, string searchString = "")
         {
@@ -95,6 +106,10 @@ namespace HRPotter.Controllers
             return PartialView("_PagingBar", (pageNo, totalPages, totalRecords));
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> ApplicationsCount(int? id)
         {
@@ -112,13 +127,18 @@ namespace HRPotter.Controllers
             return Ok(offer.JobApplications.Count);
         }
 
-
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> IndexHR()
         {
             return View(await _context.JobOffers.Include(x => x.Company).ToListAsync());
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
@@ -136,6 +156,10 @@ namespace HRPotter.Controllers
             return View(offer);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> DetailsHR(int? id)
         {
@@ -156,6 +180,9 @@ namespace HRPotter.Controllers
             return View(offer);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]")]
+        [HttpGet]
         public async Task<ActionResult> Create()
         {
             var model = new JobOfferCreateView
@@ -166,6 +193,7 @@ namespace HRPotter.Controllers
             return View(model);
         }
 
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(JobOfferCreateView model)
@@ -194,7 +222,11 @@ namespace HRPotter.Controllers
             return RedirectToAction("IndexHR");
         }
 
-
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -216,6 +248,7 @@ namespace HRPotter.Controllers
             return View(createView);
         }
 
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(JobOffer model)
@@ -240,6 +273,9 @@ namespace HRPotter.Controllers
             return RedirectToAction("DetailsHR", new { id = model.Id });
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("[action]/{id}")]
         [HttpPost]
         public async Task<ActionResult> Delete(int? id)
         {

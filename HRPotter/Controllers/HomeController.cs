@@ -1,10 +1,12 @@
 ﻿using HRPotter.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace HRPotter.Controllers
 {
+    [Route("[controller]")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -14,16 +16,22 @@ namespace HRPotter.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Main page
+        /// </summary>
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("")]
+        [Route("/")]
+        [Route("[action]")]
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

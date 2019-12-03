@@ -4,9 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using HRPotter.Data;
+using HRPotter.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace HRPotter.Controllers
 {
+    [Route("[controller]")]
     public class CompaniesController : Controller
     {
         private readonly HRPotterContext _context;
@@ -16,24 +23,40 @@ namespace HRPotter.Controllers
             _context = context;
         }
 
-        // GET: Companies
+        /// <summary>
+        /// Main companies page
+        /// </summary>
+        /// <returns> Companies list </returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]")]
+        [Route("")]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Companies.ToListAsync());
         }
 
-        // GET: CompaniesTables
-        public async Task<IActionResult> CompaniesTable()
+
+        /// <returns> Partial view with list of companies</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> GetCompaniesTable()
         {
             return PartialView("_CompaniesTable", await _context.Companies.ToListAsync());
         }
 
-        // POST: Companies/Create
+        /// <summary>
+        ///     Create new company
+        /// </summary>
+        /// <param name="company"></param>
+        /// <returns></returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Company company)
         {
-
             if (ModelState.IsValid)
             {
                 _context.Add(company);
@@ -44,7 +67,15 @@ namespace HRPotter.Controllers
             return BadRequest();
         }
 
-        // GET: Companies/Edit/5
+        /// <summary>
+        ///     Edit company
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> Redirection to edit form</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("[action]/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -57,10 +88,17 @@ namespace HRPotter.Controllers
             {
                 return NotFound();
             }
+
             return View(company);
         }
 
-        // POST: Companies/Edit/5
+
+        /// <param name="id"> Id of company </param>
+        /// <param name="company"> New company </param>
+        /// <returns> Redirection to index </returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Company company)
@@ -93,8 +131,16 @@ namespace HRPotter.Controllers
             return View(company);
         }
 
-        // GET: Companies/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        /// <summary>
+        ///     Delete company - get
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("[action]/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetDeleteModal(int? id)
         {
             if (id == null)
             {
@@ -110,7 +156,13 @@ namespace HRPotter.Controllers
             return PartialView("_DeleteModal", (company.Name, company.Id, "Companies"));
         }
 
-        // POST: Companies/Delete/5
+        /// <summary>
+        ///     Delete company - post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("[action]/{id}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
