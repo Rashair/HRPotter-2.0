@@ -1,5 +1,6 @@
 ﻿using HRPotter.Data;
 using HRPotter.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,6 +20,11 @@ namespace HRPotter.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Main page
+        /// </summary>
+        /// <returns> Job applications list</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [Route("")]
         [HttpGet]
@@ -27,6 +33,7 @@ namespace HRPotter.Controllers
             return View(await _context.JobApplications.Include(x => x.JobOffer).ToListAsync());
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> GetApplicationsTable([FromQuery(Name = "query")] string searchString)
@@ -46,6 +53,8 @@ namespace HRPotter.Controllers
             return PartialView("_ApplicationsTable", applications);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
@@ -64,6 +73,9 @@ namespace HRPotter.Controllers
             return View(app);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> DetailsHR(int? id)
@@ -83,6 +95,9 @@ namespace HRPotter.Controllers
         }
 
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -107,6 +122,9 @@ namespace HRPotter.Controllers
         }
 
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{offerId}")]
         [HttpGet]
         public async Task<IActionResult> Create(int? offerId)
@@ -131,6 +149,7 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -160,6 +179,9 @@ namespace HRPotter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
@@ -179,6 +201,7 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -204,6 +227,8 @@ namespace HRPotter.Controllers
             return RedirectToAction("Details", new { id = model.Id });
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpPost]
         public async Task<IActionResult> Delete(int? id)
@@ -219,6 +244,8 @@ namespace HRPotter.Controllers
             return RedirectToAction("Index");
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> ApplicationsForOffer(int? id, [FromQuery(Name = "query")] string searchString)

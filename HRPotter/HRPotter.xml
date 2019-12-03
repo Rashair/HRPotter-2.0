@@ -8,7 +8,7 @@
             <summary>
             Main companies page
             </summary>
-            <returns></returns>
+            <returns> Companies list </returns>
         </member>
         <member name="M:HRPotter.Controllers.CompaniesController.GetCompaniesTable">
             <returns> Partial view with list of companies</returns>
@@ -50,6 +50,18 @@
             <summary>
             Main page
             </summary>
+        </member>
+        <member name="M:HRPotter.Controllers.JobApplicationsController.Index">
+            <summary>
+            Main page
+            </summary>
+            <returns> Job applications list</returns>
+        </member>
+        <member name="M:HRPotter.Controllers.JobOffersController.Index">
+            <summary>
+            Main page
+            </summary>
+            <returns> Job offers list </returns>
         </member>
     </members>
 </doc>

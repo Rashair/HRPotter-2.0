@@ -1,4 +1,5 @@
 ﻿using HRPotter.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -18,6 +19,8 @@ namespace HRPotter.Controllers
         /// <summary>
         /// Main page
         /// </summary>
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("")]
         [Route("/")]
         [Route("[action]")]
