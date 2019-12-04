@@ -61,7 +61,7 @@
             <summary>
             Main page
             </summary>
-            <returns> Job offers list </returns>
+            <returns> Job offers list view </returns>
         </member>
     </members>
 </doc>
