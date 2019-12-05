@@ -12,6 +12,8 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace HRPotter
 {
@@ -30,7 +32,16 @@ namespace HRPotter
             services.AddAuthentication(AzureADB2CDefaults.AuthenticationScheme)
                 .AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
 
-            
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.Configure<RazorViewEngineOptions>(opt =>
+            {
+                opt.ViewLocationFormats.Add("/Views/{1}/HR/{0}" + RazorViewEngine.ViewExtension);
+            });
+
+            services.AddDbContext<HRPotterContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HRPotter API", Version = "v1" });
@@ -40,17 +51,6 @@ namespace HRPotter
                 c.IncludeXmlComments(xmlPath);
             });
 
-            services.AddControllersWithViews();
-            services.AddRazorPages();
-
-            services.Configure<RazorViewEngineOptions>(opt =>
-            {
-                opt.ViewLocationFormats.Add("/Views/{1}/HR/{0}" + RazorViewEngine.ViewExtension);
-            });
-
-
-            services.AddDbContext<HRPotterContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

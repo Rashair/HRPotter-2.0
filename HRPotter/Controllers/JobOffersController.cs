@@ -8,10 +8,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using static HRPotter.Helpers.ViewsFactory;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HRPotter.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class JobOffersController : Controller
     {
         private readonly HRPotterContext _context;
