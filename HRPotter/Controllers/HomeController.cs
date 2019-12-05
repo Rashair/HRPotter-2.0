@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Security.Claims;
+using static HRPotter.Helpers.ViewsFactory;
 
 namespace HRPotter.Controllers
 {
@@ -27,7 +29,12 @@ namespace HRPotter.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+            }
+
+
+            return OkView(View());
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

@@ -1,16 +1,19 @@
 ﻿using HRPotter.Data;
 using HRPotter.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using static HRPotter.Helpers.ViewsFactory;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HRPotter.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class JobOffersController : Controller
     {
         private readonly HRPotterContext _context;
@@ -23,21 +26,20 @@ namespace HRPotter.Controllers
         /// <summary>
         /// Main page
         /// </summary>
-        /// <returns> Job offers list </returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        /// <returns> Job offers list view </returns>
         [Route("[action]")]
         [Route("")]
         [HttpGet]
-        public IActionResult Index()
+        public ViewResult Index()
         {
-            return View();
+            return OkView(View());
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> GetOffersTable(int author = -1,  int pageNo = 1, int pageSize = 4, string searchString = "")
+        public async Task<IActionResult> GetOffersTable(int author = -1, int pageNo = 1, int pageSize = 4, string searchString = "")
         {
             if (author == -1)
             {
@@ -54,7 +56,7 @@ namespace HRPotter.Controllers
                 return BadRequest();
             }
 
-            return PartialView("_OffersTable", (result, author == 1));
+            return OkView(PartialView("_OffersTable", (result, author == 1)));
         }
 
         private async Task<JobOfferPagingView> GetOffersPage(int pageNo = 1, int pageSize = 4, string searchString = "")

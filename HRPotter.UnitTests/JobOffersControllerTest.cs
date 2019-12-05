@@ -1,6 +1,7 @@
 ﻿using HRPotter.Controllers;
 using HRPotter.Data;
 using HRPotter.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -82,7 +83,8 @@ namespace HRPotter.UnitTests
             // Assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<ViewResult>(result);
-            Assert.IsInstanceOf<OkResult>(result);
+            var viewResult = (ViewResult)result;
+            Assert.AreEqual(viewResult.StatusCode, StatusCodes.Status200OK);
         }
 
         // AplicationsCount

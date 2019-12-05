@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HRPotter.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class CompaniesController : Controller
     {
         private readonly HRPotterContext _context;
