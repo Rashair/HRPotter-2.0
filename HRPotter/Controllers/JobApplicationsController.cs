@@ -20,6 +20,10 @@ namespace HRPotter.Controllers
         public JobApplicationsController(HRPotterContext context)
         {
             _context = context;
+            if (!IsAuthorized())
+            {
+                AuthorizeUser(_context, base.User);
+            }
         }
 
         /// <summary>
@@ -32,7 +36,7 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).ToListAsync());
+            return View(await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).Where(u => u.CreatorId == HRPotterUser.Id).ToListAsync());
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -43,11 +47,12 @@ namespace HRPotter.Controllers
             List<JobApplication> applications;
             if (string.IsNullOrEmpty(searchString))
             {
-                applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).ToListAsync();
+                applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).Where(u => u.CreatorId == HRPotterUser.Id).ToListAsync();
             }
             else
             {
                 applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
+                    Where(u => u.CreatorId == HRPotterUser.Id).
                     Where(app => app.JobOffer.JobTitle.Contains(searchString)).
                     ToListAsync();
             }
@@ -164,6 +169,7 @@ namespace HRPotter.Controllers
 
             JobApplication app = new JobApplication
             {
+                CreatorId = HRPotterUser.Id,
                 JobOfferId = model.JobOfferId,
                 FirstName = model.FirstName,
                 LastName = model.LastName,

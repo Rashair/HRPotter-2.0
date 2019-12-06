@@ -23,6 +23,10 @@ namespace HRPotter.Controllers
         public JobOffersController(HRPotterContext context)
         {
             _context = context;
+            if (!IsAuthorized())
+            {
+                AuthorizeUser(_context, base.User);
+            }
         }
 
         /// <summary>
@@ -34,6 +38,7 @@ namespace HRPotter.Controllers
         [HttpGet]
         public ViewResult Index()
         {
+
             return OkView(View());
         }
 
@@ -41,13 +46,8 @@ namespace HRPotter.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> GetOffersTable(int author = -1, int pageNo = 1, int pageSize = 4, string searchString = "")
+        public async Task<IActionResult> GetOffersTable(int pageNo = 1, int pageSize = 4, string searchString = "")
         {
-            if (author == -1)
-            {
-                return StatusCode(403);
-            }
-
             JobOfferPagingView result;
             try
             {
@@ -58,7 +58,7 @@ namespace HRPotter.Controllers
                 return BadRequest();
             }
 
-            return OkView(PartialView("_OffersTable", (result, author == 1)));
+            return OkView(PartialView("_OffersTable", result));
         }
 
         private async Task<JobOfferPagingView> GetOffersPage(int pageNo = 1, int pageSize = 4, string searchString = "")

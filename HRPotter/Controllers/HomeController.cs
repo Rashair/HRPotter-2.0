@@ -26,7 +26,6 @@ namespace HRPotter.Controllers
         /// <summary>
         /// Main page
         /// </summary>
-
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("")]
         [Route("/")]
@@ -34,33 +33,10 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                await AuthorizeUser();
-            }
+            AuthorizeUser(_context, base.User);
+
 
             return OkView(View());
-        }
-
-        private async Task AuthorizeUser()
-        {
-            if(!User.HasClaim(claim => claim.Type.EndsWith("objectidentifier")))
-            {
-                return;
-            }
-
-            var key = User.Claims.Where(claim => claim.Type.EndsWith("objectidentifier")).First().Value;
-            var user = await _context.Users.Include(x => x.Role).FirstOrDefaultAsync(u => u.B2CKey == key);
-            if (user == null)
-            {
-                var name = User.Claims.Where(claim => claim.Type.EndsWith("givenname")).First().Value;
-                user = new User() { B2CKey = key, Name = name, RoleId = 1 };
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                user = await _context.Users.Include(x => x.Role).FirstAsync(u => u.B2CKey == key);
-            }
-            HRPotterUser = user;
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

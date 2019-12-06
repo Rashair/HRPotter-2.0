@@ -20,6 +20,10 @@ namespace HRPotter.Controllers
         public CompaniesController(HRPotterContext context)
         {
             _context = context;
+            if (!IsAuthorized())
+            {
+                AuthorizeUser(_context, User);
+            }
         }
 
         /// <summary>

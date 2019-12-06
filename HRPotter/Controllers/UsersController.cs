@@ -10,6 +10,7 @@ using HRPotter.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using static HRPotter.Helpers.ViewsFactory;
+using System.Security.Claims;
 
 namespace HRPotter.Controllers
 {
@@ -22,9 +23,39 @@ namespace HRPotter.Controllers
         public UsersController(HRPotterContext context)
         {
             _context = context;
+            if (!IsAuthorized())
+            {
+                AuthorizeUser(_context, base.User);
+            }
         }
 
-        public static User HRPotterUser { get; set; } = new User();
+        public static User HRPotterUser { get; set; }
+
+        public static bool IsAuthorized()
+        {
+            return HRPotterUser != null;
+        }
+
+        public static void AuthorizeUser(HRPotterContext context, ClaimsPrincipal User)
+        {
+            if (User == null || !User.Identity.IsAuthenticated || !User.HasClaim(claim => claim.Type.EndsWith("objectidentifier")))
+            {
+                return;
+            }
+
+            var key = User.Claims.Where(claim => claim.Type.EndsWith("objectidentifier")).First().Value;
+            var user = context.Users.Include(x => x.Role).FirstOrDefault(u => u.B2CKey == key);
+            if (user == null)
+            {
+                var name = User.Claims.Where(claim => claim.Type.EndsWith("givenname")).First().Value;
+                user = new User() { B2CKey = key, Name = name, RoleId = 1 };
+                context.Users.Add(user);
+                context.SaveChanges();
+
+                user = context.Users.Include(x => x.Role).First(u => u.B2CKey == key);
+            }
+            HRPotterUser = user;
+        }
 
         /// <summary>
         /// Main companies page

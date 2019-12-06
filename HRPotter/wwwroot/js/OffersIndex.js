@@ -15,15 +15,14 @@ function getOffers(pageNo) {
     $loading.show();
 
     let val = $('input#searchInput').val();
-    let author = $('input#author').val();
-    _getOffers(author, val, pageSize, pageNo);
+    _getOffers(val, pageSize, pageNo);
 }
 
-function _getOffers(author, val, pageSize, pageNo) {
+function _getOffers(val, pageSize, pageNo) {
     $.ajax({
         url: '/JobOffers/GetOffersTable',
         type: 'GET',
-        data: { author: author, pageNo: pageNo, pageSize: pageSize, searchString: val },
+        data: { pageNo: pageNo, pageSize: pageSize, searchString: val },
         dataType: 'html',
         success: function (data) {
             $.ajax({
