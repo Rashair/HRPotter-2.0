@@ -18,7 +18,7 @@ namespace HRPotter.Models
 
         [Required]
         public virtual int RoleId { get; set; }
-        public virtual Role Role { get; set; } = new Role() { Name = "" };
+        public virtual Role Role { get; set; }
     }
 
     public class UserEditView : User
@@ -37,8 +37,9 @@ namespace HRPotter.Models
     public class Role
     {
         [Key]
-        public int Id { get; set; }
+        public int Id { get; set; } = 1;
 
+        [MaxLength(100)]
         public string Name { get; set; }
 
         public static implicit operator string(Role role) => role.Name;

@@ -55,10 +55,10 @@ namespace HRPotter.Controllers
             {
                 var name = User.Claims.Where(claim => claim.Type.EndsWith("givenname")).First().Value;
                 user = new User() { B2CKey = key, Name = name, RoleId = 1 };
-                _context.Add(user);
+                _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
-                user.Role = await _context.Roles.FirstOrDefaultAsync(r => r.Id == 1);
+                user = await _context.Users.Include(x => x.Role).FirstAsync(u => u.B2CKey == key);
             }
             HRPotterUser = user;
         }

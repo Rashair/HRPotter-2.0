@@ -10,6 +10,7 @@ namespace HRPotter.Models
         {
             Id = offer.Id;
             JobTitle = offer.JobTitle;
+            CreatorId = offer.CreatorId;
             CompanyId = offer.CompanyId;
             Company = offer.Company;
             Location = offer.Location;
