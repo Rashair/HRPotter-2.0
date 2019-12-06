@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRPotter", "HRPotter\HRPotter.csproj", "{45BB93FB-6B8B-4E0D-8133-EDD54B3D4C34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRPotter.UnitTests", "HRPotter.UnitTests\HRPotter.UnitTests.csproj", "{76DFB9C0-88FD-4608-BC2D-D9B3D2326F34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRPotter.UnitTests", "HRPotter.UnitTests\HRPotter.UnitTests.csproj", "{76DFB9C0-88FD-4608-BC2D-D9B3D2326F34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -13,6 +13,9 @@ namespace HRPotter.Data
         public DbSet<JobOffer> JobOffers { get; set; }
 
         public DbSet<Company> Companies { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +24,9 @@ namespace HRPotter.Data
             modelBuilder.Entity<JobApplication>().HasIndex(x => x.JobOfferId);
             modelBuilder.Entity<JobApplication>().HasIndex(x => x.LastName);
             modelBuilder.Entity<JobOffer>().HasIndex(x => x.JobTitle);
+
+            modelBuilder.Entity<User>().HasIndex(x => x.B2CKey).IsUnique();
+            modelBuilder.Entity<Role>().HasIndex(x => x.Name).IsUnique();
 
             // Data
             modelBuilder.Entity<JobApplication>().HasData(
@@ -229,7 +235,7 @@ namespace HRPotter.Data
                     Location = "Venice",
                     SalaryFrom = 15000,
                     SalaryTo = 25000
-                }, 
+                },
                 new JobOffer
                 {
                     Id = 15,
@@ -247,6 +253,12 @@ namespace HRPotter.Data
                 new Company { Id = 2, Name = "Apple" },
                 new Company { Id = 3, Name = "Google" },
                 new Company { Id = 4, Name = "EBR-IT" }
+            );
+
+            modelBuilder.Entity<Role>().HasData(
+                new Role { Id = 1, Name = "User" },
+                new Role { Id = 2, Name = "HRUser" },
+                new Role { Id = 3, Name = "Admin" }
             );
         }
     }

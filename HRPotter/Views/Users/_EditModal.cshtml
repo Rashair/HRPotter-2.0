@@ -1,0 +1,64 @@
+﻿@model UserEditView
+
+<div class="modal fade" id="editRole" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">@Model.Name</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form asp-action="Edit" method="post" id="editFormModal">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label class="control-label" asp-for="Role"></label>
+                        <select id="roleSelect" class="form-control" asp-for="Role" 
+                                asp-items="@(new SelectList(Model.Roles, "Id", "Name", Model.RoleId))">
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-chevron-left pr-2"></i>
+                    Cancel
+                </button>
+
+                <button id="submitEdit" type="submit" class="btn btn-primary pr-2" form="editFormModal">
+                    <i class="fas fa-check pr-2"></i>
+                    Update role
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#editFormModal').submit(function (e) {
+            e.preventDefault();
+            var val = $(this).find("select#roleSelect option:selected").val();
+            $.ajax({
+                type: 'POST',
+                url: '/Users/UpdateRole',
+                data: { id: @Model.Id, roleId: val },
+                headers: { "RequestVerificationToken": $(this).find('input[name="__RequestVerificationToken"]').val() },
+                dataType: 'html',
+                success: function (result) {
+                    $('#editRole').modal("hide");
+                },
+                error: function () {
+                    alert('Error! Please try again.');
+                }
+            }).done(function () {
+                // Important - must be defined in full view
+                refreshContent();
+            });
+        });
+    });
+</script>

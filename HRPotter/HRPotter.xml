@@ -63,5 +63,28 @@
             </summary>
             <returns> Job offers list view </returns>
         </member>
+        <member name="M:HRPotter.Controllers.UsersController.Index">
+            <summary>
+            Main companies page
+            </summary>
+            <returns> Companies list </returns>
+        </member>
+        <member name="M:HRPotter.Controllers.UsersController.GetUsersTable(System.String)">
+            <returns> Partial view with list of users </returns>
+        </member>
+        <member name="M:HRPotter.Controllers.UsersController.GetEditModal(System.Nullable{System.Int32})">
+            <summary>
+                Edit user - get
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HRPotter.Controllers.UsersController.GetDeleteModal(System.Nullable{System.Int32})">
+            <summary>
+                Delete user - get
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>
