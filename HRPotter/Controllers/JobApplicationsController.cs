@@ -32,7 +32,7 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.JobApplications.Include(x => x.JobOffer).ToListAsync());
+            return View(await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).ToListAsync());
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -43,11 +43,11 @@ namespace HRPotter.Controllers
             List<JobApplication> applications;
             if (string.IsNullOrEmpty(searchString))
             {
-                applications = await _context.JobApplications.Include(x => x.JobOffer).ToListAsync();
+                applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).ToListAsync();
             }
             else
             {
-                applications = await _context.JobApplications.Include(x => x.JobOffer).
+                applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
                     Where(app => app.JobOffer.JobTitle.Contains(searchString)).
                     ToListAsync();
             }
@@ -198,6 +198,10 @@ namespace HRPotter.Controllers
             if (jobApplication == null)
             {
                 return NotFound();
+            }
+            if(jobApplication.Status != ApplicationStatus.ToBeReviewed)
+            {
+                return BadRequest();
             }
 
             return View(jobApplication);

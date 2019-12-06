@@ -16,17 +16,23 @@
                 <span>This offer is no longer valid</span>
             }
         </td>
+        <td>
+            @item.JobOffer.Company.Name
+        </td>
         <td class=@(item.Status == ApplicationStatus.Approved ? "text-success" :
                     item.Status == ApplicationStatus.Rejected ? "text-danger" : "")>
             @item.Status.GetDescription()
         </td>
         <td>
-            <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
-                <i class="fas fa-edit"></i>
-            </a>
             <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.Id">
                 <i class="fas fa-info pr-2"></i>
             </a>
+            @if (item.Status == ApplicationStatus.ToBeReviewed)
+            {
+                <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="fas fa-edit"></i>
+                </a>
+            }
         </td>
     </tr>
 }
