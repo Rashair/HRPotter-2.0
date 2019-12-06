@@ -12,8 +12,6 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace HRPotter
 {
@@ -50,7 +48,6 @@ namespace HRPotter
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

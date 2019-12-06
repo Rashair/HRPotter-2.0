@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using static HRPotter.Helpers.ViewsFactory;
 using Microsoft.AspNetCore.Authorization;
+using static HRPotter.Helpers.ViewsFactory;
+using static HRPotter.Controllers.UsersController;
+
 
 namespace HRPotter.Controllers
 {

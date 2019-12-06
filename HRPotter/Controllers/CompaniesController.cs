@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using static HRPotter.Controllers.UsersController;
+
 
 namespace HRPotter.Controllers
 {

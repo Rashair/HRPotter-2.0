@@ -13,7 +13,6 @@ using static HRPotter.Helpers.ViewsFactory;
 
 namespace HRPotter.Controllers
 {
-
     [Route("[controller]")]
     [Authorize]
     public class UsersController : Controller
@@ -24,6 +23,8 @@ namespace HRPotter.Controllers
         {
             _context = context;
         }
+
+        public static User HRPotterUser { get; set; } = new User();
 
         /// <summary>
         /// Main companies page

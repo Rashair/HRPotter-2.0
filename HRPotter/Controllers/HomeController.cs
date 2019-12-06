@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.Security.Claims;
 using System.Linq;
 using static HRPotter.Helpers.ViewsFactory;
+using static HRPotter.Controllers.UsersController;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
 {
@@ -29,26 +32,35 @@ namespace HRPotter.Controllers
         [Route("/")]
         [Route("[action]")]
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            if (User.Identity.IsAuthenticated && User.HasClaim(claim => claim.Type.EndsWith("objectidentifier")))
+            if (User.Identity.IsAuthenticated)
             {
-                var key = User.Claims.Where(claim => claim.Type.EndsWith("objectidentifier")).First().Value;
-                if (!UserExists(key))
-                {
-                    var name = User.Claims.Where(claim => claim.Type.EndsWith("givenname")).First().Value;
-                    var user = new User() { B2CKey = key, Name = name, RoleId = 1 };
-                    _context.Add(user);
-                    _context.SaveChangesAsync();
-                }
+                await AuthorizeUser();
             }
 
             return OkView(View());
         }
 
-        private bool UserExists(string key)
+        private async Task AuthorizeUser()
         {
-            return _context.Users.Any(e => e.B2CKey.Equals(key));
+            if(!User.HasClaim(claim => claim.Type.EndsWith("objectidentifier")))
+            {
+                return;
+            }
+
+            var key = User.Claims.Where(claim => claim.Type.EndsWith("objectidentifier")).First().Value;
+            var user = await _context.Users.Include(x => x.Role).FirstOrDefaultAsync(u => u.B2CKey == key);
+            if (user == null)
+            {
+                var name = User.Claims.Where(claim => claim.Type.EndsWith("givenname")).First().Value;
+                user = new User() { B2CKey = key, Name = name, RoleId = 1 };
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+
+                user.Role = await _context.Roles.FirstOrDefaultAsync(r => r.Id == 1);
+            }
+            HRPotterUser = user;
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

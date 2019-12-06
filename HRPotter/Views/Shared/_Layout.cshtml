@@ -19,21 +19,34 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated && HRPotterUser != null)
                     {
                         <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="JobOffers" asp-action="Index">Job offers</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="JobApplications" asp-action="Index">Your applications</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Companies" asp-action="Index">Companies</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
-                            </li>
+                            @if (HRPotterUser.Role == "User")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="JobOffers" asp-action="Index">Job offers</a>
+                                </li>
+                            }
+                            @if (HRPotterUser.Role == "User")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="JobApplications" asp-action="Index">Your applications</a>
+                                </li>
+                            }
+                            @if (HRPotterUser.Role == "HRUser")
+                            {
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Companies" asp-action="Index">Companies</a>
+                                </li>
+                            }
+                            @if (HRPotterUser.Role == "Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                                </li>
+                            }
                         </ul>
                     }
                 </div>
