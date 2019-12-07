@@ -2,10 +2,6 @@
 
 @foreach (var item in Model)
 {
-    if (HRPotterUser.B2CKey == item.B2CKey)
-    {
-        continue;
-    }
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Id)
@@ -30,5 +26,5 @@
 }
 
 <script>
-    viewModel.count(@(Model.Count() > 0 ? Model.Count() - 1 : 0));
+    viewModel.count(@Model.Count());
 </script>
