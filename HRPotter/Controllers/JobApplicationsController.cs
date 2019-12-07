@@ -272,22 +272,26 @@ namespace HRPotter.Controllers
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(JobApplication model)
         {
-            if (model.CreatorId != HRPotterUser.Id)
-            {
-                return Forbid();
-            }
-
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
             JobApplication app = await _context.JobApplications.FirstOrDefaultAsync(app => app.Id == model.Id);
+            if(app == null)
+            {
+                return BadRequest();
+            }
+            if(app.CreatorId != HRPotterUser.Id)
+            {
+                return Forbid();
+            }
 
             app.FirstName = model.FirstName;
             app.LastName = model.LastName;

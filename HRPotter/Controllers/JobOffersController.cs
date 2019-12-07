@@ -37,8 +37,13 @@ namespace HRPotter.Controllers
         [Route("[action]")]
         [Route("")]
         [HttpGet]
-        public ViewResult Index()
+        public IActionResult Index()
         {
+            if(HRPotterUser.Role == "HR")
+            {
+                return View("IndexHR", null);
+            }
+
             return OkView(View());
         }
 
@@ -288,7 +293,6 @@ namespace HRPotter.Controllers
             return RedirectToAction("IndexHR");
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
@@ -325,22 +329,28 @@ namespace HRPotter.Controllers
             return View(createView);
         }
 
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(JobOffer model)
         {
-            if (HRPotterUser.Id != model.CreatorId)
-            {
-                return Forbid();
-            }
-
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
             JobOffer offer = await _context.JobOffers.FirstOrDefaultAsync(o => o.Id == model.Id);
+            if(offer == null)
+            {
+                return BadRequest();
+            }
+
+            if (HRPotterUser.Id != offer.CreatorId)
+            {
+                return Forbid();
+            }
+
 
             offer.JobTitle = model.JobTitle;
             offer.Description = model.Description;
@@ -355,7 +365,6 @@ namespace HRPotter.Controllers
             return RedirectToAction("DetailsHR", new { id = model.Id });
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpPost]

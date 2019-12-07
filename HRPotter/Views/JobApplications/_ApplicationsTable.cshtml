@@ -4,18 +4,28 @@
 @foreach (var item in Model)
 {
     <tr>
-        <td>
-            @if (item.JobOffer != null)
-            {
-                <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId">
-                    @(item.JobOffer.JobTitle)
-                </a>
-            }
-            else
-            {
-                <span>This offer is no longer valid</span>
-            }
-        </td>
+        @if (HRPotterUser.Role == "Admin")
+        {
+            <td>
+                @item.FirstName @item.LastName
+            </td>
+        }
+    <td>
+        @if (item.JobOffer != null && item.CreatorId == HRPotterUser.Id)
+        {
+            <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@item.JobOfferId">
+                @(item.JobOffer.JobTitle)
+            </a>
+        }
+        else if (item.JobOffer != null)
+        {
+            @item.JobOffer.JobTitle
+        }
+        else
+        {
+            <span>This offer is no longer valid</span>
+        }
+    </td>
         <td>
             @item.JobOffer.Company.Name
         </td>
@@ -24,14 +34,17 @@
             @item.Status.GetDescription()
         </td>
         <td>
-            <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.Id">
-                <i class="fas fa-info pr-2"></i>
-            </a>
-            @if (item.Status == ApplicationStatus.ToBeReviewed)
+            @if (HRPotterUser.Id == item.CreatorId)
             {
-                <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
-                    <i class="fas fa-edit"></i>
+                <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.Id">
+                    <i class="fas fa-info pr-2"></i>
                 </a>
+                @if (item.Status == ApplicationStatus.ToBeReviewed)
+                {
+                    <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                }
             }
         </td>
     </tr>

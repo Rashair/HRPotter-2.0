@@ -278,7 +278,7 @@ namespace HRPotter.Data
 
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "User" },
-                new Role { Id = 2, Name = "HRUser" },
+                new Role { Id = 2, Name = "HR" },
                 new Role { Id = 3, Name = "Admin" }
             );
 
