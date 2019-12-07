@@ -17,12 +17,12 @@ namespace HRPotter.Controllers
     {
         private readonly HRPotterContext _context;
 
-        public CompaniesController(HRPotterContext context)
+        public CompaniesController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             if (!IsAuthorized())
             {
-                AuthorizeUser(_context, User);
+                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
             }
         }
 

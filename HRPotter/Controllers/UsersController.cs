@@ -20,12 +20,12 @@ namespace HRPotter.Controllers
     {
         private readonly HRPotterContext _context;
 
-        public UsersController(HRPotterContext context)
+        public UsersController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             if (!IsAuthorized())
             {
-                AuthorizeUser(_context, base.User);
+                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
             }
         }
 

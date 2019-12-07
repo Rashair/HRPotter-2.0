@@ -17,12 +17,12 @@ namespace HRPotter.Controllers
     public class JobApplicationsController : Controller
     {
         private HRPotterContext _context;
-        public JobApplicationsController(HRPotterContext context)
+        public JobApplicationsController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             if (!IsAuthorized())
             {
-                AuthorizeUser(_context, base.User);
+                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
             }
         }
 
@@ -37,7 +37,7 @@ namespace HRPotter.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).Where(u => u.CreatorId == HRPotterUser.Id).ToListAsync());
-        }
+        } 
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]

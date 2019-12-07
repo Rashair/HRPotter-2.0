@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.AspNetCore.Http;
 
 namespace HRPotter
 {
@@ -29,6 +30,7 @@ namespace HRPotter
         {
             services.AddAuthentication(AzureADB2CDefaults.AuthenticationScheme)
                 .AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.Configure<RazorViewEngineOptions>(opt =>
