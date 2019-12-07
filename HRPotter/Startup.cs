@@ -58,6 +58,11 @@ namespace HRPotter
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "HRPotter API");
+                });
             }
             else
             {
@@ -68,13 +73,6 @@ namespace HRPotter
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "HRPotter API");
-            });
-
 
             app.UseRouting();
 
