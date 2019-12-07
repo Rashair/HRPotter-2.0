@@ -99,8 +99,6 @@ namespace HRPotter.UnitTests
             // Assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<ViewResult>(result);
-            var viewResult = (ViewResult)result;
-            Assert.AreEqual(viewResult.StatusCode, StatusCodes.Status200OK);
         }
 
         // AplicationsCount

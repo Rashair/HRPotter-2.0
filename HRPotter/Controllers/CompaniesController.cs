@@ -1,11 +1,11 @@
 ﻿using HRPotter.Data;
 using HRPotter.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 using static HRPotter.Controllers.UsersController;
 
 
@@ -31,7 +31,6 @@ namespace HRPotter.Controllers
         /// Main companies page
         /// </summary>
         /// <returns> Companies list </returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [Route("")]
         [HttpGet]
@@ -47,7 +46,6 @@ namespace HRPotter.Controllers
 
 
         /// <returns> Partial view with list of companies</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> GetCompaniesTable()
@@ -65,7 +63,6 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="company"></param>
         /// <returns></returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -91,7 +88,6 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns> Redirection to edit form</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("[action]/{id}")]
         [HttpGet]
@@ -120,7 +116,6 @@ namespace HRPotter.Controllers
         /// <param name="id"> Id of company </param>
         /// <param name="company"> New company </param>
         /// <returns> Redirection to index </returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("[action]/{id}")]
         [HttpPost]
@@ -165,7 +160,6 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("[action]/{id}")]
         [HttpGet]
@@ -195,7 +189,6 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]/{id}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

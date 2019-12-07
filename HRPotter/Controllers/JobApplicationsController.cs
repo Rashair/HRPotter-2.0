@@ -49,7 +49,6 @@ namespace HRPotter.Controllers
             return View(result);
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> GetApplicationsTable([FromQuery(Name = "query")] string searchString)
@@ -86,7 +85,6 @@ namespace HRPotter.Controllers
             return PartialView("_ApplicationsTable", applications);
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("[action]/{id}")]
         [HttpGet]
@@ -111,7 +109,6 @@ namespace HRPotter.Controllers
             return View(app);
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
@@ -138,7 +135,6 @@ namespace HRPotter.Controllers
         }
 
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]")]
@@ -175,7 +171,6 @@ namespace HRPotter.Controllers
         }
 
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]")]
@@ -202,13 +197,12 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(JobApplication model)
         {
-            if(HRPotterUser.Role != "User")
+            if (HRPotterUser.Role != "User")
             {
                 return Forbid();
             }
@@ -238,7 +232,6 @@ namespace HRPotter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
@@ -271,7 +264,6 @@ namespace HRPotter.Controllers
             return View(jobApplication);
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpPost]
@@ -284,11 +276,11 @@ namespace HRPotter.Controllers
             }
 
             JobApplication app = await _context.JobApplications.FirstOrDefaultAsync(app => app.Id == model.Id);
-            if(app == null)
+            if (app == null)
             {
                 return BadRequest();
             }
-            if(app.CreatorId != HRPotterUser.Id)
+            if (app.CreatorId != HRPotterUser.Id)
             {
                 return Forbid();
             }
@@ -306,7 +298,6 @@ namespace HRPotter.Controllers
             return RedirectToAction("Details", new { id = model.Id });
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpPost]
@@ -334,7 +325,6 @@ namespace HRPotter.Controllers
             return RedirectToAction("Index");
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpGet]

@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HRPotter.Data;
+﻿using HRPotter.Data;
 using HRPotter.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using static HRPotter.Helpers.ViewsFactory;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
 {
@@ -76,7 +74,6 @@ namespace HRPotter.Controllers
         }
 
         /// <returns> Partial view with list of users </returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> GetUsersTable(string searchString)
@@ -104,7 +101,6 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("[action]/{id}")]
         [HttpGet]
@@ -171,7 +167,6 @@ namespace HRPotter.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("[action]/{id}")]
         [HttpGet]

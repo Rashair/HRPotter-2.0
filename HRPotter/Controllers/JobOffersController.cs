@@ -1,14 +1,13 @@
 ﻿using HRPotter.Data;
 using HRPotter.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using static HRPotter.Helpers.ViewsFactory;
 using static HRPotter.Controllers.UsersController;
 
 
@@ -39,15 +38,15 @@ namespace HRPotter.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if(HRPotterUser.Role == "HR")
+            if (HRPotterUser.Role == "HR")
             {
                 return View("IndexHR", null);
             }
 
-            return OkView(View());
+            return View();
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
         [Route("[action]")]
         [HttpGet]
@@ -63,7 +62,7 @@ namespace HRPotter.Controllers
                 return BadRequest();
             }
 
-            return OkView(PartialView("_OffersTable", result));
+            return PartialView("_OffersTable", result);
         }
 
         private async Task<JobOfferPagingView> GetOffersPage(int pageNo = 1, int pageSize = 4, string searchString = "")
@@ -106,7 +105,6 @@ namespace HRPotter.Controllers
             return offersData;
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("GetPagingBar")]
         [HttpGet]
@@ -173,7 +171,6 @@ namespace HRPotter.Controllers
             return Ok(offer.JobApplications.Count);
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> IndexHR()
@@ -186,7 +183,6 @@ namespace HRPotter.Controllers
             return View(await _context.JobOffers.Include(x => x.Company).Where(off => off.CreatorId == HRPotterUser.Id).ToListAsync());
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
@@ -207,7 +203,6 @@ namespace HRPotter.Controllers
             return View(offer);
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
@@ -241,7 +236,6 @@ namespace HRPotter.Controllers
             return View(offer);
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("[action]")]
         [HttpGet]
         public async Task<ActionResult> Create()
@@ -341,7 +335,7 @@ namespace HRPotter.Controllers
             }
 
             JobOffer offer = await _context.JobOffers.FirstOrDefaultAsync(o => o.Id == model.Id);
-            if(offer == null)
+            if (offer == null)
             {
                 return BadRequest();
             }

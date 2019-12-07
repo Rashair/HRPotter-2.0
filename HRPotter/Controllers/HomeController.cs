@@ -2,14 +2,9 @@
 using HRPotter.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Security.Claims;
-using System.Linq;
-using static HRPotter.Helpers.ViewsFactory;
-using static HRPotter.Controllers.UsersController;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using static HRPotter.Controllers.UsersController;
 
 namespace HRPotter.Controllers
 {
@@ -30,7 +25,6 @@ namespace HRPotter.Controllers
         /// <summary>
         /// Main page
         /// </summary>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("")]
         [Route("/")]
         [Route("[action]")]
@@ -40,7 +34,7 @@ namespace HRPotter.Controllers
             AuthorizeUser(_context, base.User);
 
 
-            return OkView(View());
+            return View();
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
