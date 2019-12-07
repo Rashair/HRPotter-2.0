@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HRPotter.Models
 {
@@ -8,6 +9,11 @@ namespace HRPotter.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [ForeignKey("Creator")]
+        public virtual int? CreatorId { get; set; }
+        public virtual User Creator { get; set; }
+
 
         public virtual int JobOfferId { get; set; }
         public virtual JobOffer JobOffer { get; set; }

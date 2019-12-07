@@ -8,6 +8,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 
 namespace HRPotter.UnitTests
@@ -61,9 +62,21 @@ namespace HRPotter.UnitTests
             context.JobOffers.Add(jobOffers[1]);
             context.JobApplications.Add(jobApplications[3]);
             context.Companies.Add(companies[0]);
+            context.Roles.Add(new Role { Id = 1, Name = "User" });
+            context.Roles.Add(new Role { Id = 2, Name = "HR" });
             context.SaveChanges();
 
-            controller = new JobOffersController(context);
+            IHttpContextAccessor accessor = new HttpContextAccessor();
+            var claims = new List<Claim>()
+            {
+                new Claim("objectidentifier", "f7c900ea-977d-4a24-8223-8da5cc8ff9b2"),
+                new Claim("givenname", "unitTestsUser"),
+            };
+            var identity = new ClaimsIdentity(claims, "TestAuthType");
+            accessor.HttpContext = new DefaultHttpContext();
+            accessor.HttpContext.User = new ClaimsPrincipal(identity);
+
+            controller = new JobOffersController(context, accessor);
         }
 
         [SetUp]
@@ -77,6 +90,9 @@ namespace HRPotter.UnitTests
         [Timeout(5000)]
         public void Index_WhenItsCalled_ShouldReturnView()
         {
+            // Arrange 
+            UsersController.HRPotterUser.Role = new Role() { Id = 1, Name = "User" };
+
             // Act
             IActionResult result = controller.Index();
 
@@ -93,6 +109,7 @@ namespace HRPotter.UnitTests
         public void ApplicationsCountForOfferId_WhenItsCalled_ShouldReturnNumber()
         {
             // Arrange
+            UsersController.HRPotterUser.Role = new Role() { Id = 2, Name = "HR" };
             int id = jobOffers[0].Id;
 
             // Act
@@ -112,6 +129,7 @@ namespace HRPotter.UnitTests
         public void ApplicationsCountForInvalidOfferId_WhenItsCalled_ShouldReturnNotFound()
         {
             // Arrange
+            UsersController.HRPotterUser.Role = new Role() { Id = 2, Name = "HR" };
             int id = 0;
 
             // Act
@@ -124,14 +142,18 @@ namespace HRPotter.UnitTests
 
         [Test]
         [Timeout(5000)]
-        public void EditForInvalidOfferId_WhenItsCalled_ShouldThrowException()
+        public void EditForInvalidOfferId_WhenItsCalled_ShouldReturnBadRequest()
         {
             // Arrange
+            UsersController.HRPotterUser.Role = new Role() { Id = 2, Name = "HR" };
             int id = -1;
             JobOffer offer = new JobOffer { Id = id };
 
-            // Act and Assert
-            Assert.Throws<AggregateException>(() => { var result = controller.Edit(offer).Result; });
+            // Act
+            var result = controller.Edit(offer).Result;
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestResult>(result);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace HRPotter.Helpers
 {
+    // TODO: Delete
     public static class ViewsFactory
     {
         public static ViewResult OkView(ViewResult view)

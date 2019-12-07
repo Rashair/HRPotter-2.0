@@ -4,14 +4,16 @@ using HRPotter.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRPotter.Migrations
 {
     [DbContext(typeof(HRPotterContext))]
-    partial class HRPotterContextModelSnapshot : ModelSnapshot
+    [Migration("20191206190010_UsersMigration")]
+    partial class UsersMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,9 +67,6 @@ namespace HRPotter.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CreatorId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CvUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -100,8 +99,6 @@ namespace HRPotter.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatorId");
-
                     b.HasIndex("JobOfferId");
 
                     b.HasIndex("LastName");
@@ -112,7 +109,6 @@ namespace HRPotter.Migrations
                         new
                         {
                             Id = 1,
-                            CreatorId = 2,
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             Email = "johnson@nsa.gov",
                             FirstName = "Stefan",
@@ -124,7 +120,6 @@ namespace HRPotter.Migrations
                         new
                         {
                             Id = 2,
-                            CreatorId = 2,
                             Email = "smith@nsa.gov",
                             FirstName = "Bogdan",
                             IsStudent = false,
@@ -135,7 +130,6 @@ namespace HRPotter.Migrations
                         new
                         {
                             Id = 3,
-                            CreatorId = 2,
                             CvUrl = "https://www.google.com/",
                             Email = "miller@nsa.gov",
                             FirstName = "Ambroży",
@@ -147,7 +141,6 @@ namespace HRPotter.Migrations
                         new
                         {
                             Id = 4,
-                            CreatorId = 7,
                             Email = "jones@nsa.gov",
                             FirstName = "Bogusław",
                             IsStudent = false,
@@ -159,7 +152,6 @@ namespace HRPotter.Migrations
                         new
                         {
                             Id = 5,
-                            CreatorId = 7,
                             Email = "wilson@nsa.gov",
                             FirstName = "Lech",
                             IsStudent = false,
@@ -170,7 +162,6 @@ namespace HRPotter.Migrations
                         new
                         {
                             Id = 6,
-                            CreatorId = 7,
                             Email = "williams@nsa.gov",
                             FirstName = "Orfeusz",
                             IsStudent = false,
@@ -193,9 +184,6 @@ namespace HRPotter.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("CreatorId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -221,8 +209,6 @@ namespace HRPotter.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("CreatorId");
-
                     b.HasIndex("JobTitle");
 
                     b.ToTable("JobOffers");
@@ -232,8 +218,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 1,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 654, DateTimeKind.Local).AddTicks(3837),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 282, DateTimeKind.Local).AddTicks(5258),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Backend Developer",
                             Location = "Warsaw",
@@ -243,32 +228,29 @@ namespace HRPotter.Migrations
                         {
                             Id = 2,
                             CompanyId = 2,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(8145),
-                            CreatorId = 4,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(196),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Frontend Developer",
                             Location = "Warsaw",
                             SalaryFrom = 10000,
-                            ValidUntil = new DateTime(2019, 12, 17, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(8195)
+                            ValidUntil = new DateTime(2019, 12, 16, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(245)
                         },
                         new
                         {
                             Id = 3,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9349),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1393),
                             JobTitle = "Manager",
                             Location = "New York",
                             SalaryFrom = 15000,
                             SalaryTo = 25000,
-                            ValidUntil = new DateTime(2019, 12, 12, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9363)
+                            ValidUntil = new DateTime(2019, 12, 11, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1407)
                         },
                         new
                         {
                             Id = 4,
                             CompanyId = 3,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9389),
-                            CreatorId = 4,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1432),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Teacher",
                             Location = "Paris",
@@ -279,8 +261,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 5,
                             CompanyId = 4,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9400),
-                            CreatorId = 4,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1443),
                             Description = "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
                             JobTitle = "Cook",
                             Location = "Venice",
@@ -291,8 +272,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 6,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9452),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1452),
                             JobTitle = "Manager",
                             Location = "Venice",
                             SalaryFrom = 15000,
@@ -302,8 +282,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 7,
                             CompanyId = 2,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9456),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1457),
                             JobTitle = "Tst1",
                             Location = "Venice",
                             SalaryFrom = 4000,
@@ -313,8 +292,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 8,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9460),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1461),
                             JobTitle = "Tst2",
                             Location = "Venice",
                             SalaryFrom = 15000,
@@ -324,8 +302,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 9,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9463),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1465),
                             JobTitle = "Tst3",
                             Location = "Venice",
                             SalaryFrom = 15000,
@@ -335,8 +312,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 10,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9468),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1469),
                             JobTitle = "Tst4",
                             Location = "Venice",
                             SalaryFrom = 15000,
@@ -346,8 +322,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 11,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9472),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1473),
                             JobTitle = "Tst5",
                             Location = "Venice",
                             SalaryFrom = 15000,
@@ -357,8 +332,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 12,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9476),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1477),
                             JobTitle = "Tst6",
                             Location = "Venice",
                             SalaryFrom = 15000,
@@ -368,8 +342,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 13,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9480),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1481),
                             JobTitle = "Tst7",
                             Location = "Venice",
                             SalaryFrom = 15000,
@@ -379,8 +352,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 14,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9483),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1485),
                             JobTitle = "Tst8",
                             Location = "Venice",
                             SalaryFrom = 15000,
@@ -390,8 +362,7 @@ namespace HRPotter.Migrations
                         {
                             Id = 15,
                             CompanyId = 1,
-                            Created = new DateTime(2019, 12, 7, 0, 16, 6, 656, DateTimeKind.Local).AddTicks(9487),
-                            CreatorId = 6,
+                            Created = new DateTime(2019, 12, 6, 20, 0, 10, 285, DateTimeKind.Local).AddTicks(1489),
                             JobTitle = "Tst9",
                             Location = "Venice",
                             SalaryFrom = 15000,
@@ -407,14 +378,9 @@ namespace HRPotter.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Roles");
 
@@ -444,7 +410,7 @@ namespace HRPotter.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("B2CKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -454,58 +420,13 @@ namespace HRPotter.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("B2CKey")
-                        .IsUnique()
-                        .HasFilter("[B2CKey] IS NOT NULL");
-
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            B2CKey = "c3513236-6bcd-4443-bcc3-f39edb2a372b",
-                            Name = "admin",
-                            RoleId = 3
-                        },
-                        new
-                        {
-                            Id = 2,
-                            B2CKey = "48243631-2f99-4553-88f5-8dd9a07a92e3",
-                            Name = "testUser",
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            B2CKey = "701dcb7e-0a16-46f5-a846-d5a06cbd774c",
-                            Name = "stefan",
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            B2CKey = "6fa35afc-2051-424b-9d4d-b4933c023081",
-                            Name = "hr1",
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            Id = 7,
-                            B2CKey = "879cc927-1809-47a6-a0c2-ee4f76815b15",
-                            Name = "test1",
-                            RoleId = 1
-                        });
                 });
 
             modelBuilder.Entity("HRPotter.Models.JobApplication", b =>
                 {
-                    b.HasOne("HRPotter.Models.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId");
-
                     b.HasOne("HRPotter.Models.JobOffer", "JobOffer")
                         .WithMany("JobApplications")
                         .HasForeignKey("JobOfferId")
@@ -520,10 +441,6 @@ namespace HRPotter.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("HRPotter.Models.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId");
                 });
 
             modelBuilder.Entity("HRPotter.Models.User", b =>
