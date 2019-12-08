@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.Extensions.Azure;
 
 namespace HRPotter
 {
@@ -51,6 +52,11 @@ namespace HRPotter
                 c.IncludeXmlComments(xmlPath);
             });
             services.AddApplicationInsightsTelemetry();
+
+            services.AddAzureClients(builder =>
+            {
+                builder.AddBlobServiceClient(Configuration["ConnectionStrings:AzureConnection1"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
