@@ -14,7 +14,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <CodeAnalysisRuleSet>HRPotter.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>F:\source\studies\.NET\HRPotter\HRPotter\HRPotter.xml</DocumentationFile>
+    <DocumentationFile>HRPotter.xml</DocumentationFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
