@@ -12,6 +12,7 @@
 
 function getOffers(pageNo) {
     $('#tableContent').html("");
+    $('#pagingContent').html("");
     $loading.show();
 
     let val = $('input#searchInput').val();
