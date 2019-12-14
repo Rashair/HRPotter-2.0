@@ -1,11 +1,14 @@
-﻿using HRPotter.Data;
+﻿using Azure.Storage.Blobs;
+using HRPotter.Data;
 using HRPotter.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static HRPotter.Controllers.UsersController;
@@ -16,10 +19,14 @@ namespace HRPotter.Controllers
     [Authorize]
     public class JobApplicationsController : Controller
     {
-        private HRPotterContext _context;
-        public JobApplicationsController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly HRPotterContext _context;
+        private readonly BlobServiceClient blobService;
+
+        public JobApplicationsController(HRPotterContext context, IHttpContextAccessor httpContextAccessor,
+            BlobServiceClient blobService)
         {
             _context = context;
+            this.blobService = blobService;
             if (!IsAuthorized())
             {
                 AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
@@ -200,7 +207,7 @@ namespace HRPotter.Controllers
         [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(JobApplication model)
+        public async Task<ActionResult> Create(JobApplication model, [FromForm] IFormFile cvFile)
         {
             if (HRPotterUser.Role != "User")
             {
@@ -212,6 +219,23 @@ namespace HRPotter.Controllers
                 return View(model);
             }
 
+            string cvUrl = null;
+            if (cvFile != null)
+            {
+                cvUrl = Guid.NewGuid().ToString() + cvFile.FileName;
+                var container = blobService.GetBlobContainerClient("job-applications");
+                var blobClient = container.GetBlobClient(cvUrl);
+                using var uploadStream = cvFile.OpenReadStream();
+                try
+                {
+                    await blobClient.UploadAsync(uploadStream);
+                }
+                catch
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
+
             JobApplication app = new JobApplication
             {
                 CreatorId = HRPotterUser.Id,
@@ -220,7 +244,7 @@ namespace HRPotter.Controllers
                 LastName = model.LastName,
                 Email = model.Email,
                 Phone = model.Phone,
-                CvUrl = model.CvUrl,
+                CvUrl = cvUrl,
                 IsStudent = model.IsStudent,
                 Description = model.Description,
                 Status = ApplicationStatus.ToBeReviewed

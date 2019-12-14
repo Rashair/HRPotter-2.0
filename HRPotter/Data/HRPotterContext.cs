@@ -61,7 +61,7 @@ namespace HRPotter.Data
                     Email = "miller@nsa.gov",
                     IsStudent = true,
                     Status = ApplicationStatus.ToBeReviewed,
-                    CvUrl = new Uri("https://www.google.com")
+                    CvUrl = "TAiJF_Cwiczenie_04.pdf"
                 },
                 new JobApplication
                 {
