@@ -273,7 +273,8 @@ namespace HRPotter.Data
                 new Company { Id = 1, Name = "Microsoft" },
                 new Company { Id = 2, Name = "Apple" },
                 new Company { Id = 3, Name = "Google" },
-                new Company { Id = 4, Name = "EBR-IT" }
+                new Company { Id = 4, Name = "EBR-IT" },
+                new Company { Id = 5, Name = "Wizarding World" }
             );
 
             modelBuilder.Entity<Role>().HasData(

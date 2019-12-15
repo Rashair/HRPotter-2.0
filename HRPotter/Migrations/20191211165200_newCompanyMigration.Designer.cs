@@ -4,14 +4,16 @@ using HRPotter.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRPotter.Migrations
 {
     [DbContext(typeof(HRPotterContext))]
-    partial class HRPotterContextModelSnapshot : ModelSnapshot
+    [Migration("20191211165200_newCompanyMigration")]
+    partial class newCompanyMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
