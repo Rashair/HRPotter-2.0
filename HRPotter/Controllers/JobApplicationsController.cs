@@ -222,7 +222,7 @@ namespace HRPotter.Controllers
             string cvUrl = null;
             if (cvFile != null)
             {
-                cvUrl = Guid.NewGuid().ToString() + cvFile.FileName;
+                cvUrl = Guid.NewGuid().ToString() + '_' + cvFile.FileName;
                 var container = blobService.GetBlobContainerClient("job-applications");
                 var blobClient = container.GetBlobClient(cvUrl);
                 using var uploadStream = cvFile.OpenReadStream();

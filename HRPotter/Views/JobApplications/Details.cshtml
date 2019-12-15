@@ -43,24 +43,44 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Email)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
+        @if (Model.Phone != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Phone)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+        }
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IsStudent)
         </dt>
         <dd class="col-sm-10">
             @Html.Raw(Model.IsStudent.GetDescription())
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+        @if (Model.CvUrl != null)
+        {
+            <dt class="col-sm-2">
+                CV file
+            </dt>
+            <dd class="col-sm-10">
+                @{
+                    var ind = Model.CvUrl.IndexOf('_');
+                    <a onclick="downloadFile">
+                        @Model.CvUrl.Substring(ind + 1)
+                    </a>
+                }
+            </dd>
+        }
+        @if (Model.Description != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        }
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Status)
         </dt>
@@ -92,5 +112,9 @@
     </div>
 </div>
 
+
+@section Scripts {
+    <script src="~/js/applicationsDetails.js"></script>
+}
 
 @await Html.PartialAsync("/Views/Shared/_DeleteModal.cshtml", (Title: "Delete job application", Id: Model.Id, Controller: "JobApplications"))
