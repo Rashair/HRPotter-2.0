@@ -14,9 +14,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Azure;
-using Microsoft.ApplicationInsights.AspNetCore.Extensions;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.ApplicationInsights.Extensibility.Implementation;
+
 
 namespace HRPotter
 {
@@ -58,14 +56,6 @@ namespace HRPotter
                 }
             });
 
-
-
-            ApplicationInsightsServiceOptions aiOptions = new ApplicationInsightsServiceOptions
-            {
-                EnablePerformanceCounterCollectionModule = false,
-            };
-            services.AddApplicationInsightsTelemetry(aiOptions);
-
             services.AddAzureClients(builder =>
             {
                 builder.AddBlobServiceClient(Configuration["ConnectionStrings:BlobStorageConnection"]);
@@ -78,9 +68,6 @@ namespace HRPotter
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
-                TelemetryConfiguration.Active.DisableTelemetry = true;
-                TelemetryDebugWriter.IsTracingDisabled = true;
                 
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
