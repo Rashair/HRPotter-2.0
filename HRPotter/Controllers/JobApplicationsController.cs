@@ -278,7 +278,8 @@ namespace HRPotter.Controllers
         }
 
         [Route("[action]")]
-        [HttpGet("Download")]
+        [ActionName("Download")]
+        [HttpGet]
         public async Task<IActionResult> DownloadBlobFile(string name)
         {
             var blobClient = blobContainerClient.GetBlobClient(name);
