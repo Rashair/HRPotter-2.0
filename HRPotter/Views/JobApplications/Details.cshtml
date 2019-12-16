@@ -65,9 +65,9 @@
             </dt>
             <dd class="col-sm-10">
                 @{
-                    var ind = Model.CvUrl.IndexOf('_');
-                    <a onclick="downloadFile">
-                        @Model.CvUrl.Substring(ind + 1)
+                    var ind = Model.CvUrl.IndexOf("#_#");
+                    <a asp-action="Download" asp-route-name="@Model.CvUrl" download="download">
+                        @Model.CvUrl.Substring(ind > 0 ? ind + 3 : 0)
                     </a>
                 }
             </dd>

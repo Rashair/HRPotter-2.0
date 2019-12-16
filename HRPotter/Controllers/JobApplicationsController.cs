@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using HRPotter.Data;
 using HRPotter.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -19,14 +20,17 @@ namespace HRPotter.Controllers
     [Authorize]
     public class JobApplicationsController : Controller
     {
+        const int maxFileSize = (int)5e6;
+        const string separationString = "#_#";
+
         private readonly HRPotterContext _context;
-        private readonly BlobServiceClient blobService;
+        private readonly BlobContainerClient blobContainerClient;
 
         public JobApplicationsController(HRPotterContext context, IHttpContextAccessor httpContextAccessor,
             BlobServiceClient blobService)
         {
             _context = context;
-            this.blobService = blobService;
+            blobContainerClient = blobService.GetBlobContainerClient("job-applications");
             if (!IsAuthorized())
             {
                 AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
@@ -220,20 +224,20 @@ namespace HRPotter.Controllers
             }
 
             string cvUrl = null;
-            if (cvFile != null)
+            if (cvFile != null && cvFile.Length < maxFileSize)
             {
-                cvUrl = Guid.NewGuid().ToString() + '_' + cvFile.FileName;
-                var container = blobService.GetBlobContainerClient("job-applications");
-                var blobClient = container.GetBlobClient(cvUrl);
-                using var uploadStream = cvFile.OpenReadStream();
                 try
                 {
-                    await blobClient.UploadAsync(uploadStream);
+                    cvUrl = await UploadFile(cvFile);
                 }
-                catch
+                catch (FileLoadException e)
                 {
                     return RedirectToAction("Error", "Home");
                 }
+            }
+            else if (cvFile.Length >= maxFileSize)
+            {
+                return RedirectToAction("Error", "Home");
             }
 
             JobApplication app = new JobApplication
@@ -255,6 +259,44 @@ namespace HRPotter.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        private async Task<string> UploadFile(IFormFile file)
+        {
+            var filename = Guid.NewGuid().ToString() + separationString + file.FileName; ;
+            var blobClient = blobContainerClient.GetBlobClient(filename);
+            using var uploadStream = file.OpenReadStream();
+            try
+            {
+                await blobClient.UploadAsync(uploadStream);
+            }
+            catch
+            {
+                throw new FileLoadException();
+            }
+
+            return filename;
+        }
+
+        [Route("[action]")]
+        [HttpGet("Download")]
+        public async Task<IActionResult> DownloadBlobFile(string name)
+        {
+            var blobClient = blobContainerClient.GetBlobClient(name);
+            BlobDownloadInfo download;
+            try
+            {
+                download = await blobClient.DownloadAsync();
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var ind = name.IndexOf(separationString);
+            string downloadFileName = name.Substring(ind > 0 ? ind + separationString.Length : 0);
+            return File(download.Content, download.ContentType, downloadFileName);
+        }
+
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
