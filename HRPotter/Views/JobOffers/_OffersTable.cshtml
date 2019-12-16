@@ -1,0 +1,79 @@
+﻿@model JobOfferPagingView
+
+@foreach (var item in Model.Offers)
+{
+    <tr>
+        <td>
+            <a id="@item.Id" asp-action=@(HRPotterUser.Role == "HR" ? "DetailsHR": "Details") asp-route-id="@item.Id"
+               data-toggle="tooltip">
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Company.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Location)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Created)
+        </td>
+        @if (HRPotterUser.Role == "HR")
+        {
+            <td>
+                <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </td>
+        }
+    </tr>
+}
+
+<script>
+    @if (HRPotterUser.Role == "HR")
+    {
+        @: handleTooltips();
+    };
+
+    function handleTooltips() {
+        var toolTips = $('[data-toggle="tooltip"]');
+        toolTips.tooltip({ trigger: 'manual' });
+
+        var lockMap = $.makeArray(toolTips).reduce(function (map, obj) {
+            map[obj.v] = false;
+            return map;
+        }, {});
+
+        toolTips.on('mouseenter', function () {
+            if (lockMap[this] === true) {
+                return;
+            }
+            lockMap[this] = true;
+
+            let val = this.id;
+            let thisElem = this;
+            $.ajax({
+                url: '/JobOffers/ApplicationsCount/' + val,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $(thisElem).attr('data-original-title', "Applications: " + data);
+                    // Solution for mouseleave before request is finished
+                    if (lockMap[thisElem] == true) {
+                         $(thisElem).tooltip('show');
+                    }
+                },
+                error: function () {
+                    console.log("Error processing request");
+                }
+            }).done(function () {
+                lockMap[thisElem] = false;
+            });
+        });
+
+        toolTips.on('mouseleave', function () {
+            $(this).tooltip('hide');
+            lockMap[this] = false;
+        });
+    }
+</script>

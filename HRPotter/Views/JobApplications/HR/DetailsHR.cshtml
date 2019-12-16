@@ -1,0 +1,104 @@
+﻿@model HRPotter.Models.JobApplication
+@using HRPotter.Helpers;
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>
+        Application for  <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@Model.JobOfferId">
+            @Model.JobOffer.JobTitle
+        </a>
+    </h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        @if (Model.Phone != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Phone)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsStudent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.IsStudent.GetDescription())
+        </dd>
+        @if (Model.CvUrl != null)
+        {
+            <dt class="col-sm-2">
+                CV file
+            </dt>
+            <dd class="col-sm-10">
+                @{
+                    var ind = Model.CvUrl.IndexOf("#_#");
+                    <a asp-action="Download" asp-route-name="@Model.CvUrl" download="download">
+                        @Model.CvUrl.Substring(ind > 0 ? ind + 3 : 0)
+                    </a>
+                }
+            </dd>
+        }
+        @if (Model.Description != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Status.GetDescription()
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <form asp-action="UpdateStatus" asp-route-id="@Model.Id" asp-route-status="@((int)Model.Status)">
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label class="font-weight-bold"> @Html.DisplayNameFor(model => model.Status) </label>
+            <select asp-for="Status" class="form-control"
+                    asp-items="@(new SelectList(DescriptionExtensions.GetEnumSelectList<ApplicationStatus>(),
+                        "Value", "Text", Model.Status.ToString()))">
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Update status" class="btn btn-primary" />
+        </div>
+    </form>
+    <a asp-action="DetailsHR" asp-controller="JobOffers" asp-route-id="@Model.JobOfferId" class="btn btn-secondary">Back to job offer</a>
+</div>
+
+@section Scripts {
+    <script src="~/js/applicationsDetails.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

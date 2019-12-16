@@ -1,0 +1,75 @@
+﻿@model IEnumerable<HRPotter.Models.Company>
+
+@{
+    ViewData["Title"] = "Companies";
+}
+
+
+<div class="table-title">
+    <div class="row">
+        <div class="col-12 col-md-4 d-flex align-items-center py-2">
+            <h3 class="font-weight-bold mb-0">
+                Companies
+            </h3>
+            <div>
+                <span data-bind="text: viewModel.count()" class="badge badge-pill badge-primary align-top" />
+            </div>
+        </div>
+        <div class="col-12 col-md-4 py-2">
+        </div>
+        <div class="col-12 col-sm-4 text-right py-2">
+            <button class="btn btn-outline-primary"
+                    data-toggle="modal"
+                    data-target="#createCompany">
+                <i class="fa fa-plus pr-3"></i>
+                Add company
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="contentWrapper">
+</div>
+
+<div class="modal fade" id="createCompany" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Add company</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form asp-action="Create" method="post" id="createForm">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label class="control-label" for="companyName"> Name </label>
+                        <input id="companyName" name="companyName" type="text" class="form-control" maxlength="100" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-chevron-left pr-2"></i>
+                    Cancel
+                </button>
+
+                <button id="submitCreate" type="submit" class="btn btn-primary pr-2" form="createForm">
+                    <i class="fas fa-plus pr-2"></i>
+                    Create
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="deleteModalWrapper">
+</div>
+
+@section Scripts {
+    <script src="~/js/companies.js"></script>
+}

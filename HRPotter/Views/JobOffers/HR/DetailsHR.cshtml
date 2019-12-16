@@ -1,0 +1,82 @@
+﻿@model HRPotter.Models.JobOffer
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<link rel="stylesheet" href="~/css/jobOfferDetails.css" />
+
+<div class="panel panel-default">
+    <div class="row ml-0">
+        <h1 class="col-sm-12">@Model.JobTitle</h1>
+        <div class="col-sm-8">
+            <div class="offer-description" id="previewMarkdown">
+                @Model.Description
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="offer-details">
+                <div>
+                    <label>Company:</label>
+                    <span>@Model.Company.Name</span>
+                </div>
+                <div>
+                    <label>Location:</label>
+                    <span>@Model.Location</span>
+                </div>
+                @if (Model.SalaryFrom.HasValue || Model.SalaryTo.HasValue)
+                {
+                    <div>
+                        <label>Salary:</label>
+                        <span>
+                            @Html.DisplayFor(item => item.SalaryFrom)
+
+                            @(Model.SalaryTo.HasValue && Model.SalaryFrom.HasValue ? "-" : "")
+
+                            @Html.DisplayFor(item => item.SalaryTo) (PLN)
+                        </span>
+                    </div>
+                }
+                <div>
+                    <label>Created:</label>
+                    <span> @Html.DisplayFor(item => item.Created) </span>
+                </div>
+                @if (Model.ValidUntil.HasValue)
+                {
+                    <div>
+                        <label>Valid:</label>
+                        <span>@Model.ValidUntil.Value.Subtract(DateTime.Now).Days days (@Html.DisplayFor(item => item.ValidUntil))</span>
+                    </div>
+                }
+                <div>
+                    <div class="pt-4">
+                        <a asp-action="Edit" asp-route-id="@Model.Id"
+                           class="btn btn-primary mx-2">
+                            <i class="fas fa-edit pr-2"></i>
+                            Edit
+                        </a>
+
+                        <button class="btn btn-danger mx-2"
+                                data-toggle="modal"
+                                data-target="#confirmDelete">
+                            <i class="fas fa-trash-alt pr-2"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.ActionLink("Go back to job offers", "IndexHR", "JobOffers", null, new { @class = "btn btn-secondary" })
+    </div>
+
+    @if (Model.JobApplications.Any())
+    {
+        await Html.RenderPartialAsync("/Views/JobApplications/HR/_IndexHR.cshtml", Model);
+    }
+</div>
+
+@await Html.PartialAsync("/Views/Shared/_DeleteModal.cshtml", (Title: Model.JobTitle, Id: Model.Id, Controller: "JobOffers"))
+
+@section Scripts {
+    <script src="~/js/applicationsIndexHR.js"></script>
+}

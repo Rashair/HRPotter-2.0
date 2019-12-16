@@ -1,0 +1,120 @@
+﻿@model HRPotter.Models.JobApplication
+@using HRPotter.Helpers;
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>
+        @if (Model.JobOffer != null)
+        {
+            <span>
+                Application for
+                <a asp-controller="JobOffers" asp-action="Details" asp-route-id="@Model.JobOfferId">
+                    @Model.JobOffer.JobTitle
+                </a>
+            </span>
+        }
+        else
+        {
+            <span>This offer is no longer valid</span>
+        }
+    </h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        @if (Model.Phone != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Phone)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsStudent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.IsStudent.GetDescription())
+        </dd>
+        @if (Model.CvUrl != null)
+        {
+            <dt class="col-sm-2">
+                CV file
+            </dt>
+            <dd class="col-sm-10">
+                @{
+                    var ind = Model.CvUrl.IndexOf("#_#");
+                    <a asp-action="Download" asp-route-name="@Model.CvUrl" download="download">
+                        @Model.CvUrl.Substring(ind > 0 ? ind + 3 : 0)
+                    </a>
+                }
+            </dd>
+        }
+        @if (Model.Description != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Status.GetDescription()
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (Model.Status == ApplicationStatus.ToBeReviewed && HRPotterUser.Id == Model.CreatorId)
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id"
+               class="btn btn-primary mx-1">
+                <i class="fas fa-edit pr-2"></i>
+                Edit
+            </a>
+
+            <button class="btn btn-danger mx-1"
+                    data-toggle="modal"
+                    data-target="#confirmDelete">
+                <i class="fas fa-trash-alt pr-2"></i>
+                Delete
+            </button>
+        </div>
+    }
+    <div class="pt-4">
+        <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/applicationsDetails.js"></script>
+}
+
+@await Html.PartialAsync("/Views/Shared/_DeleteModal.cshtml", (Title: "Delete job application", Id: Model.Id, Controller: "JobApplications"))

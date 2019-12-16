@@ -1,33 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using HRPotter.Data;
 using HRPotter.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using static HRPotter.Controllers.UsersController;
 
 namespace HRPotter.Controllers
 {
+    [Route("[controller]")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly HRPotterContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
         {
-            _logger = logger;
+            _context = context;
+            if (!IsAuthorized())
+            {
+                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
+            }
         }
 
-        public IActionResult Index()
+        /// <summary>
+        /// Main page
+        /// </summary>
+        [Route("")]
+        [Route("/")]
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
+            AuthorizeUser(_context, base.User);
+
+
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
