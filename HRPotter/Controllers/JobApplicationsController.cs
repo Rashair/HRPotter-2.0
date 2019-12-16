@@ -1,11 +1,15 @@
-﻿using HRPotter.Data;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using HRPotter.Data;
 using HRPotter.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static HRPotter.Controllers.UsersController;
@@ -16,10 +20,17 @@ namespace HRPotter.Controllers
     [Authorize]
     public class JobApplicationsController : Controller
     {
-        private HRPotterContext _context;
-        public JobApplicationsController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
+        const int maxFileSize = (int)5e6;
+        const string separationString = "#_#";
+
+        private readonly HRPotterContext _context;
+        private readonly BlobContainerClient blobContainerClient;
+
+        public JobApplicationsController(HRPotterContext context, IHttpContextAccessor httpContextAccessor,
+            BlobServiceClient blobService)
         {
             _context = context;
+            blobContainerClient = blobService.GetBlobContainerClient("job-applications");
             if (!IsAuthorized())
             {
                 AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
@@ -200,7 +211,7 @@ namespace HRPotter.Controllers
         [Route("[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(JobApplication model)
+        public async Task<ActionResult> Create(JobApplication model, [FromForm] IFormFile cvFile)
         {
             if (HRPotterUser.Role != "User")
             {
@@ -212,6 +223,23 @@ namespace HRPotter.Controllers
                 return View(model);
             }
 
+            string cvUrl = null;
+            if (cvFile != null && cvFile.Length < maxFileSize)
+            {
+                try
+                {
+                    cvUrl = await UploadFile(cvFile);
+                }
+                catch (FileLoadException e)
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
+            else if (cvFile.Length >= maxFileSize)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
             JobApplication app = new JobApplication
             {
                 CreatorId = HRPotterUser.Id,
@@ -220,7 +248,7 @@ namespace HRPotter.Controllers
                 LastName = model.LastName,
                 Email = model.Email,
                 Phone = model.Phone,
-                CvUrl = model.CvUrl,
+                CvUrl = cvUrl,
                 IsStudent = model.IsStudent,
                 Description = model.Description,
                 Status = ApplicationStatus.ToBeReviewed
@@ -231,6 +259,44 @@ namespace HRPotter.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        private async Task<string> UploadFile(IFormFile file)
+        {
+            var filename = Guid.NewGuid().ToString() + separationString + file.FileName; ;
+            var blobClient = blobContainerClient.GetBlobClient(filename);
+            using var uploadStream = file.OpenReadStream();
+            try
+            {
+                await blobClient.UploadAsync(uploadStream);
+            }
+            catch
+            {
+                throw new FileLoadException();
+            }
+
+            return filename;
+        }
+
+        [Route("[action]")]
+        [HttpGet("Download")]
+        public async Task<IActionResult> DownloadBlobFile(string name)
+        {
+            var blobClient = blobContainerClient.GetBlobClient(name);
+            BlobDownloadInfo download;
+            try
+            {
+                download = await blobClient.DownloadAsync();
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var ind = name.IndexOf(separationString);
+            string downloadFileName = name.Substring(ind > 0 ? ind + separationString.Length : 0);
+            return File(download.Content, download.ContentType, downloadFileName);
+        }
+
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

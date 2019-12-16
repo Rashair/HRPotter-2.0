@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -31,7 +32,8 @@ namespace HRPotter.Models
         public string Email { get; set; }
         [RegularExpression("^[0-9]{9}$", ErrorMessage = "Phone number should only contain 9 digits")]
         public string Phone { get; set; }
-        public Uri CvUrl { get; set; }
+
+        public string CvUrl { get; set; }
 
         [Display(Name = "Student")]
         public bool IsStudent { get; set; }
