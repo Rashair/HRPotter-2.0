@@ -230,7 +230,7 @@ namespace HRPotter.Controllers
                 {
                     cvUrl = await UploadFile(cvFile);
                 }
-                catch (FileLoadException e)
+                catch (FileLoadException)
                 {
                     return RedirectToAction("Error", "Home");
                 }
@@ -278,7 +278,8 @@ namespace HRPotter.Controllers
         }
 
         [Route("[action]")]
-        [HttpGet("Download")]
+        [ActionName("Download")]
+        [HttpGet]
         public async Task<IActionResult> DownloadBlobFile(string name)
         {
             var blobClient = blobContainerClient.GetBlobClient(name);
