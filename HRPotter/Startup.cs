@@ -60,6 +60,8 @@ namespace HRPotter
             {
                 builder.AddBlobServiceClient(Configuration["ConnectionStrings:BlobStorageConnection"]);
             });
+
+            services.AddApplicationInsightsTelemetry();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,12 +72,6 @@ namespace HRPotter
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "HRPotter API");
-                });
             }
             else
             {
@@ -83,6 +79,12 @@ namespace HRPotter
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "HRPotter API");
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

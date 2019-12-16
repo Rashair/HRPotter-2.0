@@ -230,7 +230,7 @@ namespace HRPotter.Controllers
                 {
                     cvUrl = await UploadFile(cvFile);
                 }
-                catch (FileLoadException e)
+                catch (FileLoadException)
                 {
                     return RedirectToAction("Error", "Home");
                 }
