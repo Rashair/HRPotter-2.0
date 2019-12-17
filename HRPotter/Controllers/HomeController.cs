@@ -26,7 +26,6 @@ namespace HRPotter.Controllers
         /// Main page
         /// </summary>
         [Route("")]
-        [Route("/")]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -38,6 +37,7 @@ namespace HRPotter.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
+        [Route("[action]")]
         [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
