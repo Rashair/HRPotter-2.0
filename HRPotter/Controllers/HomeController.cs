@@ -26,6 +26,7 @@ namespace HRPotter.Controllers
         /// Main page
         /// </summary>
         [Route("")]
+        [Route("/")]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> Index()
