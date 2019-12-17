@@ -224,7 +224,7 @@ namespace HRPotter.Controllers
             }
 
             string cvUrl = null;
-            if (cvFile != null && cvFile.Length < maxFileSize)
+            if (cvFile != null && cvFile.Length < maxFileSize && cvFile.Length > 0)
             {
                 try
                 {
@@ -235,7 +235,7 @@ namespace HRPotter.Controllers
                     return RedirectToAction("Error", "Home");
                 }
             }
-            else if (cvFile.Length >= maxFileSize)
+            else if (cvFile != null)
             {
                 return RedirectToAction("Error", "Home");
             }
