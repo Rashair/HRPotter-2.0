@@ -271,6 +271,7 @@ namespace HRPotter.Controllers
 
             JobOffer offer = new JobOffer
             {
+                CreatorId = HRPotterUser.Id,
                 CompanyId = model.CompanyId,
                 Description = model.Description,
                 JobTitle = model.JobTitle,

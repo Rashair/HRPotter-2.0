@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,7 +72,8 @@ namespace HRPotter.Controllers
                 }
                 else
                 {
-                    applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).Where(u => u.CreatorId == HRPotterUser.Id).ToListAsync();
+                    applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
+                        Where(u => u.CreatorId == HRPotterUser.Id).ToListAsync();
                 }
             }
             else
