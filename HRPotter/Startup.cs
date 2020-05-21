@@ -41,7 +41,7 @@ namespace HRPotter
             });
 
 
-            string connectionString = GetConnectionString();
+            string connectionString = GetConnectionString("AWSConnection");
             services.AddDbContext<HRPotterContext>(options =>
             {
                 options.UseMySql(connectionString);
@@ -62,16 +62,16 @@ namespace HRPotter
 
             services.AddAzureClients(builder =>
             {
-                builder.AddBlobServiceClient(Configuration["ConnectionStrings:BlobStorageConnection"]);
+                builder.AddBlobServiceClient(GetConnectionString("BlobStorageConnection"));
             });
         }
 
-        private string GetConnectionString()
+        private string GetConnectionString(string name)
         {
-            string conn = Configuration.GetConnectionString("AWSConnection");
-            if (!conn.StartsWith("Server", StringComparison.InvariantCulture))
+            string conn = Configuration.GetConnectionString(name);
+            if (conn.StartsWith("<P", StringComparison.InvariantCulture))
             {
-                conn = Environment.GetEnvironmentVariable("AWSConnection");
+                conn = Environment.GetEnvironmentVariable(name);
             }
 
             return conn;
