@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>HRPotter</RootNamespace>
     <UserSecretsId>542ce0a0-67e6-48b5-aafa-7c30050a2479</UserSecretsId>
     <StartupObject>HRPotter.Program</StartupObject>
