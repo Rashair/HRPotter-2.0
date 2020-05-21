@@ -40,8 +40,12 @@ namespace HRPotter
                 opt.ViewLocationFormats.Add("/Views/{1}/HR/{0}" + RazorViewEngine.ViewExtension);
             });
 
+
+            string connectionString = GetConnectionString();
             services.AddDbContext<HRPotterContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
+            {
+                options.UseMySql(connectionString);
+            });
 
 
             services.AddSwaggerGen(c =>
@@ -64,10 +68,19 @@ namespace HRPotter
             services.AddApplicationInsightsTelemetry();
         }
 
+        private string GetConnectionString()
+        {
+            string conn = Configuration.GetConnectionString("AWSConnection");
+            if (!conn.StartsWith("Server", StringComparison.InvariantCulture))
+            {
+                conn = Environment.GetEnvironmentVariable("AWSConnection");
+            }
+
+            return conn;
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-#pragma warning disable CA1822 // Mark members as static
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-#pragma warning restore CA1822 // Mark members as static
         {
             if (env.IsDevelopment())
             {
@@ -85,6 +98,8 @@ namespace HRPotter
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseHttpsRedirection();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
