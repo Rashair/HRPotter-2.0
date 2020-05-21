@@ -64,8 +64,6 @@ namespace HRPotter
             {
                 builder.AddBlobServiceClient(Configuration["ConnectionStrings:BlobStorageConnection"]);
             });
-
-            services.AddApplicationInsightsTelemetry();
         }
 
         private string GetConnectionString()
