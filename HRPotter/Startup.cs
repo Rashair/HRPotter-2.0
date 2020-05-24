@@ -14,7 +14,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Azure;
-
+using Microsoft.Extensions.FileProviders;
 
 namespace HRPotter
 {
@@ -99,7 +99,11 @@ namespace HRPotter
             }
 
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "wwwroot")),
+                RequestPath = ""
+            });
             app.UseRouting();
 
             app.UseAuthentication();
