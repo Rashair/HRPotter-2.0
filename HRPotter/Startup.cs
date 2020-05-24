@@ -15,6 +15,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.FileProviders;
+using HRPotter.Helpers;
 
 namespace HRPotter
 {
@@ -72,6 +73,11 @@ namespace HRPotter
             if (conn.StartsWith("<P", StringComparison.InvariantCulture))
             {
                 conn = Environment.GetEnvironmentVariable(name);
+            }
+
+            if(conn == null)
+            {
+                conn = AwsTools.GetSecret(name);
             }
 
             return conn;
