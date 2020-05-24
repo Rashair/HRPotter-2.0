@@ -9,9 +9,8 @@ namespace HRPotter.Helpers
 {
     public static class AwsTools
     {
-        public static string GetSecret(string name)
+        public static string GetSecret(string secretName)
         {
-            string secretName = "AWSConnection";
             string region = "us-east-1";
 
             using IAmazonSecretsManager client = new AmazonSecretsManagerClient(region: RegionEndpoint.GetBySystemName(region));

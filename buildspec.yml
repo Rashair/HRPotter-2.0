@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - dotnet restore
+      - dotnet build -c Release
+artifacts:
+  files:
+    - .\HRPotter\Release\netcoreapp3.1\*
