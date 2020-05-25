@@ -18,6 +18,7 @@
         "Policies": [
           "AWSLambdaFullAccess"
         ],
+        "stage": ${opt:stage, 'v1'}
         "Environment": {
           "Variables": {}
         },
