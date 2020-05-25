@@ -14,7 +14,7 @@
 
     function getApplications(val) {
         $.ajax({
-            url: '/JobApplications/GetApplicationsTable?query=' + val,
+            url: 'https://d2pwb47r49781h.cloudfront.net/Users/JobApplications/GetApplicationsTable?query=' + val,
             type: 'GET',
             dataType: 'html',
             success: function (data) {

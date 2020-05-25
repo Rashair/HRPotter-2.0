@@ -1,6 +1,6 @@
 ﻿function refreshContent(val = "") {
     $.ajax({
-        url: 'GetUsersTable/',
+        url: 'https://d2pwb47r49781h.cloudfront.net/Users/GetUsersTable/',
         type: 'GET',
         data: { searchString: val },
         dataType: 'html',
@@ -41,7 +41,7 @@ $(document).ready(() => {
 // Used in UsersTable
 function toggleEditModal(id) {
     $.ajax({
-        url: 'GetEditModal/' + id,
+        url: 'https://d2pwb47r49781h.cloudfront.net/Users/GetEditModal/' + id,
         type: 'GET',
         dataType: 'html',
         success: function (data) {
@@ -57,7 +57,7 @@ function toggleEditModal(id) {
 
 function toggleDeleteModal(id) {
     $.ajax({
-        url: 'GetDeleteModal/' + id,
+        url: 'https://d2pwb47r49781h.cloudfront.net/Users/GetDeleteModal/' + id,
         type: 'GET',
         dataType: 'html',
         success: function (data) {

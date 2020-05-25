@@ -11,7 +11,7 @@ $(document).ready(() => {
         let id = $(this).children('input#idInput').val();
         let val = $(this).find('input#searchInput').val();
         $.ajax({
-            url: '/JobApplications/ApplicationsForOffer/' + id + '?query=' + val,
+            url: 'https://d2pwb47r49781h.cloudfront.net/JobApplications/ApplicationsForOffer/' + id + '?query=' + val,
             type: 'GET',
             dataType: 'html',
             success: function (data) {

@@ -1,6 +1,6 @@
 ﻿function refreshContent() {
     $.ajax({
-        url: 'GetCompaniesTable/',
+        url: 'https://d2pwb47r49781h.cloudfront.net/Companies/GetCompaniesTable/',
         type: 'GET',
         dataType: 'html',
         success: function (data) {
@@ -23,7 +23,7 @@ $(document).ready(() => {
         var company = { id: 0, name: compName };
         $.ajax({
             type: 'POST',
-            url: 'Create',
+            url: 'https://d2pwb47r49781h.cloudfront.net/Companies/Create',
             headers: { "RequestVerificationToken": $(this).find('input[name="__RequestVerificationToken"]').val() },
             data: { company: company },
             dataType: 'html',
@@ -42,7 +42,7 @@ $(document).ready(() => {
 // Used in _CompaniesTable
 function toggleDeleteModal(id) {
     $.ajax({
-        url: 'GetDeleteModal/' + id,
+        url: 'https://d2pwb47r49781h.cloudfront.net/Companies/GetDeleteModal/' + id,
         type: 'GET',
         dataType: 'html',
         success: function (data) {

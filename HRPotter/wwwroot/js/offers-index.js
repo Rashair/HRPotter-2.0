@@ -21,13 +21,13 @@ function getOffers(pageNo) {
 
 function _getOffers(val, pageSize, pageNo) {
     $.ajax({
-        url: '/JobOffers/GetOffersTable',
+        url: 'https://d2pwb47r49781h.cloudfront.net/JobOffers/GetOffersTable',
         type: 'GET',
         data: { pageNo: pageNo, pageSize: pageSize, searchString: val },
         dataType: 'html',
         success: function (data) {
             $.ajax({
-                url: '/JobOffers/GetPagingBar',
+                url: 'https://d2pwb47r49781h.cloudfront.net/JobOffers/GetPagingBar',
                 type: 'GET',
                 data: { pageNo: pageNo, pageSize: pageSize, searchString: val },
                 dataType: 'html',
