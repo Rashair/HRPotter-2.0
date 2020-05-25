@@ -21,13 +21,13 @@ function getOffers(pageNo) {
 
 function _getOffers(val, pageSize, pageNo) {
     $.ajax({
-        url: 'https://d2pwb47r49781h.cloudfront.net/JobOffers/GetOffersTable',
+        url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/JobOffers/GetOffersTable',
         type: 'GET',
         data: { pageNo: pageNo, pageSize: pageSize, searchString: val },
         dataType: 'html',
         success: function (data) {
             $.ajax({
-                url: 'https://d2pwb47r49781h.cloudfront.net/JobOffers/GetPagingBar',
+                url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/JobOffers/GetPagingBar',
                 type: 'GET',
                 data: { pageNo: pageNo, pageSize: pageSize, searchString: val },
                 dataType: 'html',
