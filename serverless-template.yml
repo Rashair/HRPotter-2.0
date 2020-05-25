@@ -11,7 +11,7 @@
         "AutoPublishAlias": "AspNetCoreFunction",
         "Handler": "HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync",
         "Runtime": "dotnetcore3.1",
-        "CodeUri": ./,
+        "CodeUri": ./publish,
         "MemorySize": 512,
         "Timeout": 30,
         "Role": null,
