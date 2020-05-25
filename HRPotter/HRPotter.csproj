@@ -5,7 +5,6 @@
     <RootNamespace>HRPotter</RootNamespace>
     <UserSecretsId>542ce0a0-67e6-48b5-aafa-7c30050a2479</UserSecretsId>
     <StartupObject>HRPotter.Program</StartupObject>
-    <ApplicationInsightsResourceId>/subscriptions/1253ad97-ce32-4fe7-9678-a2a707a0d7d4/resourcegroups/resRashair/providers/microsoft.insights/components/hrpotter</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

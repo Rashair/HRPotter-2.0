@@ -7,4 +7,4 @@ phases:
       - dotnet build -c Release
 artifacts:
   files:
-    - ./HRPotter/Release/netcoreapp3.1/*
+    - ./HRPotter/bin/Release/netcoreapp3.1/*
