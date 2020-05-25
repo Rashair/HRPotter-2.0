@@ -14,7 +14,7 @@ using static HRPotter.Controllers.UsersController;
 namespace HRPotter.Controllers
 {
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [Route("[controller]")]
+    [Route("/[controller]")]
     [Authorize]
     public class JobOffersController : Controller
     {
