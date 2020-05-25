@@ -105,11 +105,11 @@ namespace HRPotter
             }
 
 
-            /*app.UseStaticFiles(new StaticFileOptions
+            app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "wwwroot")),
                 RequestPath = ""
-            });*/
+            });
             app.UseRouting();
 
             app.UseAuthentication();
