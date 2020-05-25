@@ -8,9 +8,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRPotter.UnitTests", "HRPotter.UnitTests\HRPotter.UnitTests.csproj", "{76DFB9C0-88FD-4608-BC2D-D9B3D2326F34}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DA039431-1308-4782-AF3A-9FB96A0C6215}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

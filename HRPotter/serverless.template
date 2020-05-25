@@ -8,6 +8,7 @@
     "AspNetCoreFunction": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
+        "AutoPublishAlias": "AspNetCoreFunction",
         "Handler": "HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync",
         "Runtime": "dotnetcore3.1",
         "CodeUri": "",
