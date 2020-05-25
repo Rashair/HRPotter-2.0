@@ -1,6 +1,6 @@
 ﻿function refreshContent(val = "") {
     $.ajax({
-        url: '/Users/GetUsersTable/',
+        url: 'GetUsersTable/',
         type: 'GET',
         data: { searchString: val },
         dataType: 'html',
@@ -41,7 +41,7 @@ $(document).ready(() => {
 // Used in UsersTable
 function toggleEditModal(id) {
     $.ajax({
-        url: '/Users/GetEditModal/' + id,
+        url: 'GetEditModal/' + id,
         type: 'GET',
         dataType: 'html',
         success: function (data) {
@@ -57,7 +57,7 @@ function toggleEditModal(id) {
 
 function toggleDeleteModal(id) {
     $.ajax({
-        url: '/Users/GetDeleteModal/' + id,
+        url: 'GetDeleteModal/' + id,
         type: 'GET',
         dataType: 'html',
         success: function (data) {
