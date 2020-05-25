@@ -3,6 +3,7 @@ version: 0.2
 phases:
   build:
     commands:
+      - aws s3 sync --delete ./HRPotter/wwwroot "s3://staticcontenthrpotter"
       - dotnet restore
       - dotnet publish -c Release ./HRPotter/HRPotter.csproj --output ./publish
       - export BUCKET=publishbuildsbucket
