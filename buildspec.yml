@@ -3,9 +3,10 @@ version: 0.2
 phases:
   build:
     commands:
-      - aws s3 sync --delete ./HRPotter/wwwroot "s3://staticcontenthrpotter"
       - dotnet restore
       - dotnet publish -c Release ./HRPotter/HRPotter.csproj --output ./publish
+      - aws s3 sync --delete ./publish/wwwroot "s3://staticcontenthrpotter"
+      - aws cloudfront create-invalidation  --distribution-id E2UYJC12YD4NQY --paths "/*"
       - export BUCKET=publishbuildsbucket
       - aws cloudformation package --template-file serverless-template.yml --s3-bucket $BUCKET --output-template-file outputtemplate.yml
 artifacts:
