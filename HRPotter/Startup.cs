@@ -1,4 +1,5 @@
 ﻿using HRPotter.Data;
+using HRPotter.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
 using Microsoft.AspNetCore.Builder;
@@ -6,16 +7,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
-using Microsoft.Extensions.Azure;
-using Microsoft.Extensions.FileProviders;
-using HRPotter.Helpers;
 
 namespace HRPotter
 {
@@ -75,7 +75,7 @@ namespace HRPotter
                 conn = Environment.GetEnvironmentVariable(name);
             }
 
-            if(conn == null)
+            if (conn == null)
             {
                 conn = AwsTools.GetSecret(name);
             }

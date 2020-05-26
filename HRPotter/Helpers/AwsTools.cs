@@ -1,12 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
-using Amazon;
-using Amazon.Runtime;
+﻿using Amazon;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
 using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace HRPotter.Helpers
 {
@@ -31,7 +28,7 @@ namespace HRPotter.Helpers
             // We rethrow the exception by default.
             try
             {
-                response =  client.GetSecretValueAsync(request).Result;
+                response = client.GetSecretValueAsync(request).Result;
             }
             catch (DecryptionFailureException)
             {
