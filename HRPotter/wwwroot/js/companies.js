@@ -1,6 +1,6 @@
 ﻿function refreshContent() {
     $.ajax({
-        url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/Companies/GetCompaniesTable/',
+        url: document.body.dataset.url + '/Companies/GetCompaniesTable/',
         type: 'GET',
         dataType: 'html',
         success: function (data) {
@@ -10,7 +10,7 @@
             alert('Error! Please try again.');
         }
     }).done(function () {
-        console.log(document.body.dataset.url);
+        console.log();
     });
 }
 
@@ -23,7 +23,7 @@ $(document).ready(() => {
         var company = { id: 0, name: compName };
         $.ajax({
             type: 'POST',
-            url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/Companies/Create',
+            url: document.body.dataset.url + '/Companies/Create',
             headers: { "RequestVerificationToken": $(this).find('input[name="__RequestVerificationToken"]').val() },
             data: { company: company },
             dataType: 'html',
@@ -42,7 +42,7 @@ $(document).ready(() => {
 // Used in _CompaniesTable
 function toggleDeleteModal(id) {
     $.ajax({
-        url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/Companies/GetDeleteModal/' + id,
+        url: document.body.dataset.url + '/Companies/GetDeleteModal/' + id,
         type: 'GET',
         dataType: 'html',
         success: function (data) {
