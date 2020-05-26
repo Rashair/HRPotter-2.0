@@ -10,7 +10,7 @@
             alert('Error! Please try again.');
         }
     }).done(function () {
-
+        console.log(document.body.dataset.url);
     });
 }
 

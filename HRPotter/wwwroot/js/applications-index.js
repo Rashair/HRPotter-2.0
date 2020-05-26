@@ -14,7 +14,7 @@
 
     function getApplications(val) {
         $.ajax({
-            url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/Users/JobApplications/GetApplicationsTable?query=' + val,
+            url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/JobApplications/GetApplicationsTable?query=' + val,
             type: 'GET',
             dataType: 'html',
             success: function (data) {
