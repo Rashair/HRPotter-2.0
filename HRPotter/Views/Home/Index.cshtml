@@ -2,7 +2,13 @@
     ViewData["Title"] = "Home";
 }
 
-<link rel="stylesheet" href="https://d2pwb47r49781h.cloudfront.net/css/home.css" />
+<environment include="Development">
+    <link rel="stylesheet" href="~/wwroot/css/home.css" />
+</environment>
+<environment exclude="Development">
+    <link rel="stylesheet" href="https://d2pwb47r49781h.cloudfront.net/css/home.css" />
+</environment>
+
 
 <div class="text-center">
     <p class="display-2"> Welcome </p>
@@ -10,7 +16,7 @@
     <p class="display-4"> HRPotter welcomes you in his Kingdom. </p>
     <br />
     <p class="display-4"> Do not hesitate to enter this wonderful land. </p>
-    <br/>
-    <p class="display-4"> But not be too confident, because you might get lost... </p>
+    <br />
+    <p class="display-4"> But do not be too confident, because you might get lost... </p>
 </div>
 

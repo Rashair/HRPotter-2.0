@@ -55,7 +55,7 @@
     <Content Update="wwwroot\css\home.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\css\jobOfferDetails.css">
+    <Content Update="wwwroot\css\job-offer-details.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\css\site.css">
