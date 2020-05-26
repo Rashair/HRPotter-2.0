@@ -13,8 +13,15 @@
       "library": "jquery-validation-unobtrusive@3.2.11",
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/",
       "files": [
-        "jquery.validate.unobtrusive.min.js" 
+        "jquery.validate.unobtrusive.min.js"
 
+      ]
+    },
+    {
+      "library": "jquery-validate@1.19.1",
+      "destination": "wwwroot/lib/jquery-validate/",
+      "files": [
+        "jquery.validate.min.js"
       ]
     },
     {
