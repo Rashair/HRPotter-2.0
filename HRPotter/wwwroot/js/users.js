@@ -1,6 +1,6 @@
 ﻿function refreshContent(val = "") {
     $.ajax({
-        url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/Users/GetUsersTable/',
+        url: document.body.dataset.url + '/Users/GetUsersTable/',
         type: 'GET',
         data: { searchString: val },
         dataType: 'html',
@@ -41,7 +41,7 @@ $(document).ready(() => {
 // Used in UsersTable
 function toggleEditModal(id) {
     $.ajax({
-        url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/Users/GetEditModal/' + id,
+        url: document.body.dataset.url + '/Users/GetEditModal/' + id,
         type: 'GET',
         dataType: 'html',
         success: function (data) {
@@ -57,7 +57,7 @@ function toggleEditModal(id) {
 
 function toggleDeleteModal(id) {
     $.ajax({
-        url: 'https://cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod/Users/GetDeleteModal/' + id,
+        url: document.body.dataset.url + '/Users/GetDeleteModal/' + id,
         type: 'GET',
         dataType: 'html',
         success: function (data) {
