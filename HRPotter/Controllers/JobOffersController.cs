@@ -15,18 +15,14 @@ namespace HRPotter.Controllers
 {
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Route("/[controller]")]
-    [Authorize]
+    [Authorize("User,HR")]
     public class JobOffersController : Controller
     {
         private readonly HRPotterContext _context;
 
-        public JobOffersController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
+        public JobOffersController(HRPotterContext context)
         {
             _context = context;
-            if (!IsAuthorized())
-            {
-                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
-            }
         }
 
         /// <summary>

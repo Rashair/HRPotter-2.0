@@ -13,18 +13,14 @@ namespace HRPotter.Controllers
 {
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Route("[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class CompaniesController : Controller
     {
         private readonly HRPotterContext _context;
 
-        public CompaniesController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
+        public CompaniesController(HRPotterContext context)
         {
             _context = context;
-            if (!IsAuthorized())
-            {
-                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
-            }
         }
 
         /// <summary>

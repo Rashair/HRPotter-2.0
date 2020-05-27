@@ -25,15 +25,10 @@ namespace HRPotter.Controllers
         private readonly HRPotterContext _context;
         private readonly BlobContainerClient blobContainerClient;
 
-        public JobApplicationsController(HRPotterContext context, IHttpContextAccessor httpContextAccessor,
-            BlobServiceClient blobService)
+        public JobApplicationsController(HRPotterContext context, BlobServiceClient blobService)
         {
             _context = context;
             blobContainerClient = blobService.GetBlobContainerClient("job-applications");
-            if (!IsAuthorized())
-            {
-                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
-            }
         }
 
         /// <summary>

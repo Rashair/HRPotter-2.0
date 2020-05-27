@@ -2,7 +2,12 @@
 using HRPotter.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Security.Authentication;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static HRPotter.Controllers.UsersController;
 
@@ -13,13 +18,9 @@ namespace HRPotter.Controllers
     {
         private readonly HRPotterContext _context;
 
-        public HomeController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
+        public HomeController(HRPotterContext context)
         {
             _context = context;
-            if (!IsAuthorized())
-            {
-                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
-            }
         }
 
         /// <summary>
@@ -29,11 +30,8 @@ namespace HRPotter.Controllers
         [Route("/")]
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public ViewResult Index()
         {
-            AuthorizeUser(_context, base.User);
-
-
             return View();
         }
 

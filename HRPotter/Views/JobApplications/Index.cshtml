@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Job applications";
+    var userRole = User.GetRole();
 }
 
 <div class="row page-box">
@@ -10,7 +11,7 @@
             <div class="row">
                 <div class="col-12 col-md-4 d-flex align-items-center py-2">
                     <h3 class="font-weight-bold mb-0">
-                        List of @(HRPotterUser.Role == "User" ? "your" : "") applications
+                        List of @(userRole == "User" ? "your" : "") applications
                     </h3>
                     <div>
                         <span data-bind="text: viewModel.count()" class="badge badge-pill badge-primary align-top" />
@@ -43,7 +44,7 @@
         <table class="table table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
-                    @if (HRPotterUser.Role == "Admin")
+                    @if (userRole == "Admin")
                     {
                         <th>
                             Applicant name

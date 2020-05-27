@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-///
-/// NOTE: the Lambda handler field on AWS should be set to HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync
-/// 
-/// NOTE2: If we want to use Application Load Balancer change:
-/// Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction -> Amazon.Lambda.AspNetCoreServer.ApplicationLoadBalancerFunction
-/// 
-/// NOTE3: If we want to use HTTP API use (I didn't test it yet):
-/// Amazon.Lambda.AspNetCoreServer.APIGatewayHttpApiV2ProxyFunction
-/// or
-/// Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
+//
+// NOTE: the Lambda handler field on AWS should be set to HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync
+// 
+// NOTE2: If we want to use Application Load Balancer change:
+// Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction -> Amazon.Lambda.AspNetCoreServer.ApplicationLoadBalancerFunction
+// 
+// NOTE3: If we want to use HTTP API use (I didn't test it yet):
+// Amazon.Lambda.AspNetCoreServer.APIGatewayHttpApiV2ProxyFunction
+// or
+// Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
 
 
 
@@ -23,8 +23,8 @@ namespace HRPotter
     public class LambdaEntryPoint : Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
     {
         /// <summary>
-        /// The builder has configuration, logging and Amazon API Gateway already configured. The startup class
-        /// needs to be configured in this method using the UseStartup<>() method.
+        /// The builder has configuration, logging and Amazon API Gateway already configured. 
+        /// The startup class needs to be configured in this method using the UseStartup() method.
         /// </summary>
         /// <param name="builder"></param>
         protected override void Init(IWebHostBuilder builder)

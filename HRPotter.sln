@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRPotter.UnitTests", "HRPot
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DA039431-1308-4782-AF3A-9FB96A0C6215}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		buildspec.yml = buildspec.yml
 		serverless-template.yml = serverless-template.yml
 	EndProjectSection

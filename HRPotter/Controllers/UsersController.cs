@@ -3,10 +3,12 @@ using HRPotter.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -18,13 +20,15 @@ namespace HRPotter.Controllers
     public class UsersController : Controller
     {
         private readonly HRPotterContext _context;
+        private readonly IHttpContextAccessor httpContext;
 
         public UsersController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            httpContext = httpContextAccessor;
             if (!IsAuthorized())
             {
-                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
+                // AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
             }
         }
 
@@ -42,18 +46,39 @@ namespace HRPotter.Controllers
                 return;
             }
 
-            var key = User.Claims.Where(claim => claim.Type.EndsWith("objectidentifier")).First().Value;
-            var user = context.Users.Include(x => x.Role).FirstOrDefault(u => u.B2CKey == key);
-            if (user == null)
+            var key = User.Claims.Where(claim => claim.Type.EndsWith("objectidentifier")).FirstOrDefault()?.Value;
+            var hrpotterUser = context.Users.Include(x => x.Role).FirstOrDefault(u => u.B2CKey == key);
+            if (hrpotterUser == null)
             {
-                var name = User.Claims.Where(claim => claim.Type.EndsWith("givenname")).First().Value;
-                user = new User() { B2CKey = key, Name = name, RoleId = 1 };
-                context.Users.Add(user);
+                var name = User.Claims.Where(claim => claim.Type.EndsWith("givenname")).FirstOrDefault()?.Value;
+                if (name == null)
+                {
+                    throw new AuthenticationException("User not authenticated properly via Azure B2C");
+                }
+
+                hrpotterUser = new User() { B2CKey = key, Name = name, RoleId = 1 };
+                context.Users.Add(hrpotterUser);
                 context.SaveChanges();
 
-                user = context.Users.Include(x => x.Role).First(u => u.B2CKey == key);
+                hrpotterUser = context.Users.Include(x => x.Role).First(u => u.B2CKey == key);
             }
-            HRPotterUser = user;
+            HRPotterUser = hrpotterUser;
+
+            if (User.Identity is ClaimsIdentity identity && User.Identity.IsAuthenticated)
+            {
+                Console.WriteLine("Identyfing");
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, hrpotterUser.Id.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.Name, hrpotterUser.Name));
+                identity.AddClaim(new Claim(ClaimTypes.Role, hrpotterUser.Role));
+                identity.AddClaim(new Claim(ClaimTypes.GroupSid, hrpotterUser.RoleId.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.Sid, hrpotterUser.B2CKey));
+                Console.WriteLine(hrpotterUser.Role);
+                Console.WriteLine(User.IsInRole("Admin"));
+            }
+            else
+            {
+                Console.WriteLine($"Identyfing not: {User.Identity.Name}");
+            }
         }
 
         /// <summary>

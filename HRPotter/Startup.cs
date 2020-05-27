@@ -1,4 +1,5 @@
-﻿using HRPotter.Data;
+﻿using HRPotter.Authorization;
+using HRPotter.Data;
 using HRPotter.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
@@ -16,6 +17,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace HRPotter
 {
@@ -31,9 +33,11 @@ namespace HRPotter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(AzureADB2CDefaults.AuthenticationScheme)
-                .AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddAuthentication(AzureADB2CDefaults.CookieScheme)
+                .AddAzureADB2C(options =>
+                {
+                    Configuration.Bind("AzureAdB2C", options);
+                });
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.Configure<RazorViewEngineOptions>(opt =>
@@ -114,6 +118,7 @@ namespace HRPotter
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<AuthorizationMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

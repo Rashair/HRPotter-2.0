@@ -16,8 +16,18 @@
         <link rel="stylesheet" href="https://d2pwb47r49781h.cloudfront.net/css/site.css" />
         <link rel="icon" type="image/x-icon" href="https://d2pwb47r49781h.cloudfront.net/favicon.ico">
     </environment>
+    @{
+        if (User.IsAuthenticated() && User.GetRole() == null)
+        {
+            <script>location.reload()</script>
+        }
+    }
 </head>
 <body data-url="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.PathBase}")">
+    @{
+        bool isAuthenticated = User.IsAuthenticated();
+        var userRole = User.GetRole();
+    }
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -28,31 +38,28 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
-                    @if (User.Identity.IsAuthenticated && HRPotterUser != null)
+                    @if (isAuthenticated && userRole != null)
                     {
                         <ul class="navbar-nav flex-grow-1">
-                            @if (HRPotterUser.Role == "User" || HRPotterUser.Role == "HR")
+                            @if (userRole == "User" || userRole == "HR")
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="JobOffers" asp-action="Index">Job offers</a>
                                 </li>
                             }
-                            @if (HRPotterUser.Role == "User" || HRPotterUser.Role == "Admin")
+                            @if (userRole == "User" || userRole == "Admin")
                             {
-                                var keyword = HRPotterUser.Role == "User" ? "Your applications" : "Applications";
+                                var keyword = userRole == "User" ? "Your applications" : "Applications";
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="JobApplications" asp-action="Index">@keyword</a>
                                 </li>
                             }
-                            @if (HRPotterUser.Role == "Admin")
+                            @if (userRole == "Admin")
                             {
 
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Companies" asp-action="Index">Companies</a>
                                 </li>
-                            }
-                            @if (HRPotterUser.Role == "Admin")
-                            {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
                                 </li>
