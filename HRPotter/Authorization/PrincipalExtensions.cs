@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 
 namespace HRPotter.Authorization
 {
@@ -18,7 +14,7 @@ namespace HRPotter.Authorization
             return int.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier));
         }
 
-        public static string  GetName(this ClaimsPrincipal principal)
+        public static string GetName(this ClaimsPrincipal principal)
         {
             return principal.FindFirstValue(ClaimTypes.Name);
         }
