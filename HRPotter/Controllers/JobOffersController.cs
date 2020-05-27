@@ -1,4 +1,5 @@
-﻿using HRPotter.Data;
+﻿using HRPotter.Authorization;
+using HRPotter.Data;
 using HRPotter.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,7 @@ namespace HRPotter.Controllers
 {
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Route("/[controller]")]
-    [Authorize("User,HR")]
+    [Authorize(Roles = "User,HR")]
     public class JobOffersController : Controller
     {
         private readonly HRPotterContext _context;
@@ -34,7 +35,7 @@ namespace HRPotter.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (HRPotterUser.Role == "HR")
+            if (User.GetRole() == "HR")
             {
                 return View("IndexHR", null);
             }
@@ -69,11 +70,12 @@ namespace HRPotter.Controllers
             }
 
             IEnumerable<JobOffer> record;
+            var userRole = User.GetRole();
             if (String.IsNullOrEmpty(searchString))
             {
-                if (HRPotterUser.Role == "HR")
+                if (userRole == "HR")
                 {
-                    record = await _context.JobOffers.Where(off => off.CreatorId == HRPotterUser.Id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+                    record = await _context.JobOffers.Where(off => off.CreatorId == User.GetId()).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
                 }
                 else
                 {
@@ -82,9 +84,10 @@ namespace HRPotter.Controllers
             }
             else
             {
-                if (HRPotterUser.Role == "HR")
+                searchString = searchString.ToLower();
+                if (userRole == "HR")
                 {
-                    record = await _context.JobOffers.Where(x => x.CreatorId == HRPotterUser.Id && x.JobTitle.Contains(searchString)).
+                    record = await _context.JobOffers.Where(x => x.CreatorId == User.GetId() && x.JobTitle.Contains(searchString)).
                         Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
                 }
                 else
@@ -113,11 +116,12 @@ namespace HRPotter.Controllers
 
             int totalRecords;
             int totalPages;
+            var userRole = User.GetRole();
             if (String.IsNullOrEmpty(searchString))
             {
-                if (HRPotterUser.Role == "HR")
+                if (userRole == "HR")
                 {
-                    totalRecords = await _context.JobOffers.Where(off => off.CreatorId == HRPotterUser.Id).CountAsync();
+                    totalRecords = await _context.JobOffers.Where(off => off.CreatorId == User.GetId()).CountAsync();
                 }
                 else
                 {
@@ -127,9 +131,10 @@ namespace HRPotter.Controllers
             }
             else
             {
-                if (HRPotterUser.Role == "HR")
+                searchString = searchString.ToLower();
+                if (userRole == "HR")
                 {
-                    totalRecords = await _context.JobOffers.Where(off => off.CreatorId == HRPotterUser.Id && off.JobTitle.Contains(searchString)).CountAsync();
+                    totalRecords = await _context.JobOffers.Where(off => off.CreatorId == User.GetId() && off.JobTitle.Contains(searchString)).CountAsync();
                 }
                 else
                 {
@@ -145,14 +150,10 @@ namespace HRPotter.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
+        [Authorize(Roles = "HR")]
         [HttpGet]
         public async Task<IActionResult> ApplicationsCount(int? id)
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return BadRequest();
@@ -168,15 +169,11 @@ namespace HRPotter.Controllers
         }
 
         [Route("[action]")]
+        [Authorize(Roles = "HR")]
         [HttpGet]
         public async Task<IActionResult> IndexHR()
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
-            return View(await _context.JobOffers.Include(x => x.Company).Where(off => off.CreatorId == HRPotterUser.Id).ToListAsync());
+            return View(await _context.JobOffers.Include(x => x.Company).Where(off => off.CreatorId == User.GetId()).ToListAsync());
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -202,14 +199,10 @@ namespace HRPotter.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
+        [Authorize(Roles = "HR")]
         [HttpGet]
         public async Task<IActionResult> DetailsHR(int? id)
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return BadRequest("Id cannot be null");
@@ -224,7 +217,7 @@ namespace HRPotter.Controllers
                 return NotFound($"Offer with corresponding id was not found: {id}");
             }
 
-            if (offer.CreatorId != HRPotterUser.Id)
+            if (offer.CreatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -233,14 +226,10 @@ namespace HRPotter.Controllers
         }
 
         [Route("[action]")]
+        [Authorize(Roles = "HR")]
         [HttpGet]
         public async Task<ActionResult> Create()
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             var model = new JobOfferCreateView
             {
                 Companies = await _context.Companies.ToListAsync()
@@ -249,16 +238,12 @@ namespace HRPotter.Controllers
             return View(model);
         }
 
-        [Route("[action]")]
-        [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("[action]")]
+        [Authorize(Roles = "HR")]
+        [HttpPost]
         public async Task<ActionResult> Create(JobOfferCreateView model)
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             if (!ModelState.IsValid)
             {
                 model.Companies = await _context.Companies.ToListAsync();
@@ -267,7 +252,7 @@ namespace HRPotter.Controllers
 
             JobOffer offer = new JobOffer
             {
-                CreatorId = HRPotterUser.Id,
+                CreatorId = User.GetId(),
                 CompanyId = model.CompanyId,
                 Description = model.Description,
                 JobTitle = model.JobTitle,
@@ -287,14 +272,10 @@ namespace HRPotter.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
+        [Authorize(Roles = "HR")]
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return BadRequest("Id cannot be null");
@@ -307,7 +288,7 @@ namespace HRPotter.Controllers
                 return NotFound($"Offer with corresponding id was not found: {id}");
             }
 
-            if (HRPotterUser.Id != offer.CreatorId)
+            if (User.GetId() != offer.CreatorId)
             {
                 return Forbid();
             }
@@ -321,9 +302,10 @@ namespace HRPotter.Controllers
         }
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("[action]/{id}")]
-        [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("[action]/{id}")]
+        [Authorize(Roles = "HR")]
+        [HttpPost]
         public async Task<ActionResult> Edit(JobOffer model)
         {
             if (!ModelState.IsValid)
@@ -337,11 +319,10 @@ namespace HRPotter.Controllers
                 return BadRequest();
             }
 
-            if (HRPotterUser.Id != offer.CreatorId)
+            if (User.GetId() != offer.CreatorId)
             {
                 return Forbid();
             }
-
 
             offer.JobTitle = model.JobTitle;
             offer.Description = model.Description;
@@ -358,14 +339,11 @@ namespace HRPotter.Controllers
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
+        [Authorize(Roles = "HR")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<ActionResult> Delete(int? id)
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return BadRequest("Id cannot be null");
@@ -377,7 +355,7 @@ namespace HRPotter.Controllers
                 return RedirectToAction("IndexHR");
             }
 
-            if (HRPotterUser.Id != creatorId)
+            if (User.GetId() != creatorId)
             {
                 return Forbid();
             }

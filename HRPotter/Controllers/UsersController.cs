@@ -16,69 +16,14 @@ namespace HRPotter.Controllers
 {
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Route("[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly HRPotterContext _context;
-        private readonly IHttpContextAccessor httpContext;
 
-        public UsersController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
+        public UsersController(HRPotterContext context)
         {
             _context = context;
-            httpContext = httpContextAccessor;
-            if (!IsAuthorized())
-            {
-                // AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
-            }
-        }
-
-        public static User HRPotterUser { get; set; }
-
-        public static bool IsAuthorized()
-        {
-            return HRPotterUser != null;
-        }
-
-        public static void AuthorizeUser(HRPotterContext context, ClaimsPrincipal User)
-        {
-            if (User == null || !User.Identity.IsAuthenticated || !User.HasClaim(claim => claim.Type.EndsWith("objectidentifier")))
-            {
-                return;
-            }
-
-            var key = User.Claims.Where(claim => claim.Type.EndsWith("objectidentifier")).FirstOrDefault()?.Value;
-            var hrpotterUser = context.Users.Include(x => x.Role).FirstOrDefault(u => u.B2CKey == key);
-            if (hrpotterUser == null)
-            {
-                var name = User.Claims.Where(claim => claim.Type.EndsWith("givenname")).FirstOrDefault()?.Value;
-                if (name == null)
-                {
-                    throw new AuthenticationException("User not authenticated properly via Azure B2C");
-                }
-
-                hrpotterUser = new User() { B2CKey = key, Name = name, RoleId = 1 };
-                context.Users.Add(hrpotterUser);
-                context.SaveChanges();
-
-                hrpotterUser = context.Users.Include(x => x.Role).First(u => u.B2CKey == key);
-            }
-            HRPotterUser = hrpotterUser;
-
-            if (User.Identity is ClaimsIdentity identity && User.Identity.IsAuthenticated)
-            {
-                Console.WriteLine("Identyfing");
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, hrpotterUser.Id.ToString()));
-                identity.AddClaim(new Claim(ClaimTypes.Name, hrpotterUser.Name));
-                identity.AddClaim(new Claim(ClaimTypes.Role, hrpotterUser.Role));
-                identity.AddClaim(new Claim(ClaimTypes.GroupSid, hrpotterUser.RoleId.ToString()));
-                identity.AddClaim(new Claim(ClaimTypes.Sid, hrpotterUser.B2CKey));
-                Console.WriteLine(hrpotterUser.Role);
-                Console.WriteLine(User.IsInRole("Admin"));
-            }
-            else
-            {
-                Console.WriteLine($"Identyfing not: {User.Identity.Name}");
-            }
         }
 
         /// <summary>
@@ -90,11 +35,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             return View();
         }
 
@@ -103,11 +43,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsersTable(string searchString)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             List<User> result;
             if (String.IsNullOrEmpty(searchString))
             {
@@ -115,6 +50,7 @@ namespace HRPotter.Controllers
             }
             else
             {
+                searchString = searchString.ToLower();
                 result = await _context.Users.Include(x => x.Role).Where(x => x.RoleId != 3).Where(u => u.Name.Contains(searchString)).ToListAsync();
             }
 
@@ -131,11 +67,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEditModal(int? id)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return NotFound();
@@ -164,11 +95,6 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateRole(int? id, int? roleId)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             if (id == null || roleId == null)
             {
                 return BadRequest();
@@ -197,11 +123,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDeleteModal(int? id)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return NotFound();
@@ -222,12 +143,7 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
-            var user = await _context.Users.Where(x => x.Id == id && x.RoleId != 3).FirstOrDefaultAsync();
+            var user = await _context.Users.Where(x => x.Id == id && x.Role != "Admin").FirstOrDefaultAsync();
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

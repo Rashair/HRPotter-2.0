@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using HRPotter.Authorization;
 using HRPotter.Data;
 using HRPotter.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static HRPotter.Controllers.UsersController;
 
 namespace HRPotter.Controllers
 {
@@ -42,13 +42,14 @@ namespace HRPotter.Controllers
         {
             List<JobApplication> result;
 
-            if (HRPotterUser.Role == "Admin")
+            if (User.GetRole() == "Admin")
             {
                 result = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).ToListAsync();
             }
             else
             {
-                result = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).Where(u => u.CreatorId == HRPotterUser.Id).ToListAsync();
+                int id = User.GetId();
+                result = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).Where(u => u.CreatorId == id).ToListAsync();
             }
 
             return View(result);
@@ -59,21 +60,24 @@ namespace HRPotter.Controllers
         public async Task<IActionResult> GetApplicationsTable([FromQuery(Name = "query")] string searchString)
         {
             List<JobApplication> applications;
+            var userRole = User.GetRole();
+            int id = User.GetId();
             if (string.IsNullOrEmpty(searchString))
             {
-                if (HRPotterUser.Role == "Admin")
+                if (userRole == "Admin")
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).ToListAsync();
                 }
                 else
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
-                        Where(u => u.CreatorId == HRPotterUser.Id).ToListAsync();
+                        Where(u => u.CreatorId == id).ToListAsync();
                 }
             }
             else
             {
-                if (HRPotterUser.Role == "Admin")
+                searchString = searchString.ToLower();
+                if (userRole == "Admin")
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
                         Where(app => app.JobOffer.JobTitle.Contains(searchString)).
@@ -82,7 +86,7 @@ namespace HRPotter.Controllers
                 else
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
-                        Where(u => u.CreatorId == HRPotterUser.Id).
+                        Where(u => u.CreatorId == id).
                         Where(app => app.JobOffer.JobTitle.Contains(searchString)).
                         ToListAsync();
                 }
@@ -107,7 +111,7 @@ namespace HRPotter.Controllers
                 return NotFound($"Application with corresponding id was not found: {id}");
             }
 
-            if (app.CreatorId != HRPotterUser.Id)
+            if (app.CreatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -121,11 +125,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> DetailsHR(int? id)
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return BadRequest("Id cannot be null");
@@ -148,11 +147,6 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int? id, int? status)
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             if (id == null || status == null || !Enum.IsDefined(typeof(ApplicationStatus), status.Value))
             {
                 return BadRequest();
@@ -164,7 +158,7 @@ namespace HRPotter.Controllers
                 return NotFound();
             }
 
-            if (app.JobOffer.CreatorId != HRPotterUser.Id)
+            if (app.JobOffer.CreatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -208,11 +202,6 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(JobApplication model, [FromForm] IFormFile cvFile)
         {
-            if (HRPotterUser.Role != "User")
-            {
-                return Forbid();
-            }
-
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -237,7 +226,7 @@ namespace HRPotter.Controllers
 
             JobApplication app = new JobApplication
             {
-                CreatorId = HRPotterUser.Id,
+                CreatorId = User.GetId(),
                 JobOfferId = model.JobOfferId,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -313,7 +302,7 @@ namespace HRPotter.Controllers
                 return NotFound();
             }
 
-            if (jobApplication.CreatorId != HRPotterUser.Id)
+            if (jobApplication.CreatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -342,7 +331,7 @@ namespace HRPotter.Controllers
             {
                 return BadRequest();
             }
-            if (app.CreatorId != HRPotterUser.Id)
+            if (app.CreatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -363,6 +352,7 @@ namespace HRPotter.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -371,7 +361,7 @@ namespace HRPotter.Controllers
             }
 
             int? creatorId = _context.JobApplications.Where(app => app.Id == id).Select(app => app.CreatorId).FirstOrDefault();
-            if (creatorId != HRPotterUser.Id)
+            if (creatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -398,7 +388,7 @@ namespace HRPotter.Controllers
             }
 
             int? creatorId = _context.JobApplications.Where(app => app.Id == id).Select(app => app.CreatorId).FirstOrDefault();
-            if (creatorId != HRPotterUser.Id)
+            if (creatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -415,6 +405,7 @@ namespace HRPotter.Controllers
             }
             else
             {
+                searchString = searchString.ToLower();
                 result = await _context.JobApplications.Where(app => app.JobOfferId == id &&
                    (app.FirstName.Contains(searchString) || app.LastName.Contains(searchString))).
                    ToListAsync();

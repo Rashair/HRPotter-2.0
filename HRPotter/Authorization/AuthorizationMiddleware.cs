@@ -32,7 +32,6 @@ namespace HRPotter.Authorization
             var user = httpContext.User;
             if (user == null || !user.Identity.IsAuthenticated && !user.HasClaim(claim => claim.Type.EndsWith("objectidentifier")))
             {
-                Console.WriteLine(user.Identity.IsAuthenticated);
                 return;
             }
 

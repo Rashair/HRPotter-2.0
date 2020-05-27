@@ -90,7 +90,7 @@
     </dl>
 </div>
 <div>
-    @if (Model.Status == ApplicationStatus.ToBeReviewed && HRPotterUser.Id == Model.CreatorId)
+    @if (Model.Status == ApplicationStatus.ToBeReviewed && User.GetId() == Model.CreatorId)
     {
         <div>
             <a asp-action="Edit" asp-route-id="@Model.Id"
