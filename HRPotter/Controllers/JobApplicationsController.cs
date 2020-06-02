@@ -1,4 +1,7 @@
-﻿using Azure.Storage.Blobs;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.S3.Transfer;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using HRPotter.Authorization;
 using HRPotter.Data;
@@ -11,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
@@ -19,16 +23,38 @@ namespace HRPotter.Controllers
     [Authorize]
     public class JobApplicationsController : Controller
     {
+        private enum StorageType { S3, BlobStorage }
+
         const int maxFileSize = (int)5e6;
         const string separationString = "#_#";
+        const string bucketName = "hrpotterfilesstorage";
 
         private readonly HRPotterContext _context;
         private readonly BlobContainerClient blobContainerClient;
+        private readonly AmazonS3Client s3Client;
+
+        private StorageType storageType;
 
         public JobApplicationsController(HRPotterContext context, BlobServiceClient blobService)
         {
             _context = context;
             blobContainerClient = blobService.GetBlobContainerClient("job-applications");
+            s3Client = new AmazonS3Client(Amazon.RegionEndpoint.USEast1);
+
+            var storageService = Environment.GetEnvironmentVariable("StorageService");
+            if (storageService == "S3")
+            {
+                storageType = StorageType.S3;
+            }
+            else if (storageService == "BlobStorage")
+            {
+                storageType = StorageType.BlobStorage;
+            }
+            else
+            {
+                // By default use BlobStorage
+                storageType = StorageType.BlobStorage;
+            }
         }
 
         /// <summary>
@@ -244,9 +270,43 @@ namespace HRPotter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<string> UploadFile(IFormFile file)
+        [Route("[action]")]
+        [ActionName("Download")]
+        [HttpGet]
+        public async Task<IActionResult> DownloadFile(string name)
         {
-            var filename = Guid.NewGuid().ToString() + separationString + file.FileName; ;
+            try
+            {
+                if (storageType == StorageType.BlobStorage)
+                {
+                    return await DownloadBlobFile(name);
+                }
+                else
+                {
+                    return await DownloadS3File(name);
+                }
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        private Task<string> UploadFile(IFormFile file)
+        {
+            if (storageType == StorageType.BlobStorage)
+            {
+                return UploadFileToBlobStorage(file);
+            }
+            else
+            {
+                return UploadFileToS3(file);
+            }
+        }
+
+        private async Task<string> UploadFileToBlobStorage(IFormFile file)
+        {
+            var filename = Guid.NewGuid().ToString() + separationString + file.FileName;
             var blobClient = blobContainerClient.GetBlobClient(filename);
             using var uploadStream = file.OpenReadStream();
             try
@@ -261,10 +321,27 @@ namespace HRPotter.Controllers
             return filename;
         }
 
-        [Route("[action]")]
-        [ActionName("Download")]
-        [HttpGet]
-        public async Task<IActionResult> DownloadBlobFile(string name)
+        private async Task<string> UploadFileToS3(IFormFile file)
+        {
+            var key = Guid.NewGuid().ToString() + separationString + file.FileName;
+
+            try
+            {
+                TransferUtility fileTransferUtility = new TransferUtility(s3Client);
+                using (var fileToUpload = file.OpenReadStream())
+                {
+                    await fileTransferUtility.UploadAsync(fileToUpload, bucketName, key);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new FileLoadException();
+            }
+
+            return key;
+        }
+
+        private async Task<IActionResult> DownloadBlobFile(string name)
         {
             var blobClient = blobContainerClient.GetBlobClient(name);
             BlobDownloadInfo download;
@@ -274,7 +351,7 @@ namespace HRPotter.Controllers
             }
             catch
             {
-                return RedirectToAction("Error", "Home");
+                throw new FileLoadException();
             }
 
             var ind = name.IndexOf(separationString);
@@ -282,6 +359,28 @@ namespace HRPotter.Controllers
             return File(download.Content, download.ContentType, downloadFileName);
         }
 
+        private async Task<IActionResult> DownloadS3File(string name)
+        {
+            GetObjectRequest request = new GetObjectRequest
+            {
+                BucketName = bucketName,
+                Key = name
+            };
+            GetObjectResponse response;
+            try
+            {
+                response = await s3Client.GetObjectAsync(request);
+            }
+            catch (Exception e)
+            {
+                throw new FileLoadException();
+            }
+
+            var ind = name.IndexOf(separationString);
+            string downloadFileName = name.Substring(ind > 0 ? ind + separationString.Length : 0);
+
+            return File(response.ResponseStream, response.Headers["Content-Type"], downloadFileName);
+        }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
