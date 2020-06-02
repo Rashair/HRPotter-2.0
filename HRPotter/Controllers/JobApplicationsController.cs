@@ -288,7 +288,7 @@ namespace HRPotter.Controllers
             }
             catch (Exception)
             {
-                return RedirectToAction("Error", "Home");
+                return NotFound();
             }
         }
 
