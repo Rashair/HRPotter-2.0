@@ -21,7 +21,8 @@
         ],
         "Environment": {
           "Variables": {
-            "StorageService": "S3"          
+            "StorageService": "S3",
+            "BucketName": { "Fn::GetAtt": [ "s3hrpotterfilesstorage", "BucketName" ] }
           }
         },
         "Events": {
@@ -41,7 +42,233 @@
           }
         }
       }
+    },
+     "hrpottercloudfront": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Enabled": true,
+          "PriceClass": "PriceClass_All",
+          "CacheBehaviors": [
+            {
+              "TargetOriginId": "S3-staticcontenthrpotter",
+              "PathPattern": "js/*",
+              "ViewerProtocolPolicy": "allow-all",
+              "MinTTL": 0,
+              "AllowedMethods": [
+                "HEAD",
+                "GET"
+              ],
+              "CachedMethods": [
+                "HEAD",
+                "GET"
+              ],
+              "ForwardedValues": {
+                "Cookies": {
+                  "Forward": "none"
+                },
+                "QueryString": "false"
+              }
+            },
+            {
+              "TargetOriginId": "S3-staticcontenthrpotter",
+              "PathPattern": "css/*",
+              "ViewerProtocolPolicy": "allow-all",
+              "MinTTL": 0,
+              "AllowedMethods": [
+                "HEAD",
+                "GET"
+              ],
+              "CachedMethods": [
+                "HEAD",
+                "GET"
+              ],
+              "ForwardedValues": {
+                "Cookies": {
+                  "Forward": "none"
+                },
+                "QueryString": "false"
+              }
+            },
+            {
+              "TargetOriginId": "S3-staticcontenthrpotter",
+              "PathPattern": "favicon.ico",
+              "ViewerProtocolPolicy": "allow-all",
+              "MinTTL": 0,
+              "AllowedMethods": [
+                "HEAD",
+                "GET"
+              ],
+              "CachedMethods": [
+                "HEAD",
+                "GET"
+              ],
+              "ForwardedValues": {
+                "Cookies": {
+                  "Forward": "none"
+                },
+                "QueryString": "false"
+              }
+            }
+          ],
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "Custom-cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod",
+            "ViewerProtocolPolicy": "allow-all",
+            "MinTTL": 0,
+            "AllowedMethods": [
+              "HEAD",
+              "DELETE",
+              "POST",
+              "GET",
+              "OPTIONS",
+              "PUT",
+              "PATCH"
+            ],
+            "CachedMethods": [
+              "HEAD",
+              "GET"
+            ],
+            "ForwardedValues": {
+              "Cookies": {
+                "Forward": "all"
+              },
+              "QueryString": "false"
+            }
+          },
+          "Origins": [
+            {
+              "DomainName": {
+        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
+      },
+              "Id": "Custom-cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod",
+              "OriginPath": "/Prod",
+              "CustomOriginConfig": {
+                "HTTPPort": "80",
+                "HTTPSPort": "443",
+                "OriginProtocolPolicy": "http-only"
+              }
+            },
+            {
+              "DomainName": { "Fn::GetAtt": [ "s3staticcontenthrpotter", "DomainName" ] },
+              "Id": "S3-staticcontenthrpotter",
+              "S3OriginConfig": {
+              }
+            }
+          ],
+          "Restrictions": {
+            "GeoRestriction": {
+              "RestrictionType": "none",
+              "Locations": [
+
+              ]
+            }
+          },
+          "ViewerCertificate": {
+            "CloudFrontDefaultCertificate": "true",
+            "MinimumProtocolVersion": "TLSv1"
+          }
+        }
+      }
+    },
+    "s3hrpotterfilesstorage": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "AccessControl": "Private",
+        "VersioningConfiguration": {
+          "Status": "Suspended"
+        }
+      }
+    },
+    "s3staticcontenthrpotter": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "WebsiteConfiguration": {
+          "IndexDocument": "user.js"
+        },
+        "AccessControl": "PublicRead",
+        "VersioningConfiguration": {
+          "Status": "Suspended"
+        }
+      }
+    },
+    "s3policyhrpotterfilesstorage": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "s3hrpotterfilesstorage"
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "arn:aws:iam::925000763740:role/HRPotterStack-AspNetCoreFunctionRole-11HVXI2CUCG3C"
+              },
+              "Action": "s3:*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "s3hrpotterfilesstorage"
+                      },
+                      ""
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "s3hrpotterfilesstorage"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "s3policystaticcontenthrpotter": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "s3staticcontenthrpotter"
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "PublicReadGetObject",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": "s3:GetObject",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    {
+                      "Ref": "s3staticcontenthrpotter"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      }
     }
+  }
   },
   "Outputs": {
     "ApiURL": {

@@ -27,7 +27,7 @@ namespace HRPotter.Controllers
 
         const int maxFileSize = (int)5e6;
         const string separationString = "#_#";
-        const string bucketName = "hrpotterfilesstorage";
+        string bucketName;
 
         private readonly HRPotterContext _context;
         private readonly BlobContainerClient blobContainerClient;
@@ -42,7 +42,13 @@ namespace HRPotter.Controllers
             s3Client = new AmazonS3Client(Amazon.RegionEndpoint.USEast1);
 
             var storageService = Environment.GetEnvironmentVariable("StorageService");
-            if (storageService == "S3")
+
+            if (storageService is null)
+            {
+                // By default use BlobStorage
+                storageType = StorageType.BlobStorage;
+            }
+            else if (storageService == "S3")
             {
                 storageType = StorageType.S3;
             }
@@ -50,11 +56,8 @@ namespace HRPotter.Controllers
             {
                 storageType = StorageType.BlobStorage;
             }
-            else
-            {
-                // By default use BlobStorage
-                storageType = StorageType.BlobStorage;
-            }
+
+            bucketName = Environment.GetEnvironmentVariable("BucketName");
         }
 
         /// <summary>
