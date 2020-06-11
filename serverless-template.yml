@@ -112,7 +112,7 @@
             }
           ],
           "DefaultCacheBehavior": {
-            "TargetOriginId": "Custom-cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod",
+            "TargetOriginId": "APIGateway",
             "ViewerProtocolPolicy": "allow-all",
             "MinTTL": 0,
             "AllowedMethods": [
@@ -140,7 +140,7 @@
               "DomainName": {
         "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
       },
-              "Id": "Custom-cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod",
+              "Id": "APIGateway",
               "OriginPath": "/Prod",
               "CustomOriginConfig": {
                 "HTTPPort": "80",

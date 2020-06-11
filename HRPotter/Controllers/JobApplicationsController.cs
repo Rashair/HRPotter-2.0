@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HRPotter.Controllers
@@ -326,7 +328,7 @@ namespace HRPotter.Controllers
 
         private async Task<string> UploadFileToS3(IFormFile file)
         {
-            var key = Guid.NewGuid().ToString() + separationString + file.FileName;
+            var key = Guid.NewGuid().ToString() + separationString + GetValidFileName(file.FileName);
 
             try
             {
@@ -383,6 +385,12 @@ namespace HRPotter.Controllers
             string downloadFileName = name.Substring(ind > 0 ? ind + separationString.Length : 0);
 
             return File(response.ResponseStream, response.Headers["Content-Type"], downloadFileName);
+        }
+
+        private string GetValidFileName(string fileName)
+        {
+            Regex.Replace(fileName, @"[^\u0000-\u007F]+", string.Empty);
+            return fileName;
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
