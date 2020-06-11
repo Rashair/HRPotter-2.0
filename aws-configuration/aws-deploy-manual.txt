@@ -1,0 +1,3 @@
+Create following secrets in aws secret manager:
+ - GitHubAuth -> Key-value secret -> Key = token, value = xxx
+ 
