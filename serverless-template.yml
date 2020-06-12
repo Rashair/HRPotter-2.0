@@ -112,11 +112,47 @@
               }
             }
           ],
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "APIGateway",
+            "ViewerProtocolPolicy": "allow-all",
+            "MinTTL": 0,
+            "AllowedMethods": [
+              "HEAD",
+              "DELETE",
+              "POST",
+              "GET",
+              "OPTIONS",
+              "PUT",
+              "PATCH"
+            ],
+            "CachedMethods": [
+              "HEAD",
+              "GET"
+            ],
+            "ForwardedValues": {
+              "Cookies": {
+                "Forward": "all"
+              },
+              "QueryString": "false"
+            }
+          },
           "Origins": [
             {
               "DomainName": { "Fn::GetAtt": [ "s3staticcontenthrpotter", "DomainName" ] },
               "Id": "S3-staticcontenthrpotter",
               "S3OriginConfig": {
+              }
+            },
+            {
+              "DomainName": {
+                "Fn::Sub": "https://cz7k3d7r2i.execute-api.${AWS::Region}.amazonaws.com/"
+              },
+              "Id": "APIGateway",
+              "OriginPath": "/Prod",
+              "CustomOriginConfig": {
+                "HTTPPort": "80",
+                "HTTPSPort": "443",
+                "OriginProtocolPolicy": "http-only"
               }
             }
           ],
