@@ -11,7 +11,7 @@
         "AutoPublishAlias": "AspNetCoreFunction",
         "Handler": "HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync",
         "Runtime": "dotnetcore3.1",
-        "CodeUri": ./publish,
+        "CodeUri": "./publish",
         "MemorySize": 512,
         "Timeout": 30,
         "Role": null,
@@ -44,7 +44,7 @@
         }
       }
     },
-     "hrpottercloudfront": {
+    "hrpottercloudfront": {
       "Type": "AWS::CloudFront::Distribution",
       "Properties": {
         "DistributionConfig": {
@@ -139,8 +139,8 @@
           "Origins": [
             {
               "DomainName": {
-        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
-      },
+                "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
+              },
               "Id": "APIGateway",
               "OriginPath": "/Prod",
               "CustomOriginConfig": {
