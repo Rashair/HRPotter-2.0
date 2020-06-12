@@ -22,7 +22,7 @@
         "Environment": {
           "Variables": {
             "StorageService": "S3",
-            "BucketName": { "Fn::GetAtt": [ "s3hrpotterfilesstorage", "BucketName" ] },
+            "BucketName": { "Ref": "s3hrpotterfilesstorage" },
             "CloudFrontDomain": { "Fn::GetAtt": [ "hrpottercloudfront", "DomainName" ] }
           }
         },
