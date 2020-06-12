@@ -103,7 +103,7 @@
         <script src="~/js/applications-details.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="https://d2pwb47r49781h.cloudfront.net/js/applications-details.js"></script>
+        <script src="@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/applications-details.js"></script>
     </environment>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
