@@ -329,20 +329,22 @@ namespace HRPotter.Controllers
         private async Task<string> UploadFileToS3(IFormFile file)
         {
             var key = Guid.NewGuid().ToString() + separationString + GetValidFileName(file.FileName);
+            TransferUtility fileTransferUtility;
 
             try
             {
-                TransferUtility fileTransferUtility = new TransferUtility(s3Client);
+                fileTransferUtility = new TransferUtility(s3Client);
                 using (var fileToUpload = file.OpenReadStream())
                 {
                     await fileTransferUtility.UploadAsync(fileToUpload, bucketName, key);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new FileLoadException();
             }
 
+            fileTransferUtility.Dispose();
             return key;
         }
 
@@ -376,7 +378,7 @@ namespace HRPotter.Controllers
             {
                 response = await s3Client.GetObjectAsync(request);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new FileLoadException();
             }
