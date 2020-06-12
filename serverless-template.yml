@@ -183,9 +183,6 @@
     "s3staticcontenthrpotter": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
-        "WebsiteConfiguration": {
-          "IndexDocument": "user.js"
-        },
         "AccessControl": "PublicRead",
         "VersioningConfiguration": {
           "Status": "Suspended"
