@@ -13,8 +13,8 @@
     <environment exclude="Development">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="@Environment.GetEnvironmentVariable("CloudFrontDomain")/css/site.css" />
-        <link rel="icon" type="image/x-icon" href="@Environment.GetEnvironmentVariable("CloudFrontDomain")/favicon.ico">
+        <link rel="stylesheet" href="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/css/site.css" />
+        <link rel="icon" type="image/x-icon" href="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/favicon.ico">
     </environment>
     @{
         if (User.IsAuthenticated() && User.GetRole() == null)
@@ -91,7 +91,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
-        <script src="@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/site.js" asp-append-version="true"></script>
+        <script src="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/site.js" asp-append-version="true"></script>
     </environment>
     @RenderSection("Scripts", required: false)
 </body>

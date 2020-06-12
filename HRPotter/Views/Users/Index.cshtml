@@ -62,6 +62,6 @@
         <script src="~/js/users.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/users.js"></script>
+        <script src="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/users.js"></script>
     </environment>
 }

@@ -78,7 +78,7 @@
         <script src="~/js/applications-index.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/applications-index.js"></script>
+        <script src="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/applications-index.js"></script>
     </environment>
 
 }
