@@ -302,9 +302,9 @@
                                 "Name": "Build",
                                 "ActionTypeId": {
                                     "category": "Build",
-                                    "owner": "AWS",
-                                    "provider": "CodeBuild",
-                                    "version": "1"
+                                    "Owner": "AWS",
+                                    "Provider": "CodeBuild",
+                                    "Version": "1"
                                 },
                                 "RunOrder": 1,
                                 "Configuration": {
