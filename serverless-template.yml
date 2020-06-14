@@ -313,7 +313,6 @@
                 "ServiceRole": "arn:aws:iam::925000763740:role/service-role/hrpotter-project-role",
                 "Source": {
                     "Type": "CODEPIPELINE",
-                    "Buildspec": "",
                     "InsecureSsl": false
                 },
                 "TimeoutInMinutes": 15
