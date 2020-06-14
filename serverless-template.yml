@@ -549,6 +549,7 @@
                     "us-east-1c",
                     "us-east-1d"
                 ],
+                "BacktrackWindow": 0,
                 "BackupRetentionPeriod": 1,
                 "DatabaseName": "hrpotter_db",
                 "DBClusterParameterGroupName": "default.aurora5.6",
@@ -558,6 +559,7 @@
                     "error",
                     "general"
                 ],
+                "EnableHttpEndpoint": false,
                 "EnableIAMDatabaseAuthentication": false,
                 "Engine": "aurora",
                 "EngineVersion": "5.6.10a",
@@ -568,8 +570,49 @@
                 "Port": 3306,
                 "SourceRegion": "us-east-1",
                 "StorageEncrypted": true,
+                "UseLatestRestorableTime": true,
                 "VpcSecurityGroupIds": ["sg-f291c8d1"]
             }
+        },
+        "HrpotterClusterInstance1": {
+            "DBInstanceIdentifier": "hrpotter-cluster-instance-1",
+            "DBInstanceClass": "db.t3.small",
+            "Engine": "aurora",
+            "MasterUsername": "{{resolve:secretsmanager:HrpotterDbCredentials:SecretString:username}}",
+            "DBName": "hrpotter_db",
+            "AllocatedStorage": 1,
+            "BackupRetentionPeriod": 1,
+            "VpcSecurityGroups": ["sg-f291c8d1"],
+            "DBParameterGroupName": "default.aurora5.6",
+            "AvailabilityZone": "us-east-1a",
+                            "DBSubnetGroupName": "default-vpc-1cc8db66",
+            "MultiAZ": false,
+            "EngineVersion": "5.6.10a",
+            "AutoMinorVersionUpgrade": true,
+            "LicenseModel": "general-public-license",
+            "OptionGroupName": "default:aurora-5-6"
+            "OptionGroupMemberships": [{ ,
+                    "Status": "in-sync"
+                }
+            ],
+            "PubliclyAccessible": true,
+            "StorageType": "aurora",
+            "DbInstancePort": 0,
+            "DBClusterIdentifier": { "Ref": "AuroraDbCluster" },
+            "StorageEncrypted": true,
+            "KmsKeyId": "arn:aws:kms:us-east-1:925000763740:key/cfe0c0f5-fe4f-4f15-aff6-2789475cdf67",
+            "DbiResourceId": "db-QC4TWCSVRE5I5MHAERVHQ36K4Q",
+            "CACertificateIdentifier": "rds-ca-2019",
+            "CopyTagsToSnapshot": false,
+            "MonitoringInterval": 0,
+            "PromotionTier": 1,
+            "IAMDatabaseAuthenticationEnabled": false,
+            "PerformanceInsightsEnabled": false,
+            "EnableCloudwatchLogsExports": [
+                "error",
+                "general"
+            ],
+            "DeletionProtection": false
         }
     }
 }
