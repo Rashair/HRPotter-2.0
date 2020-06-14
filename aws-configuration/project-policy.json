@@ -1,0 +1,15 @@
+{
+    "Policy": {
+        "PolicyName": "CodeBuildBasePolicy-hrpotter-project-us-east-1",
+        "PolicyId": "ANPA5OXSXRFOE6PNMTVQH",
+        "Arn": "arn:aws:iam::925000763740:policy/service-role/CodeBuildBasePolicy-hrpotter-project-us-east-1",
+        "Path": "/service-role/",
+        "DefaultVersionId": "v3",
+        "AttachmentCount": 1,
+        "PermissionsBoundaryUsageCount": 0,
+        "IsAttachable": true,
+        "Description": "Policy used in trust relationship with CodeBuild",
+        "CreateDate": "2020-05-24T23:34:28+00:00",
+        "UpdateDate": "2020-05-26T17:51:03+00:00"
+    }
+}
