@@ -301,7 +301,7 @@
                         "Actions": [{
                                 "Name": "Build",
                                 "ActionTypeId": {
-                                    "category": "Build",
+                                    "Category": "Build",
                                     "Owner": "AWS",
                                     "Provider": "CodeBuild",
                                     "Version": "1"
