@@ -2,7 +2,22 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Transform": "AWS::Serverless-2016-10-31",
     "Description": "HRPotter is an AWS Serverless Application running in Amazon Lambda.",
-    "Parameters": {},
+    "Parameters": {
+        "RepositoryName": {
+            "Description": "GitHub repository name",
+            "Type": "String",
+            "Default": "HRPotter-2.0"
+        },
+        "BranchName": {
+            "Description": "GitHub branch name",
+            "Type": "String",
+            "Default": "develop"
+        },
+        "GitHubOwner": {
+            "Type": "String",
+            "Default": "Rashair"
+        }
+    },
     "Conditions": {},
     "Resources": {
         "AspNetCoreFunction": {
@@ -325,11 +340,17 @@
                                 },
                                 "RunOrder": 1,
                                 "Configuration": {
-                                    "Branch": "develop",
                                     "OAuthToken": "{{resolve:secretsmanager:GitHubAuth:SecretString:token}}",
-                                    "Owner": "Rashair",
-                                    "PollForSourceChanges": "false",
-                                    "Repo": "HRPotter-2.0"
+                                    "Owner": {
+                                        "Ref": "GitHubOwner"
+                                    },
+                                    "Repo": {
+                                        "Ref": "RepositoryName"
+                                    },
+                                    "Branch": {
+                                        "Ref": "BranchName"
+                                    },
+                                    "PollForSourceChanges": "false"
                                 },
                                 "OutputArtifacts": [{
                                         "Name": "SourceArtifact"
@@ -396,6 +417,32 @@
                         ]
                     }
                 ]
+            }
+        },
+        "HrpotterPipelineWebhook": {
+            "Type": "AWS::CodePipeline::Webhook",
+            "Properties": {
+                "Authentication": "GITHUB_HMAC",
+                "AuthenticationConfiguration": {
+                    "SecretToken": "{{resolve:secretsmanager:GitHubAuth:SecretString:token}}"
+                },
+                "Filters": [{
+                        "JsonPath": "$.ref",
+                        "MatchEquals": "refs/heads/{Branch}"
+                    }
+                ],
+                "TargetPipeline": {
+                    "Ref": "HrpotterPipelineCf"
+                },
+                "TargetAction": "Source",
+                "Name": "hrpotter-pipeline-webhook",
+                "TargetPipelineVersion": {
+                    "Fn::GetAtt": [
+                        "HrpotterPipelineCf",
+                        "Version"
+                    ]
+                },
+                "RegisterWithThirdParty": true
             }
         }
     },
