@@ -1,5 +1,9 @@
+Create following OAuthToken in repository:
+	- repo - used for full control to read and pull artifacts from public and private repositories into a pipeline.
+	- admin:repo_hook - used for full control of repository hooks.
+	
 Create following secrets in aws secret manager:
  - GitHubAuth -> Key-value secret -> Key = token, value = xxx
  
 When running create-stack:
-create-stack --template-body "serverless-template.yml" --capabilities "CAPABILITY_NAMED_IAM" --parameters ParameterKey=DbPasswordParam,ParameterValue=myDbPassword
+create-stack --template-body "serverless-template.yml" --capabilities "CAPABILITY_NAMED_IAM"

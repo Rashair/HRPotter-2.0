@@ -244,51 +244,7 @@
                 "MaxSessionDuration": 3600
             }
         },
-        "HrpotterProject": {
-            "Type": "AWS::CodeBuild::Project",
-            "Properties": {
-                "Artifacts": {
-                    "type": "CODEPIPELINE",
-                    "name": "hrpotter-project",
-                    "packaging": "NONE",
-                    "encryptionDisabled": false
-                },
-                "BadgeEnabled": false,
-                "Cache": {
-                    "type": "NO_CACHE"
-                },
-                "Description": "Project for hrpotter-main-pipeline",
-                "Environment": {
-                    "type": "LINUX_CONTAINER",
-                    "image": "aws/codebuild/amazonlinux2-x86_64-standard:3.0",
-                    "computeType": "BUILD_GENERAL1_LARGE",
-                    "environmentVariables": [],
-                    "privilegedMode": true,
-                    "imagePullCredentialsType": "CODEBUILD"
-                },
-                "FileSystemLocations": [],
-                "LogsConfig": {
-                    "cloudWatchLogs": {
-                        "status": "ENABLED",
-                        "groupName": "hrpotter-build-project-logs",
-                        "streamName": "hrpotter-build-project-log-stream"
-                    },
-                    "s3Logs": {
-                        "status": "DISABLED",
-                        "encryptionDisabled": false
-                    }
-                },
-                "Name": "hrpotter-project",
-                "QueuedTimeoutInMinutes": 60,
-                "ServiceRole": arn:aws:iam::925000763740:role/service-role/hrpotter-project-role,
-                "Source": {
-                    "type": "CODEPIPELINE",
-                    "buildspec": "",
-                    "insecureSsl": false
-                },
-                "TimeoutInMinutes": 15
-            }
-        },
+       ,
 
         "AwsDeployRole": {
             "Type": "AWS::IAM::Role",
