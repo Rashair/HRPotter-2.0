@@ -443,6 +443,42 @@
                 },
                 "RegisterWithThirdParty": true
             }
+        },
+        "AuroraDbCluster": {
+            "Type": "AWS::RDS::DBCluster",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "DBClusterIdentifier": "hrpotter-cluster",
+                "AssociatedRoles": [],
+                "AvailabilityZones": [
+                    "us-east-1a",
+                    "us-east-1c",
+                    "us-east-1d"
+                ],
+                "BacktrackWindow": 0,
+                "BackupRetentionPeriod": 1,
+                "DatabaseName": "hrpotter_db",
+                "DBClusterParameterGroupName": "default.aurora5.6",
+                "DBSubnetGroupName": "default-vpc-1cc8db66",
+                "DeletionProtection": true,
+                "EnableCloudwatchLogsExports": [
+                    "error",
+                    "general"
+                ],
+                "EnableHttpEndpoint": false,
+                "EnableIAMDatabaseAuthentication": false,
+                "Engine": "aurora",
+                "EngineVersion": "5.6.10a",
+                "EngineMode": "provisioned",
+                "KmsKeyId": "arn:aws:kms:us-east-1:925000763740:key/cfe0c0f5-fe4f-4f15-aff6-2789475cdf67",
+                "MasterUsername": "{{resolve:secretsmanager:HrpotterDbCredentials:SecretString:username}}",
+                "MasterUserPassword": "{{resolve:secretsmanager:HrpotterDbCredentials:SecretString:password}}",
+                "Port": 3306,
+                "SourceRegion": "us-east-1",
+                "StorageEncrypted": true,
+                "UseLatestRestorableTime": true,
+                "VpcSecurityGroupIds": ["sg-f291c8d1"]
+            }
         }
     },
     "Outputs": {
@@ -450,6 +486,19 @@
             "Description": "API endpoint URL",
             "Value": {
                 "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
+            }
+        },
+        "DbEndpoint": {
+            "Description": "Database endpoint URL",
+            "Value": {
+                "Fn::Join":
+                [
+                    "Server=", {
+                        "Fn::GetAtt": ["AuroraDbCluster", "Endpoint.Address"]
+                    }, "; Port=", {
+                        "Fn::GetAtt": ["AuroraDbCluster", "Endpoint.Port"]
+                    }, ";"
+                ]
             }
         }
     }

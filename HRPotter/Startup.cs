@@ -63,7 +63,7 @@ namespace HRPotter
                 }
             });
 
-			// TODO: Is it needed?
+            // TODO: Is it needed?
             services.AddAzureClients(builder =>
             {
                 builder.AddBlobServiceClient(GetConnectionString("BlobStorageConnection"));
