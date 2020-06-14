@@ -487,19 +487,6 @@
             "Value": {
                 "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
             }
-        },
-        "DbEndpoint": {
-            "Description": "Database endpoint URL",
-            "Value": {
-                "Fn::Join":
-                [
-                    "Server=", {
-                        "Fn::GetAtt": ["AuroraDbCluster", "Endpoint.Address"]
-                    }, "; Port=", {
-                        "Fn::GetAtt": ["AuroraDbCluster", "Endpoint.Port"]
-                    }, ";"
-                ]
-            }
         }
     }
 }
