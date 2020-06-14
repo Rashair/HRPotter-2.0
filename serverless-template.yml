@@ -603,7 +603,7 @@
                 "CopyTagsToSnapshot": false,
                 "MonitoringInterval": 0,
                 "PromotionTier": 1,
-                "IAMDatabaseAuthenticationEnabled": false,
+                "EnableIAMDatabaseAuthentication": false,
                 "PerformanceInsightsEnabled": false,
                 "EnableCloudwatchLogsExports": [
                     "error",

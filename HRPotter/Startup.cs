@@ -47,7 +47,9 @@ namespace HRPotter
             string connectionString = GetConnectionString("AWSConnection");
             services.AddDbContext<HRPotterContext>(options =>
             {
-                options.UseMySql(connectionString);
+                options.UseMySql(connectionString, mySqlOptions =>
+                {
+                });
             });
 
 
