@@ -63,7 +63,7 @@
                 }
             }
         },
-        "Hrpottercloudfront": {
+        "hrpottercloudfront": {
             "Type": "AWS::CloudFront::Distribution",
             "Properties": {
                 "DistributionConfig": {
@@ -186,7 +186,7 @@
                 }
             }
         },
-        "S3hrpotterfilesstorage": {
+        "s3hrpotterfilesstorage": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
                 "AccessControl": "Private",
@@ -195,7 +195,7 @@
                 }
             }
         },
-        "S3staticcontenthrpotter": {
+        "s3staticcontenthrpotter": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
                 "AccessControl": "PublicRead",
@@ -204,7 +204,7 @@
                 }
             }
         },
-        "S3policyhrpotterfilesstorage": {
+        "s3policyhrpotterfilesstorage": {
             "Type": "AWS::S3::BucketPolicy",
             "Properties": {
                 "Bucket": {
@@ -245,7 +245,7 @@
                 }
             }
         },
-        "S3policystaticcontenthrpotter": {
+        "s3policystaticcontenthrpotter": {
             "Type": "AWS::S3::BucketPolicy",
             "Properties": {
                 "Bucket": {
