@@ -309,7 +309,7 @@
                     }
                 },
                 "Name": "hrpotter-project-cf",
-                "QueuedTimeoutInMinutes": 60,
+                "QueuedTimeoutInMinutes": 50,
                 "ServiceRole": "arn:aws:iam::925000763740:role/service-role/hrpotter-project-role",
                 "Source": {
                     "Type": "CODEPIPELINE",
