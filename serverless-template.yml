@@ -259,12 +259,12 @@
                 }
             }
         },
-        "HrpotterProject": {
+        "HrpotterProjectCf": {
             "Type": "AWS::CodeBuild::Project",
             "Properties": {
                 "Artifacts": {
                     "Type": "CODEPIPELINE",
-                    "Name": "hrpotter-project",
+                    "Name": "hrpotter-project-cf",
                     "Packaging": "NONE",
                     "EncryptionDisabled": false
                 },
@@ -352,7 +352,9 @@
                                 },
                                 "RunOrder": 1,
                                 "Configuration": {
-                                    "ProjectName": "hrpotter-project"
+                                    "ProjectName": {
+                                        "Ref": "HrpotterProjectCf"
+                                    }
                                 },
                                 "OutputArtifacts": [{
                                         "Name": "BuildArtifact"
