@@ -259,9 +259,8 @@
                 }
             }
         },
-        "HrpotterPipeline": {
+        "HrpotterPipelineCf": {
             "Type": "AWS::CodePipeline::Pipeline",
-            "DeletionPolicy": "Retain",
             "Properties": {
                 "Name": "hrpotter-pipeline-cf",
                 "RoleArn": "arn:aws:iam::925000763740:role/service-role/AWSCodePipelineServiceRole-us-east-1-hrpotter-pipeline",
