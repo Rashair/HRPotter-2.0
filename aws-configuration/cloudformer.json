@@ -1,632 +1,671 @@
 {
-  "AWSTemplateFormatVersion": "2010-09-09",
-  "Resources": {
-    "vpc1cc8db66": {
-      "Type": "AWS::EC2::VPC",
-      "Properties": {
-        "CidrBlock": "172.31.0.0/16",
-        "InstanceTenancy": "default",
-        "EnableDnsSupport": "true",
-        "EnableDnsHostnames": "true"
-      }
-    },
-    "subnetad161c93": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "CidrBlock": "172.31.48.0/20",
-        "AvailabilityZone": "us-east-1e",
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        }
-      }
-    },
-    "subnet7f18df19": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "CidrBlock": "172.31.0.0/20",
-        "AvailabilityZone": "us-east-1a",
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        }
-      }
-    },
-    "subnet860ab388": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "CidrBlock": "172.31.64.0/20",
-        "AvailabilityZone": "us-east-1f",
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        }
-      }
-    },
-    "subnet2ecc010f": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "CidrBlock": "172.31.80.0/20",
-        "AvailabilityZone": "us-east-1b",
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        }
-      }
-    },
-    "subneta39350fc": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "CidrBlock": "172.31.32.0/20",
-        "AvailabilityZone": "us-east-1d",
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        }
-      }
-    },
-    "subnetfcf066b1": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "CidrBlock": "172.31.16.0/20",
-        "AvailabilityZone": "us-east-1c",
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        }
-      }
-    },
-    "igw7085c30b": {
-      "Type": "AWS::EC2::InternetGateway",
-      "Properties": {
-      }
-    },
-    "dopt0679c57c": {
-      "Type": "AWS::EC2::DHCPOptions",
-      "Properties": {
-        "DomainName": "ec2.internal",
-        "DomainNameServers": [
-          "AmazonProvidedDNS"
-        ]
-      }
-    },
-    "aclc791ebba": {
-      "Type": "AWS::EC2::NetworkAcl",
-      "Properties": {
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        }
-      }
-    },
-    "rtb954cd2eb": {
-      "Type": "AWS::EC2::RouteTable",
-      "Properties": {
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        }
-      }
-    },
-    "distd2pwb47r49781hcloudfrontnet": {
-      "Type": "AWS::CloudFront::Distribution",
-      "Properties": {
-        "DistributionConfig": {
-          "Enabled": true,
-          "PriceClass": "PriceClass_All",
-          "CacheBehaviors": [
-            {
-              "TargetOriginId": "S3-staticcontenthrpotter",
-              "PathPattern": "js/*",
-              "ViewerProtocolPolicy": "allow-all",
-              "MinTTL": 0,
-              "AllowedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "CachedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "ForwardedValues": {
-                "Cookies": {
-                  "Forward": "none"
-                }
-              }
-            },
-            {
-              "TargetOriginId": "S3-staticcontenthrpotter",
-              "PathPattern": "css/*",
-              "ViewerProtocolPolicy": "allow-all",
-              "MinTTL": 0,
-              "AllowedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "CachedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "ForwardedValues": {
-                "Cookies": {
-                  "Forward": "none"
-                }
-              }
-            },
-            {
-              "TargetOriginId": "S3-staticcontenthrpotter",
-              "PathPattern": "favicon.ico",
-              "ViewerProtocolPolicy": "allow-all",
-              "MinTTL": 0,
-              "AllowedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "CachedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "ForwardedValues": {
-                "Cookies": {
-                  "Forward": "none"
-                }
-              }
-            }
-          ],
-          "DefaultCacheBehavior": {
-            "TargetOriginId": "Custom-cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod",
-            "ViewerProtocolPolicy": "allow-all",
-            "MinTTL": 0,
-            "AllowedMethods": [
-              "HEAD",
-              "DELETE",
-              "POST",
-              "GET",
-              "OPTIONS",
-              "PUT",
-              "PATCH"
-            ],
-            "CachedMethods": [
-              "HEAD",
-              "GET"
-            ],
-            "ForwardedValues": {
-              "Cookies": {
-                "Forward": "all"
-              }
-            }
-          },
-          "Origins": [
-            {
-              "DomainName": "cz7k3d7r2i.execute-api.us-east-1.amazonaws.com",
-              "Id": "Custom-cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod",
-              "OriginPath": "/Prod",
-              "S3OriginConfig": {
-                "HTTPPort": "80",
-                "HTTPSPort": "443",
-                "OriginProtocolPolicy": "http-only"
-              }
-            },
-            {
-              "DomainName": "staticcontenthrpotter.s3.amazonaws.com",
-              "Id": "S3-staticcontenthrpotter",
-              "S3OriginConfig": {
-              }
-            }
-          ],
-          "Restrictions": {
-            "GeoRestriction": {
-              "RestrictionType": "none",
-              "Locations": [
-
-              ]
-            }
-          },
-          "ViewerCertificate": {
-            "CloudFrontDefaultCertificate": "true",
-            "MinimumProtocolVersion": "TLSv1"
-          }
-        }
-      }
-    },
-    "instancei0cd8731dac6d68d52": {
-      "Type": "AWS::EC2::Instance",
-      "Properties": {
-        "DisableApiTermination": "false",
-        "InstanceInitiatedShutdownBehavior": "stop",
-        "ImageId": "ami-7f6aa912",
-        "InstanceType": "t2.small",
-        "Monitoring": "false"
-      }
-    },
-    "rdsdatabase1": {
-      "Type": "AWS::RDS::DBInstance",
-      "Properties": {
-        "AllocatedStorage": "20",
-        "AllowMajorVersionUpgrade": "false",
-        "AutoMinorVersionUpgrade": "true",
-        "DBInstanceClass": "db.t2.micro",
-        "Port": "3306",
-        "PubliclyAccessible": "true",
-        "StorageType": "gp2",
-        "BackupRetentionPeriod": "0",
-        "MasterUsername": "hrpotter_admin",
-        "MasterUserPassword": "MyPassword",
-        "PreferredBackupWindow": "03:23-03:53",
-        "PreferredMaintenanceWindow": "mon:02:00-mon:02:30",
-        "DBName": "MyDatabase",
-        "Engine": "mysql",
-        "EngineVersion": "5.6.46",
-        "LicenseModel": "general-public-license",
-        "DBSubnetGroupName": {
-          "Ref": "dbsubnetdefaultvpc1cc8db66"
-        },
-        "VPCSecurityGroups": [
-          {
-            "Ref": "sgdefault"
-          }
-        ]
-      }
-    },
-    "rdshrpotterglobaldatabaseinstance": {
-      "Type": "AWS::RDS::DBInstance",
-      "Properties": {
-        "AllocatedStorage": "0",
-        "AllowMajorVersionUpgrade": "false",
-        "AutoMinorVersionUpgrade": "true",
-        "DBInstanceClass": "db.r4.xlarge",
-        "Port": "3306",
-        "PubliclyAccessible": "true",
-        "StorageType": "aurora",
-        "BackupRetentionPeriod": "0",
-        "MasterUsername": "hrpotter_admin",
-        "MasterUserPassword": "MyPassword",
-        "PreferredBackupWindow": "03:30-04:00",
-        "PreferredMaintenanceWindow": "tue:08:31-tue:09:01",
-        "DBName": "MyDatabase",
-        "Engine": "aurora",
-        "EngineVersion": "5.6.10a",
-        "LicenseModel": "general-public-license",
-        "DBSubnetGroupName": {
-          "Ref": "dbsubnetdefaultvpc1cc8db66"
-        },
-        "VPCSecurityGroups": [
-          {
-            "Ref": "sgdefault"
-          }
-        ]
-      }
-    },
-    "rdshrpotterglobaldatabaseinstanceuseast1e": {
-      "Type": "AWS::RDS::DBInstance",
-      "Properties": {
-        "AllocatedStorage": "0",
-        "AllowMajorVersionUpgrade": "false",
-        "AutoMinorVersionUpgrade": "true",
-        "DBInstanceClass": "db.r4.xlarge",
-        "Port": "3306",
-        "PubliclyAccessible": "true",
-        "StorageType": "aurora",
-        "BackupRetentionPeriod": "0",
-        "MasterUsername": "hrpotter_admin",
-        "MasterUserPassword": "MyPassword",
-        "PreferredBackupWindow": "04:28-04:58",
-        "PreferredMaintenanceWindow": "thu:10:16-thu:10:46",
-        "DBName": "MyDatabase",
-        "Engine": "aurora",
-        "EngineVersion": "5.6.10a",
-        "LicenseModel": "general-public-license",
-        "DBSubnetGroupName": {
-          "Ref": "dbsubnetdefaultvpc1cc8db66"
-        },
-        "VPCSecurityGroups": [
-          {
-            "Ref": "sgdefault"
-          }
-        ]
-      }
-    },
-    "s3hrpotterfilesstorage": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "AccessControl": "Private",
-        "VersioningConfiguration": {
-          "Status": "Suspended"
-        }
-      }
-    },
-    "s3publishbuildsbucket": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "AccessControl": "Private",
-        "VersioningConfiguration": {
-          "Status": "Suspended"
-        }
-      }
-    },
-    "s3staticcontenthrpotter": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "WebsiteConfiguration": {
-          "IndexDocument": "user.js"
-        },
-        "AccessControl": "PublicRead",
-        "VersioningConfiguration": {
-          "Status": "Suspended"
-        }
-      }
-    },
-    "dbsubnetdefaultvpc1cc8db66": {
-      "Type": "AWS::RDS::DBSubnetGroup",
-      "Properties": {
-        "DBSubnetGroupDescription": "Created from the RDS Management Console",
-        "SubnetIds": [
-          {
-            "Ref": "subnetfcf066b1"
-          },
-          {
-            "Ref": "subneta39350fc"
-          },
-          {
-            "Ref": "subnet2ecc010f"
-          },
-          {
-            "Ref": "subnet860ab388"
-          },
-          {
-            "Ref": "subnet7f18df19"
-          },
-          {
-            "Ref": "subnetad161c93"
-          }
-        ]
-      }
-    },
-    "sgdefault": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "default VPC security group",
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        }
-      }
-    },
-    "dbsgdefault": {
-      "Type": "AWS::RDS::DBSecurityGroup",
-      "Properties": {
-        "GroupDescription": "default"
-      }
-    },
-    "s3policyhrpotterfilesstorage": {
-      "Type": "AWS::S3::BucketPolicy",
-      "Properties": {
-        "Bucket": {
-          "Ref": "s3hrpotterfilesstorage"
-        },
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": "arn:aws:iam::925000763740:role/HRPotterStack-AspNetCoreFunctionRole-11HVXI2CUCG3C"
-              },
-              "Action": "s3:*",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:s3:::",
-                      {
-                        "Ref": "s3hrpotterfilesstorage"
-                      },
-                      ""
-                    ]
-                  ]
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "hrpotter-app-template",
+    "Resources": {
+        "acl1": {
+            "Properties": {
+                "CidrBlock": "0.0.0.0/0",
+                "Egress": "true",
+                "NetworkAclId": {
+                    "Ref": "aclc791ebba"
                 },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:s3:::",
-                      {
-                        "Ref": "s3hrpotterfilesstorage"
-                      },
-                      "/*"
-                    ]
-                  ]
+                "Protocol": "-1",
+                "RuleAction": "allow",
+                "RuleNumber": "100"
+            },
+            "Type": "AWS::EC2::NetworkAclEntry"
+        },
+        "acl2": {
+            "Properties": {
+                "CidrBlock": "0.0.0.0/0",
+                "NetworkAclId": {
+                    "Ref": "aclc791ebba"
+                },
+                "Protocol": "-1",
+                "RuleAction": "allow",
+                "RuleNumber": "100"
+            },
+            "Type": "AWS::EC2::NetworkAclEntry"
+        },
+        "aclc791ebba": {
+            "Properties": {
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
                 }
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "s3policystaticcontenthrpotter": {
-      "Type": "AWS::S3::BucketPolicy",
-      "Properties": {
-        "Bucket": {
-          "Ref": "s3staticcontenthrpotter"
+            },
+            "Type": "AWS::EC2::NetworkAcl"
         },
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Sid": "PublicReadGetObject",
-              "Effect": "Allow",
-              "Principal": "*",
-              "Action": "s3:GetObject",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:s3:::",
-                    {
-                      "Ref": "s3staticcontenthrpotter"
-                    },
-                    "/*"
-                  ]
+        "dbsgdefault": {
+            "Properties": {
+                "GroupDescription": "default"
+            },
+            "Type": "AWS::RDS::DBSecurityGroup"
+        },
+        "dbsubnetdefaultvpc1cc8db66": {
+            "Properties": {
+                "DBSubnetGroupDescription": "Created from the RDS Management Console",
+                "SubnetIds": [{
+                        "Ref": "subnetfcf066b1"
+                    }, {
+                        "Ref": "subneta39350fc"
+                    }, {
+                        "Ref": "subnet2ecc010f"
+                    }, {
+                        "Ref": "subnet860ab388"
+                    }, {
+                        "Ref": "subnet7f18df19"
+                    }, {
+                        "Ref": "subnetad161c93"
+                    }
                 ]
-              }
+            },
+            "Type": "AWS::RDS::DBSubnetGroup"
+        },
+        "dchpassoc1": {
+            "Properties": {
+                "DhcpOptionsId": {
+                    "Ref": "dopt0679c57c"
+                },
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::VPCDHCPOptionsAssociation"
+        },
+        "distd2pwb47r49781hcloudfrontnet": {
+            "Properties": {
+                "DistributionConfig": {
+                    "CacheBehaviors": [{
+                            "AllowedMethods": ["HEAD", "GET"],
+                            "CachedMethods": ["HEAD", "GET"],
+                            "ForwardedValues": {
+                                "Cookies": {
+                                    "Forward": "none"
+                                }
+                            },
+                            "MinTTL": 0,
+                            "PathPattern": "js/*",
+                            "TargetOriginId": "S3-staticcontenthrpotter",
+                            "ViewerProtocolPolicy": "allow-all"
+                        }, {
+                            "AllowedMethods": ["HEAD", "GET"],
+                            "CachedMethods": ["HEAD", "GET"],
+                            "ForwardedValues": {
+                                "Cookies": {
+                                    "Forward": "none"
+                                }
+                            },
+                            "MinTTL": 0,
+                            "PathPattern": "css/*",
+                            "TargetOriginId": "S3-staticcontenthrpotter",
+                            "ViewerProtocolPolicy": "allow-all"
+                        }, {
+                            "AllowedMethods": ["HEAD", "GET"],
+                            "CachedMethods": ["HEAD", "GET"],
+                            "ForwardedValues": {
+                                "Cookies": {
+                                    "Forward": "none"
+                                }
+                            },
+                            "MinTTL": 0,
+                            "PathPattern": "favicon.ico",
+                            "TargetOriginId": "S3-staticcontenthrpotter",
+                            "ViewerProtocolPolicy": "allow-all"
+                        }
+                    ],
+                    "DefaultCacheBehavior": {
+                        "AllowedMethods": ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"],
+                        "CachedMethods": ["HEAD", "GET"],
+                        "ForwardedValues": {
+                            "Cookies": {
+                                "Forward": "all"
+                            }
+                        },
+                        "MinTTL": 0,
+                        "TargetOriginId": "Custom-cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod",
+                        "ViewerProtocolPolicy": "allow-all"
+                    },
+                    "Enabled": true,
+                    "Origins": [{
+                            "DomainName": "cz7k3d7r2i.execute-api.us-east-1.amazonaws.com",
+                            "Id": "Custom-cz7k3d7r2i.execute-api.us-east-1.amazonaws.com/Prod",
+                            "OriginPath": "/Prod",
+                            "S3OriginConfig": {
+                                "HTTPPort": "80",
+                                "HTTPSPort": "443",
+                                "OriginProtocolPolicy": "http-only"
+                            }
+                        }, {
+                            "DomainName": "staticcontenthrpotter.s3.amazonaws.com",
+                            "Id": "S3-staticcontenthrpotter",
+                            "S3OriginConfig": {}
+                        }
+                    ],
+                    "PriceClass": "PriceClass_All",
+                    "Restrictions": {
+                        "GeoRestriction": {
+                            "Locations": [],
+                            "RestrictionType": "none"
+                        }
+                    },
+                    "ViewerCertificate": {
+                        "CloudFrontDefaultCertificate": "true",
+                        "MinimumProtocolVersion": "TLSv1"
+                    }
+                }
+            },
+            "Type": "AWS::CloudFront::Distribution"
+        },
+        "dopt0679c57c": {
+            "Properties": {
+                "DomainName": "ec2.internal",
+                "DomainNameServers": ["AmazonProvidedDNS"]
+            },
+            "Type": "AWS::EC2::DHCPOptions"
+        },
+        "egress1": {
+            "Properties": {
+                "CidrIp": "0.0.0.0/0",
+                "GroupId": {
+                    "Ref": "sgdefault"
+                },
+                "IpProtocol": "-1"
+            },
+            "Type": "AWS::EC2::SecurityGroupEgress"
+        },
+        "gw1": {
+            "Properties": {
+                "InternetGatewayId": {
+                    "Ref": "igw7085c30b"
+                },
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::VPCGatewayAttachment"
+        },
+        "igw7085c30b": {
+            "Properties": {},
+            "Type": "AWS::EC2::InternetGateway"
+        },
+        "ingress1": {
+            "Properties": {
+                "GroupId": {
+                    "Ref": "sgdefault"
+                },
+                "IpProtocol": "-1",
+                "SourceSecurityGroupId": {
+                    "Ref": "sgdefault"
+                },
+                "SourceSecurityGroupOwnerId": "925000763740"
+            },
+            "Type": "AWS::EC2::SecurityGroupIngress"
+        },
+        "ingress2": {
+            "Properties": {
+                "CidrIp": "0.0.0.0/0",
+                "FromPort": "3306",
+                "GroupId": {
+                    "Ref": "sgdefault"
+                },
+                "IpProtocol": "tcp",
+                "ToPort": "3306"
+            },
+            "Type": "AWS::EC2::SecurityGroupIngress"
+        },
+        "instancei0cd8731dac6d68d52": {
+            "Properties": {
+                "DisableApiTermination": "false",
+                "ImageId": "ami-7f6aa912",
+                "InstanceInitiatedShutdownBehavior": "stop",
+                "InstanceType": "t2.small",
+                "Monitoring": "false"
+            },
+            "Type": "AWS::EC2::Instance"
+        },
+        "AwsDeployRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "Description": "Allows CodeDeploy to route traffic to a new version of an AWS Lambda function version on your behalf.",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "codedeploy.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "RoleName": "aws-deploy-role",
+                "Path": "/",
+                "MaxSessionDuration": 3600
             }
-          ]
+        },
+        "pipeline1": {
+            "Properties": {
+                "artifactStore": {
+                    "location": "publishbuildsbucket",
+                    "type": "S3"
+                },
+                "name": "hrpotter-pipeline",
+                "roleArn": "arn:aws:iam::925000763740:role/service-role/AWSCodePipelineServiceRole-us-east-1-hrpotter-pipeline",
+                "stages": [{
+                        "actions": [{
+                                "actionTypeId": {
+                                    "category": "Source",
+                                    "owner": "ThirdParty",
+                                    "provider": "GitHub",
+                                    "version": "1"
+                                },
+                                "configuration": {
+                                    "Branch": "develop",
+                                    "OAuthToken": "{{resolve:secretsmanager:GitHubAuth:SecretString:token}}",
+                                    "Owner": "Rashair",
+                                    "PollForSourceChanges": "false",
+                                    "Repo": "HRPotter-2.0"
+                                },
+                                "inputArtifacts": [],
+                                "name": "Source",
+                                "namespace": "SourceVariables",
+                                "outputArtifacts": [{
+                                        "name": "SourceArtifact"
+                                    }
+                                ],
+                                "region": "us-east-1",
+                                "runOrder": 1
+                            }
+                        ],
+                        "name": "Source"
+                    }, {
+                        "actions": [{
+                                "actionTypeId": {
+                                    "category": "Build",
+                                    "owner": "AWS",
+                                    "provider": "CodeBuild",
+                                    "version": "1"
+                                },
+                                "configuration": {
+                                    "ProjectName": "hrpotter-project"
+                                },
+                                "inputArtifacts": [{
+                                        "name": "SourceArtifact"
+                                    }
+                                ],
+                                "name": "Build",
+                                "namespace": "BuildVariables",
+                                "outputArtifacts": [{
+                                        "name": "BuildArtifact"
+                                    }
+                                ],
+                                "region": "us-east-1",
+                                "runOrder": 1
+                            }
+                        ],
+                        "name": "Build"
+                    }, {
+                        "actions": [{
+                                "actionTypeId": {
+                                    "category": "Deploy",
+                                    "owner": "AWS",
+                                    "provider": "CloudFormation",
+                                    "version": "1"
+                                },
+                                "configuration": {
+                                    "ActionMode": "CREATE_UPDATE",
+                                    "Capabilities": "CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND",
+                                    "RoleArn": {"Fn::GetAtt" : ["AwsDeployRole", "Arn"] },
+                                    "StackName": "HRPotterStack",
+                                    "TemplatePath": "BuildArtifact::outputtemplate.yml"
+                                },
+                                "inputArtifacts": [{
+                                        "name": "BuildArtifact"
+                                    }
+                                ],
+                                "name": "hrpotter-cf-deploy",
+                                "outputArtifacts": [],
+                                "region": "us-east-1",
+                                "runOrder": 1
+                            }
+                        ],
+                        "name": "Deploy"
+                    }
+                ]
+            },
+            "Type": "AWS::CodePipeline::Pipeline"
+        },
+        "rdsdatabase1": {
+            "Properties": {
+                "AllocatedStorage": "20",
+                "AllowMajorVersionUpgrade": "false",
+                "AutoMinorVersionUpgrade": "true",
+                "BackupRetentionPeriod": "0",
+                "DBInstanceClass": "db.t2.micro",
+                "DBName": "MyDatabase",
+                "DBSubnetGroupName": {
+                    "Ref": "dbsubnetdefaultvpc1cc8db66"
+                },
+                "Engine": "mysql",
+                "EngineVersion": "5.6.46",
+                "LicenseModel": "general-public-license",
+                "MasterUserPassword": "MyPassword",
+                "MasterUsername": "hrpotter_admin",
+                "Port": "3306",
+                "PreferredBackupWindow": "03:23-03:53",
+                "PreferredMaintenanceWindow": "mon:02:00-mon:02:30",
+                "PubliclyAccessible": "true",
+                "StorageType": "gp2",
+                "VPCSecurityGroups": [{
+                        "Ref": "sgdefault"
+                    }
+                ]
+            },
+            "Type": "AWS::RDS::DBInstance"
+        },
+        "rdshrpotterglobaldatabaseinstance": {
+            "Properties": {
+                "AllocatedStorage": "0",
+                "AllowMajorVersionUpgrade": "false",
+                "AutoMinorVersionUpgrade": "true",
+                "BackupRetentionPeriod": "0",
+                "DBInstanceClass": "db.r4.xlarge",
+                "DBName": "MyDatabase",
+                "DBSubnetGroupName": {
+                    "Ref": "dbsubnetdefaultvpc1cc8db66"
+                },
+                "Engine": "aurora",
+                "EngineVersion": "5.6.10a",
+                "LicenseModel": "general-public-license",
+                "MasterUserPassword": "MyPassword",
+                "MasterUsername": "hrpotter_admin",
+                "Port": "3306",
+                "PreferredBackupWindow": "03:30-04:00",
+                "PreferredMaintenanceWindow": "tue:08:31-tue:09:01",
+                "PubliclyAccessible": "true",
+                "StorageType": "aurora",
+                "VPCSecurityGroups": [{
+                        "Ref": "sgdefault"
+                    }
+                ]
+            },
+            "Type": "AWS::RDS::DBInstance"
+        },
+        "rdshrpotterglobaldatabaseinstanceuseast1e": {
+            "Properties": {
+                "AllocatedStorage": "0",
+                "AllowMajorVersionUpgrade": "false",
+                "AutoMinorVersionUpgrade": "true",
+                "BackupRetentionPeriod": "0",
+                "DBInstanceClass": "db.r4.xlarge",
+                "DBName": "MyDatabase",
+                "DBSubnetGroupName": {
+                    "Ref": "dbsubnetdefaultvpc1cc8db66"
+                },
+                "Engine": "aurora",
+                "EngineVersion": "5.6.10a",
+                "LicenseModel": "general-public-license",
+                "MasterUserPassword": "MyPassword",
+                "MasterUsername": "hrpotter_admin",
+                "Port": "3306",
+                "PreferredBackupWindow": "04:28-04:58",
+                "PreferredMaintenanceWindow": "thu:10:16-thu:10:46",
+                "PubliclyAccessible": "true",
+                "StorageType": "aurora",
+                "VPCSecurityGroups": [{
+                        "Ref": "sgdefault"
+                    }
+                ]
+            },
+            "Type": "AWS::RDS::DBInstance"
+        },
+        "route1": {
+            "DependsOn": "gw1",
+            "Properties": {
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "igw7085c30b"
+                },
+                "RouteTableId": {
+                    "Ref": "rtb954cd2eb"
+                }
+            },
+            "Type": "AWS::EC2::Route"
+        },
+        "rtb954cd2eb": {
+            "Properties": {
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::RouteTable"
+        },
+        "s3hrpotterfilesstorage": {
+            "Properties": {
+                "AccessControl": "Private",
+                "VersioningConfiguration": {
+                    "Status": "Suspended"
+                }
+            },
+            "Type": "AWS::S3::Bucket"
+        },
+        "s3policyhrpotterfilesstorage": {
+            "Properties": {
+                "Bucket": {
+                    "Ref": "s3hrpotterfilesstorage"
+                },
+                "PolicyDocument": {
+                    "Statement": [{
+                            "Action": "s3:*",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "arn:aws:iam::925000763740:role/HRPotterStack-AspNetCoreFunctionRole-11HVXI2CUCG3C"
+                            },
+                            "Resource": [{
+                                    "Fn::Join": ["", ["arn:aws:s3:::", {
+                                                "Ref": "s3hrpotterfilesstorage"
+                                            }, ""]]
+                                }, {
+                                    "Fn::Join": ["", ["arn:aws:s3:::", {
+                                                "Ref": "s3hrpotterfilesstorage"
+                                            }, "/*"]]
+                                }
+                            ]
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                }
+            },
+            "Type": "AWS::S3::BucketPolicy"
+        },
+        "s3policystaticcontenthrpotter": {
+            "Properties": {
+                "Bucket": {
+                    "Ref": "s3staticcontenthrpotter"
+                },
+                "PolicyDocument": {
+                    "Statement": [{
+                            "Action": "s3:GetObject",
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Resource": {
+                                "Fn::Join": ["", ["arn:aws:s3:::", {
+                                            "Ref": "s3staticcontenthrpotter"
+                                        }, "/*"]]
+                            },
+                            "Sid": "PublicReadGetObject"
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                }
+            },
+            "Type": "AWS::S3::BucketPolicy"
+        },
+        "s3publishbuildsbucket": {
+            "Properties": {
+                "AccessControl": "Private",
+                "VersioningConfiguration": {
+                    "Status": "Suspended"
+                }
+            },
+            "Type": "AWS::S3::Bucket"
+        },
+        "s3staticcontenthrpotter": {
+            "Properties": {
+                "AccessControl": "PublicRead",
+                "VersioningConfiguration": {
+                    "Status": "Suspended"
+                },
+                "WebsiteConfiguration": {
+                    "IndexDocument": "user.js"
+                }
+            },
+            "Type": "AWS::S3::Bucket"
+        },
+        "sgdefault": {
+            "Properties": {
+                "GroupDescription": "default VPC security group",
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "subnet2ecc010f": {
+            "Properties": {
+                "AvailabilityZone": "us-east-1b",
+                "CidrBlock": "172.31.80.0/20",
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "subnet7f18df19": {
+            "Properties": {
+                "AvailabilityZone": "us-east-1a",
+                "CidrBlock": "172.31.0.0/20",
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "subnet860ab388": {
+            "Properties": {
+                "AvailabilityZone": "us-east-1f",
+                "CidrBlock": "172.31.64.0/20",
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "subneta39350fc": {
+            "Properties": {
+                "AvailabilityZone": "us-east-1d",
+                "CidrBlock": "172.31.32.0/20",
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "subnetacl1": {
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "aclc791ebba"
+                },
+                "SubnetId": {
+                    "Ref": "subnet7f18df19"
+                }
+            },
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation"
+        },
+        "subnetacl2": {
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "aclc791ebba"
+                },
+                "SubnetId": {
+                    "Ref": "subnetfcf066b1"
+                }
+            },
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation"
+        },
+        "subnetacl3": {
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "aclc791ebba"
+                },
+                "SubnetId": {
+                    "Ref": "subnet860ab388"
+                }
+            },
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation"
+        },
+        "subnetacl4": {
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "aclc791ebba"
+                },
+                "SubnetId": {
+                    "Ref": "subnetad161c93"
+                }
+            },
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation"
+        },
+        "subnetacl5": {
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "aclc791ebba"
+                },
+                "SubnetId": {
+                    "Ref": "subneta39350fc"
+                }
+            },
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation"
+        },
+        "subnetacl6": {
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "aclc791ebba"
+                },
+                "SubnetId": {
+                    "Ref": "subnet2ecc010f"
+                }
+            },
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation"
+        },
+        "subnetad161c93": {
+            "Properties": {
+                "AvailabilityZone": "us-east-1e",
+                "CidrBlock": "172.31.48.0/20",
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "subnetfcf066b1": {
+            "Properties": {
+                "AvailabilityZone": "us-east-1c",
+                "CidrBlock": "172.31.16.0/20",
+                "VpcId": {
+                    "Ref": "vpc1cc8db66"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "vpc1cc8db66": {
+            "Properties": {
+                "CidrBlock": "172.31.0.0/16",
+                "EnableDnsHostnames": "true",
+                "EnableDnsSupport": "true",
+                "InstanceTenancy": "default"
+            },
+            "Type": "AWS::EC2::VPC"
         }
-      }
-    },
-    "acl1": {
-      "Type": "AWS::EC2::NetworkAclEntry",
-      "Properties": {
-        "CidrBlock": "0.0.0.0/0",
-        "Egress": "true",
-        "Protocol": "-1",
-        "RuleAction": "allow",
-        "RuleNumber": "100",
-        "NetworkAclId": {
-          "Ref": "aclc791ebba"
-        }
-      }
-    },
-    "acl2": {
-      "Type": "AWS::EC2::NetworkAclEntry",
-      "Properties": {
-        "CidrBlock": "0.0.0.0/0",
-        "Protocol": "-1",
-        "RuleAction": "allow",
-        "RuleNumber": "100",
-        "NetworkAclId": {
-          "Ref": "aclc791ebba"
-        }
-      }
-    },
-    "subnetacl1": {
-      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
-      "Properties": {
-        "NetworkAclId": {
-          "Ref": "aclc791ebba"
-        },
-        "SubnetId": {
-          "Ref": "subnet7f18df19"
-        }
-      }
-    },
-    "subnetacl2": {
-      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
-      "Properties": {
-        "NetworkAclId": {
-          "Ref": "aclc791ebba"
-        },
-        "SubnetId": {
-          "Ref": "subnetfcf066b1"
-        }
-      }
-    },
-    "subnetacl3": {
-      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
-      "Properties": {
-        "NetworkAclId": {
-          "Ref": "aclc791ebba"
-        },
-        "SubnetId": {
-          "Ref": "subnet860ab388"
-        }
-      }
-    },
-    "subnetacl4": {
-      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
-      "Properties": {
-        "NetworkAclId": {
-          "Ref": "aclc791ebba"
-        },
-        "SubnetId": {
-          "Ref": "subnetad161c93"
-        }
-      }
-    },
-    "subnetacl5": {
-      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
-      "Properties": {
-        "NetworkAclId": {
-          "Ref": "aclc791ebba"
-        },
-        "SubnetId": {
-          "Ref": "subneta39350fc"
-        }
-      }
-    },
-    "subnetacl6": {
-      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
-      "Properties": {
-        "NetworkAclId": {
-          "Ref": "aclc791ebba"
-        },
-        "SubnetId": {
-          "Ref": "subnet2ecc010f"
-        }
-      }
-    },
-    "gw1": {
-      "Type": "AWS::EC2::VPCGatewayAttachment",
-      "Properties": {
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        },
-        "InternetGatewayId": {
-          "Ref": "igw7085c30b"
-        }
-      }
-    },
-    "route1": {
-      "Type": "AWS::EC2::Route",
-      "Properties": {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "RouteTableId": {
-          "Ref": "rtb954cd2eb"
-        },
-        "GatewayId": {
-          "Ref": "igw7085c30b"
-        }
-      },
-      "DependsOn": "gw1"
-    },
-    "dchpassoc1": {
-      "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
-      "Properties": {
-        "VpcId": {
-          "Ref": "vpc1cc8db66"
-        },
-        "DhcpOptionsId": {
-          "Ref": "dopt0679c57c"
-        }
-      }
-    },
-    "ingress1": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgdefault"
-        },
-        "IpProtocol": "-1",
-        "SourceSecurityGroupId": {
-          "Ref": "sgdefault"
-        },
-        "SourceSecurityGroupOwnerId": "925000763740"
-      }
-    },
-    "ingress2": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgdefault"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "3306",
-        "ToPort": "3306",
-        "CidrIp": "0.0.0.0/0"
-      }
-    },
-    "egress1": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgdefault"
-        },
-        "IpProtocol": "-1",
-        "CidrIp": "0.0.0.0/0"
-      }
     }
-  },
-  "Description": "hrpotter-app-template"
 }

@@ -1,3 +1,6 @@
 Create following secrets in aws secret manager:
  - GitHubAuth -> Key-value secret -> Key = token, value = xxx
  
+
+When running create-stack
+create-stack --template-body "xxx" --capabilities "CAPABILITY_NAMED_IAM"
