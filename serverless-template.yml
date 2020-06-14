@@ -1,278 +1,364 @@
 {
-  "AWSTemplateFormatVersion": "2010-09-09",
-  "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "HRPotter is an AWS Serverless Application running in Amazon Lambda.",
-  "Parameters": {},
-  "Conditions": {},
-  "Resources": {
-    "AspNetCoreFunction": {
-      "Type": "AWS::Serverless::Function",
-      "Properties": {
-        "AutoPublishAlias": "AspNetCoreFunction",
-        "Handler": "HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync",
-        "Runtime": "dotnetcore3.1",
-        "CodeUri": "./publish",
-        "MemorySize": 512,
-        "Timeout": 30,
-        "Role": null,
-        "Policies": [
-          "AWSLambdaFullAccess",
-          "AmazonS3FullAccess"
-        ],
-        "Environment": {
-          "Variables": {
-            "StorageService": "S3",
-            "BucketName": { "Ref": "s3hrpotterfilesstorage" },
-            "CloudFrontDomain": { "Fn::GetAtt": [ "hrpottercloudfront", "DomainName" ] }
-          }
-        },
-        "Events": {
-          "ProxyResource": {
-            "Type": "Api",
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Description": "HRPotter is an AWS Serverless Application running in Amazon Lambda.",
+    "Parameters": {},
+    "Conditions": {},
+    "Resources": {
+        "AspNetCoreFunction": {
+            "Type": "AWS::Serverless::Function",
             "Properties": {
-              "Path": "/{proxy+}",
-              "Method": "ANY"
-            }
-          },
-          "RootResource": {
-            "Type": "Api",
-            "Properties": {
-              "Path": "/",
-              "Method": "ANY"
-            }
-          }
-        }
-      }
-    },
-    "hrpottercloudfront": {
-      "Type": "AWS::CloudFront::Distribution",
-      "Properties": {
-        "DistributionConfig": {
-          "Enabled": true,
-          "PriceClass": "PriceClass_All",
-          "CacheBehaviors": [
-            {
-              "TargetOriginId": "S3-staticcontenthrpotter",
-              "PathPattern": "js/*",
-              "ViewerProtocolPolicy": "allow-all",
-              "MinTTL": 0,
-              "AllowedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "CachedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "ForwardedValues": {
-                "Cookies": {
-                  "Forward": "none"
+                "AutoPublishAlias": "AspNetCoreFunction",
+                "Handler": "HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync",
+                "Runtime": "dotnetcore3.1",
+                "CodeUri": "./publish",
+                "MemorySize": 512,
+                "Timeout": 30,
+                "Role": null,
+                "Policies": [
+                    "AWSLambdaFullAccess",
+                    "AmazonS3FullAccess"
+                ],
+                "Environment": {
+                    "Variables": {
+                        "StorageService": "S3",
+                        "BucketName": {
+                            "Ref": "s3hrpotterfilesstorage"
+                        },
+                        "CloudFrontDomain": {
+                            "Fn::GetAtt": ["hrpottercloudfront", "DomainName"]
+                        }
+                    }
                 },
-                "QueryString": "false"
-              }
-            },
-            {
-              "TargetOriginId": "S3-staticcontenthrpotter",
-              "PathPattern": "css/*",
-              "ViewerProtocolPolicy": "allow-all",
-              "MinTTL": 0,
-              "AllowedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "CachedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "ForwardedValues": {
-                "Cookies": {
-                  "Forward": "none"
-                },
-                "QueryString": "false"
-              }
-            },
-            {
-              "TargetOriginId": "S3-staticcontenthrpotter",
-              "PathPattern": "favicon.ico",
-              "ViewerProtocolPolicy": "allow-all",
-              "MinTTL": 0,
-              "AllowedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "CachedMethods": [
-                "HEAD",
-                "GET"
-              ],
-              "ForwardedValues": {
-                "Cookies": {
-                  "Forward": "none"
-                },
-                "QueryString": "false"
-              }
-            }
-          ],
-          "DefaultCacheBehavior": {
-            "TargetOriginId": "APIGateway",
-            "ViewerProtocolPolicy": "allow-all",
-            "MinTTL": 0,
-            "AllowedMethods": [
-              "HEAD",
-              "DELETE",
-              "POST",
-              "GET",
-              "OPTIONS",
-              "PUT",
-              "PATCH"
-            ],
-            "CachedMethods": [
-              "HEAD",
-              "GET"
-            ],
-            "ForwardedValues": {
-              "Cookies": {
-                "Forward": "all"
-              },
-              "QueryString": "false"
-            }
-          },
-          "Origins": [
-            {
-              "DomainName": { "Fn::GetAtt": [ "s3staticcontenthrpotter", "DomainName" ] },
-              "Id": "S3-staticcontenthrpotter",
-              "S3OriginConfig": {
-              }
-            },
-            {
-              "DomainName": {
-                "Fn::Sub": "cz7k3d7r2i.execute-api.${AWS::Region}.amazonaws.com"
-              },
-              "Id": "APIGateway",
-              "OriginPath": "/Prod",
-              "CustomOriginConfig": {
-                "HTTPPort": "80",
-                "HTTPSPort": "443",
-                "OriginProtocolPolicy": "http-only"
-              }
-            }
-          ],
-          "Restrictions": {
-            "GeoRestriction": {
-              "RestrictionType": "none",
-              "Locations": [
-
-              ]
-            }
-          },
-          "ViewerCertificate": {
-            "CloudFrontDefaultCertificate": "true",
-            "MinimumProtocolVersion": "TLSv1"
-          }
-        }
-      }
-    },
-    "s3hrpotterfilesstorage": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "AccessControl": "Private",
-        "VersioningConfiguration": {
-          "Status": "Suspended"
-        }
-      }
-    },
-    "s3staticcontenthrpotter": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "AccessControl": "PublicRead",
-        "VersioningConfiguration": {
-          "Status": "Suspended"
-        }
-      }
-    },
-    "s3policyhrpotterfilesstorage": {
-      "Type": "AWS::S3::BucketPolicy",
-      "Properties": {
-        "Bucket": {
-          "Ref": "s3hrpotterfilesstorage"
-        },
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": "arn:aws:iam::925000763740:role/HRPotterStack-AspNetCoreFunctionRole-11HVXI2CUCG3C"
-              },
-              "Action": "s3:*",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:s3:::",
-                      {
-                        "Ref": "s3hrpotterfilesstorage"
-                      },
-                      ""
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:s3:::",
-                      {
-                        "Ref": "s3hrpotterfilesstorage"
-                      },
-                      "/*"
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "s3policystaticcontenthrpotter": {
-      "Type": "AWS::S3::BucketPolicy",
-      "Properties": {
-        "Bucket": {
-          "Ref": "s3staticcontenthrpotter"
-        },
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Sid": "PublicReadGetObject",
-              "Effect": "Allow",
-              "Principal": "*",
-              "Action": "s3:GetObject",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:s3:::",
-                    {
-                      "Ref": "s3staticcontenthrpotter"
+                "Events": {
+                    "ProxyResource": {
+                        "Type": "Api",
+                        "Properties": {
+                            "Path": "/{proxy+}",
+                            "Method": "ANY"
+                        }
                     },
-                    "/*"
-                  ]
-                ]
-              }
+                    "RootResource": {
+                        "Type": "Api",
+                        "Properties": {
+                            "Path": "/",
+                            "Method": "ANY"
+                        }
+                    }
+                }
             }
-          ]
+        },
+        "hrpottercloudfront": {
+            "Type": "AWS::CloudFront::Distribution",
+            "Properties": {
+                "DistributionConfig": {
+                    "Enabled": true,
+                    "PriceClass": "PriceClass_All",
+                    "CacheBehaviors": [{
+                            "TargetOriginId": "S3-staticcontenthrpotter",
+                            "PathPattern": "js/*",
+                            "ViewerProtocolPolicy": "allow-all",
+                            "MinTTL": 0,
+                            "AllowedMethods": [
+                                "HEAD",
+                                "GET"
+                            ],
+                            "CachedMethods": [
+                                "HEAD",
+                                "GET"
+                            ],
+                            "ForwardedValues": {
+                                "Cookies": {
+                                    "Forward": "none"
+                                },
+                                "QueryString": "false"
+                            }
+                        }, {
+                            "TargetOriginId": "S3-staticcontenthrpotter",
+                            "PathPattern": "css/*",
+                            "ViewerProtocolPolicy": "allow-all",
+                            "MinTTL": 0,
+                            "AllowedMethods": [
+                                "HEAD",
+                                "GET"
+                            ],
+                            "CachedMethods": [
+                                "HEAD",
+                                "GET"
+                            ],
+                            "ForwardedValues": {
+                                "Cookies": {
+                                    "Forward": "none"
+                                },
+                                "QueryString": "false"
+                            }
+                        }, {
+                            "TargetOriginId": "S3-staticcontenthrpotter",
+                            "PathPattern": "favicon.ico",
+                            "ViewerProtocolPolicy": "allow-all",
+                            "MinTTL": 0,
+                            "AllowedMethods": [
+                                "HEAD",
+                                "GET"
+                            ],
+                            "CachedMethods": [
+                                "HEAD",
+                                "GET"
+                            ],
+                            "ForwardedValues": {
+                                "Cookies": {
+                                    "Forward": "none"
+                                },
+                                "QueryString": "false"
+                            }
+                        }
+                    ],
+                    "DefaultCacheBehavior": {
+                        "TargetOriginId": "APIGateway",
+                        "ViewerProtocolPolicy": "allow-all",
+                        "MinTTL": 0,
+                        "AllowedMethods": [
+                            "HEAD",
+                            "DELETE",
+                            "POST",
+                            "GET",
+                            "OPTIONS",
+                            "PUT",
+                            "PATCH"
+                        ],
+                        "CachedMethods": [
+                            "HEAD",
+                            "GET"
+                        ],
+                        "ForwardedValues": {
+                            "Cookies": {
+                                "Forward": "all"
+                            },
+                            "QueryString": "false"
+                        }
+                    },
+                    "Origins": [{
+                            "DomainName": {
+                                "Fn::GetAtt": ["s3staticcontenthrpotter", "DomainName"]
+                            },
+                            "Id": "S3-staticcontenthrpotter",
+                            "S3OriginConfig": {}
+                        }, {
+                            "DomainName": {
+                                "Fn::Sub": "cz7k3d7r2i.execute-api.${AWS::Region}.amazonaws.com"
+                            },
+                            "Id": "APIGateway",
+                            "OriginPath": "/Prod",
+                            "CustomOriginConfig": {
+                                "HTTPPort": "80",
+                                "HTTPSPort": "443",
+                                "OriginProtocolPolicy": "http-only"
+                            }
+                        }
+                    ],
+                    "Restrictions": {
+                        "GeoRestriction": {
+                            "RestrictionType": "none",
+                            "Locations": [
+
+                            ]
+                        }
+                    },
+                    "ViewerCertificate": {
+                        "CloudFrontDefaultCertificate": "true",
+                        "MinimumProtocolVersion": "TLSv1"
+                    }
+                }
+            }
+        },
+        "s3hrpotterfilesstorage": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "Private",
+                "VersioningConfiguration": {
+                    "Status": "Suspended"
+                }
+            }
+        },
+        "s3staticcontenthrpotter": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "PublicRead",
+                "VersioningConfiguration": {
+                    "Status": "Suspended"
+                }
+            }
+        },
+        "s3policyhrpotterfilesstorage": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+                "Bucket": {
+                    "Ref": "s3hrpotterfilesstorage"
+                },
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "arn:aws:iam::925000763740:role/HRPotterStack-AspNetCoreFunctionRole-11HVXI2CUCG3C"
+                            },
+                            "Action": "s3:*",
+                            "Resource": [{
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:s3:::", {
+                                                "Ref": "s3hrpotterfilesstorage"
+                                            },
+                                            ""
+                                        ]
+                                    ]
+                                }, {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:s3:::", {
+                                                "Ref": "s3hrpotterfilesstorage"
+                                            },
+                                            "/*"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "s3policystaticcontenthrpotter": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+                "Bucket": {
+                    "Ref": "s3staticcontenthrpotter"
+                },
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                            "Sid": "PublicReadGetObject",
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": "s3:GetObject",
+                            "Resource": {
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                        "arn:aws:s3:::", {
+                                            "Ref": "s3staticcontenthrpotter"
+                                        },
+                                        "/*"
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "HrpotterPipeline": {
+            "Type": "AWS::CodePipeline::Pipeline",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "name": "hrpotter-pipeline-cf",
+                "roleArn": "arn:aws:iam::925000763740:role/service-role/AWSCodePipelineServiceRole-us-east-1-hrpotter-pipeline",
+                "artifactStore": {
+                    "type": "S3",
+                    "location": "publishbuildsbucket"
+                },
+                "stages": [{
+                        "name": "Source",
+                        "actions": [{
+                                "name": "Source",
+                                "actionTypeId": {
+                                    "category": "Source",
+                                    "owner": "ThirdParty",
+                                    "provider": "GitHub",
+                                    "version": "1"
+                                },
+                                "runOrder": 1,
+                                "configuration": {
+                                    "Branch": "develop",
+                                    "OAuthToken": "{{resolve:secretsmanager:GitHubAuth:SecretString:token}}",
+                                    "Owner": "Rashair",
+                                    "PollForSourceChanges": "false",
+                                    "Repo": "HRPotter-2.0"
+                                },
+                                "outputArtifacts": [{
+                                        "name": "SourceArtifact"
+                                    }
+                                ],
+                                "inputArtifacts": [],
+                                "region": "us-east-1",
+                                "namespace": "SourceVariables"
+                            }
+                        ]
+                    }, {
+                        "name": "Build",
+                        "actions": [{
+                                "name": "Build",
+                                "actionTypeId": {
+                                    "category": "Build",
+                                    "owner": "AWS",
+                                    "provider": "CodeBuild",
+                                    "version": "1"
+                                },
+                                "runOrder": 1,
+                                "configuration": {
+                                    "ProjectName": "hrpotter-project"
+                                },
+                                "outputArtifacts": [{
+                                        "name": "BuildArtifact"
+                                    }
+                                ],
+                                "inputArtifacts": [{
+                                        "name": "SourceArtifact"
+                                    }
+                                ],
+                                "region": "us-east-1",
+                                "namespace": "BuildVariables"
+                            }
+                        ]
+                    }, {
+                        "name": "Deploy",
+                        "actions": [{
+                                "name": "hrpotter-cf-deploy",
+                                "actionTypeId": {
+                                    "category": "Deploy",
+                                    "owner": "AWS",
+                                    "provider": "CloudFormation",
+                                    "version": "1"
+                                },
+                                "runOrder": 1,
+                                "configuration": {
+                                    "ActionMode": "CREATE_UPDATE",
+                                    "Capabilities": "CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND",
+                                    "RoleArn": "arn:aws:iam::925000763740:role/cfn-lambda-pipeline",
+                                    "StackName": "HRPotterStack",
+                                    "TemplatePath": "BuildArtifact::outputtemplate.yml"
+                                },
+                                "outputArtifacts": [],
+                                "inputArtifacts": [{
+                                        "name": "BuildArtifact"
+                                    }
+                                ],
+                                "region": "us-east-1"
+                            }
+                        ]
+                    }
+                ]
+            }
         }
-      }
+    },
+    "Outputs": {
+        "ApiURL": {
+            "Description": "API endpoint URL",
+            "Value": {
+                "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
+            }
+        }
     }
-  },
-  "Outputs": {
-    "ApiURL": {
-      "Description": "API endpoint URL",
-      "Value": {
-        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
-      }
-    }
-  }
 }
