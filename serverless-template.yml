@@ -262,7 +262,14 @@
                         }
                     ]
                 },
-                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole", "arn:aws:iam::aws:policy/AWSLambdaFullAccess", "arn:aws:iam::aws:policy/AmazonS3FullAccess"],
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/AWSLambdaFullAccess",
+                    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+                    "arn:aws:iam::925000763740:policy/service-role/AWSLambdaRDSProxyExecutionRole-0a404fe4-7fc9-4afc-8737-3fdb29cc8051",
+                    "arn:aws:iam::925000763740:policy/decryptAwsSecretManager",
+                    "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+                ],
                 "Tags": [{
                         "Value": "SAM",
                         "Key": "lambda:createdBy"
@@ -542,7 +549,6 @@
                     "us-east-1c",
                     "us-east-1d"
                 ],
-                "BacktrackWindow": 0,
                 "BackupRetentionPeriod": 1,
                 "DatabaseName": "hrpotter_db",
                 "DBClusterParameterGroupName": "default.aurora5.6",
@@ -552,7 +558,6 @@
                     "error",
                     "general"
                 ],
-                "EnableHttpEndpoint": false,
                 "EnableIAMDatabaseAuthentication": false,
                 "Engine": "aurora",
                 "EngineVersion": "5.6.10a",
@@ -563,7 +568,6 @@
                 "Port": 3306,
                 "SourceRegion": "us-east-1",
                 "StorageEncrypted": true,
-                "UseLatestRestorableTime": true,
                 "VpcSecurityGroupIds": ["sg-f291c8d1"]
             }
         }
