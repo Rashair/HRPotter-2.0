@@ -48,7 +48,7 @@
                 }
             }
         },
-        "hrpottercloudfront": {
+        "Hrpottercloudfront": {
             "Type": "AWS::CloudFront::Distribution",
             "Properties": {
                 "DistributionConfig": {
@@ -171,7 +171,7 @@
                 }
             }
         },
-        "s3hrpotterfilesstorage": {
+        "S3hrpotterfilesstorage": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
                 "AccessControl": "Private",
@@ -180,7 +180,7 @@
                 }
             }
         },
-        "s3staticcontenthrpotter": {
+        "S3staticcontenthrpotter": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
                 "AccessControl": "PublicRead",
@@ -189,7 +189,7 @@
                 }
             }
         },
-        "s3policyhrpotterfilesstorage": {
+        "S3policyhrpotterfilesstorage": {
             "Type": "AWS::S3::BucketPolicy",
             "Properties": {
                 "Bucket": {
@@ -230,7 +230,7 @@
                 }
             }
         },
-        "s3policystaticcontenthrpotter": {
+        "S3policystaticcontenthrpotter": {
             "Type": "AWS::S3::BucketPolicy",
             "Properties": {
                 "Bucket": {
@@ -257,6 +257,51 @@
                         }
                     ]
                 }
+            }
+        },
+        "HrpotterProject": {
+            "Type": "AWS::CodeBuild::Project",
+            "Properties": {
+                "Artifacts": {
+                    "Type": "CODEPIPELINE",
+                    "Name": "hrpotter-project",
+                    "Packaging": "NONE",
+                    "EncryptionDisabled": false
+                },
+                "BadgeEnabled": false,
+                "Cache": {
+                    "Type": "NO_CACHE"
+                },
+                "Description": "Project for hrpotter-main-pipeline",
+                "Environment": {
+                    "Type": "LINUX_CONTAINER",
+                    "Image": "aws/codebuild/amazonlinux2-x86_64-standard:3.0",
+                    "ComputeType": "BUILD_GENERAL1_LARGE",
+                    "EnvironmentVariables": [],
+                    "PrivilegedMode": true,
+                    "ImagePullCredentialsType": "CODEBUILD"
+                },
+                "FileSystemLocations": [],
+                "LogsConfig": {
+                    "CloudWatchLogs": {
+                        "Status": "ENABLED",
+                        "GroupName": "hrpotter-build-project-logs",
+                        "StreamName": "hrpotter-build-project-log-stream"
+                    },
+                    "S3Logs": {
+                        "Status": "DISABLED",
+                        "EncryptionDisabled": false
+                    }
+                },
+                "Name": "hrpotter-project",
+                "QueuedTimeoutInMinutes": 60,
+                "ServiceRole": "arn:aws:iam::925000763740:role/service-role/hrpotter-project-role",
+                "Source": {
+                    "Type": "CODEPIPELINE",
+                    "Buildspec": "",
+                    "InsecureSsl": false
+                },
+                "TimeoutInMinutes": 15
             }
         },
         "HrpotterPipelineCf": {

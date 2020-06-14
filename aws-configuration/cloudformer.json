@@ -160,7 +160,7 @@
                                                 "Ref": "AWS::AccountId"
                                             },
                                             ":log-group:/aws/codebuild/", {
-                                                "Fn::GetAtt": ["HrpotterProject", "Name"]
+                                                "Ref": "HrpotterProject"
                                             }
                                         ]
                                     ]
@@ -280,9 +280,7 @@
                 },
                 "Name": "hrpotter-project",
                 "QueuedTimeoutInMinutes": 60,
-                "ServiceRole": {
-                    "Fn::GetAtt": ["HrpotterProjectRole", "Arn"]
-                },
+                "ServiceRole": arn:aws:iam::925000763740:role/service-role/hrpotter-project-role,
                 "Source": {
                     "type": "CODEPIPELINE",
                     "buildspec": "",
