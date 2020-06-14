@@ -223,6 +223,55 @@
             },
             "Type": "AWS::EC2::Instance"
         },
+        "HrpotterProject": {
+            "Type": "AWS::CodeBuild::Project",
+            "Properties": {
+                "Artifacts": {
+                    "type": "CODEPIPELINE",
+                    "name": "hrpotter-project",
+                    "packaging": "NONE",
+                    "encryptionDisabled": false
+                },
+                "BadgeEnabled": false,
+                "Cache": {
+                    "type": "NO_CACHE"
+                },
+                "Description": "Project for hrpotter-main-pipeline",
+                "EncryptionKey": "arn:aws:kms:us-east-1:925000763740:alias/aws/s3",
+                "Environment": {
+                    "type": "LINUX_CONTAINER",
+                    "image": "aws/codebuild/amazonlinux2-x86_64-standard:3.0",
+                    "computeType": "BUILD_GENERAL1_LARGE",
+                    "environmentVariables": [],
+                    "privilegedMode": true,
+                    "imagePullCredentialsType": "CODEBUILD"
+                },
+                "FileSystemLocations": [],
+                "LogsConfig": {
+                    "cloudWatchLogs": {
+                        "status": "ENABLED",
+                        "groupName": "hrpotter-build-project-logs",
+                        "streamName": "hrpotter-build-project-log-stream"
+                    },
+                    "s3Logs": {
+                        "status": "DISABLED",
+                        "encryptionDisabled": false
+                    }
+                },
+                "Name": "hrpotter-project",
+                "QueuedTimeoutInMinutes": 60,
+                "ServiceRole": "arn:aws:iam::925000763740:role/service-role/hrpotter-project-role",
+                "Source": {
+                    "type": "CODEPIPELINE",
+                    "buildspec": "",
+                    "insecureSsl": false
+                },
+                "SourceVersion": String,
+                "TimeoutInMinutes": 15,
+                "Triggers": ProjectTriggers,
+                "VpcConfig": VpcConfig
+            }
+        },
         "AwsDeployRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -244,14 +293,35 @@
                 "MaxSessionDuration": 3600
             }
         },
-        "pipeline1": {
+        "AwsCodePipelineServiceRoleUsEast1HrpotterPipeline": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "codepipeline.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "RoleName": "AWSCodePipelineServiceRole-us-east-1-hrpotter-pipeline",
+                "Path": "/service-role/",
+                "MaxSessionDuration": 3600
+            }
+        },
+        "HrpotterPipeline": {
             "Properties": {
                 "artifactStore": {
                     "location": "publishbuildsbucket",
                     "type": "S3"
                 },
                 "name": "hrpotter-pipeline",
-                "roleArn": "arn:aws:iam::925000763740:role/service-role/AWSCodePipelineServiceRole-us-east-1-hrpotter-pipeline",
+                "roleArn": {
+                    "Fn::GetAtt": ["AwsCodePipelineServiceRoleUsEast1HrpotterPipeline", "Arn"]
+                },
                 "stages": [{
                         "actions": [{
                                 "actionTypeId": {
@@ -288,7 +358,7 @@
                                     "version": "1"
                                 },
                                 "configuration": {
-                                    "ProjectName": "hrpotter-project"
+                                    "ProjectName":  { "Ref" : "HrpotterProject" }
                                 },
                                 "inputArtifacts": [{
                                         "name": "SourceArtifact"
@@ -316,7 +386,9 @@
                                 "configuration": {
                                     "ActionMode": "CREATE_UPDATE",
                                     "Capabilities": "CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND",
-                                    "RoleArn": {"Fn::GetAtt" : ["AwsDeployRole", "Arn"] },
+                                    "RoleArn": {
+                                        "Fn::GetAtt": ["AwsDeployRole", "Arn"]
+                                    },
                                     "StackName": "HRPotterStack",
                                     "TemplatePath": "BuildArtifact::outputtemplate.yml"
                                 },
