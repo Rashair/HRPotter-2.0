@@ -308,7 +308,7 @@
                         "EncryptionDisabled": false
                     }
                 },
-                "Name": "hrpotter-project",
+                "Name": "hrpotter-project-cf",
                 "QueuedTimeoutInMinutes": 60,
                 "ServiceRole": "arn:aws:iam::925000763740:role/service-role/hrpotter-project-role",
                 "Source": {
