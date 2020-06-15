@@ -284,28 +284,6 @@
                 ]
             }
         },
-        "PublishBucket": {
-            "Type": "AWS::S3::Bucket",
-            "Properties": {
-                "AccessControl": "Private",
-                "LifecycleConfiguration": {
-                    "Rules": [{
-                            "ExpirationInDays": 90,
-                            "Status": "Enabled"
-                        }
-                    ]
-                },
-                "PublicAccessBlockConfiguration": {
-                    "BlockPublicAcls": true,
-                    "BlockPublicPolicy": true,
-                    "RestrictPublicBuckets": true,
-                    "IgnorePublicAcls": true
-                },
-                "VersioningConfiguration": {
-                    "Status": "Suspended"
-                }
-            }
-        },
         "HrpotterPipelineCf": {
             "Type": "AWS::CodePipeline::Pipeline",
             "Properties": {
@@ -401,9 +379,7 @@
                 ],
                 "ArtifactStore": {
                     "Type": "S3",
-                    "Location": {
-                        "Ref": "PublishBucket"
-                    }
+                    "Location": "publishbuildbucket"
                 },
                 "Name": "hrpotter-pipeline-cf"
             }
