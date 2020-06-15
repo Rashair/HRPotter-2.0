@@ -346,11 +346,12 @@
             "Properties": {
                 "AccessControl": "private",
                 "LifecycleConfiguration": {
-                    "Rules": [
-                        "ExpirationInDays": 90,
-                        "Status": "Enabled"
+                    "Rules": [{
+                            "ExpirationInDays": 90,
+                            "Status": "Enabled"
+                        }
                     ]
-                }
+                },
                 "PublicAccessBlockConfiguration": {
                     "BlockPublicAcls": true,
                     "BlockPublicPolicy": true,
