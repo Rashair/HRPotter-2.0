@@ -151,7 +151,7 @@
                             },
                             "Id": "APIGateway",
                             "DomainName": {
-                                "Fn::Sub": "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
+                                "Fn::Sub": "cz7k3d7r2i.execute-api.${AWS::Region}.amazonaws.com"
                             }
                         }
                     ],
