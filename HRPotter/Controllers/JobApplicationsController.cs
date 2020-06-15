@@ -14,8 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -29,13 +27,13 @@ namespace HRPotter.Controllers
 
         const int maxFileSize = (int)5e6;
         const string separationString = "#_#";
-        string bucketName;
+        private readonly string bucketName;
 
         private readonly HRPotterContext _context;
         private readonly BlobContainerClient blobContainerClient;
         private readonly AmazonS3Client s3Client;
 
-        private StorageType storageType;
+        private readonly StorageType storageType;
 
         public JobApplicationsController(HRPotterContext context, BlobServiceClient blobService)
         {
@@ -44,18 +42,13 @@ namespace HRPotter.Controllers
             s3Client = new AmazonS3Client(Amazon.RegionEndpoint.USEast1);
 
             var storageService = Environment.GetEnvironmentVariable("StorageService");
-
-            if (storageService is null)
-            {
-                // By default use BlobStorage
-                storageType = StorageType.BlobStorage;
-            }
-            else if (storageService == "S3")
+            if (storageService == "S3")
             {
                 storageType = StorageType.S3;
             }
-            else if (storageService == "BlobStorage")
+            else
             {
+                // By default use BlobStorage
                 storageType = StorageType.BlobStorage;
             }
 

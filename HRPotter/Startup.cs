@@ -1,6 +1,7 @@
 ﻿using HRPotter.Authorization;
 using HRPotter.Data;
 using HRPotter.Helpers;
+using HRPotter.Helpers.Secrets;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
 using Microsoft.AspNetCore.Builder;
@@ -44,7 +45,7 @@ namespace HRPotter
             });
 
 
-            string connectionString = GetConnectionString("AWSConnection");
+            string connectionString = GetConnectionString(Secret.AWSConnection);
             services.AddDbContext<HRPotterContext>(options =>
             {
                 options.UseMySql(connectionString, mySqlOptions =>
@@ -68,12 +69,13 @@ namespace HRPotter
             // TODO: Is it needed?
             services.AddAzureClients(builder =>
             {
-                builder.AddBlobServiceClient(GetConnectionString("BlobStorageConnection"));
+                builder.AddBlobServiceClient(GetConnectionString(Secret.BlobStorageConnection));
             });
         }
 
-        private string GetConnectionString(string name)
+        private string GetConnectionString(Secret secret)
         {
+            string name = secret.ToString();
             string conn = Configuration.GetConnectionString(name);
             if (conn.StartsWith("<P", StringComparison.InvariantCulture))
             {
@@ -82,7 +84,7 @@ namespace HRPotter
 
             if (conn == null)
             {
-                conn = AwsTools.GetSecret(name);
+                conn = secret.Get().ToString();
             }
 
             return conn;

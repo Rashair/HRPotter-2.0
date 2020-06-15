@@ -1,7 +1,6 @@
 ﻿using Amazon;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 
@@ -9,7 +8,7 @@ namespace HRPotter.Helpers
 {
     public static class AwsTools
     {
-        public static string GetSecret(string secretName)
+        public static string GetSerializedSecret(string secretName)
         {
             string region = "us-east-1";
 
@@ -80,7 +79,7 @@ namespace HRPotter.Helpers
                 secret = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(reader.ReadToEnd()));
             }
 
-            return JsonConvert.DeserializeObject<AwsSecret>(secret).Value;
+            return secret;
         }
     }
 }
