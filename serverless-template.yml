@@ -544,6 +544,27 @@
                 "Name": "AspNetCoreFunction"
             }
         },
+        "AWSConnection": {
+            "Type": "AWS::SecretsManager::Secret",
+            "Properties": {
+                "Name": "AWSConnectionTest",
+                "Description": "Connection",
+                "GenerateSecretString": {
+                    "SecretStringTemplate": "{\"username\":\"hrpotter_admin\"}",
+                    "GenerateStringKey": "password",
+                    "PasswordLength": 32,
+                    "ExcludeCharacters": "\"@/\\"
+                },
+                "Tags": [{
+                        "Key": "AppName",
+                        "Value": "HRPotter"
+                    }, {
+                        "Key": "Environment",
+                        "Value": "Prod"
+                    }
+                ]
+            }
+        },
         "AuroraDbCluster": {
             "Type": "AWS::RDS::DBCluster",
             "DeletionPolicy": "Retain",
@@ -559,7 +580,7 @@
                 "DatabaseName": "hrpotter_db",
                 "DBClusterParameterGroupName": "default.aurora5.6",
                 "DBSubnetGroupName": "default-vpc-1cc8db66",
-                "DeletionProtection": true,
+                "DeletionProtection": false,
                 "EnableCloudwatchLogsExports": [
                     "error",
                     "general"
@@ -600,6 +621,18 @@
                 "MonitoringInterval": 0,
                 "PromotionTier": 1,
                 "EnablePerformanceInsights": false
+            }
+        },
+        "SecretRDSInstanceAttachment": {
+            "Type": "AWS::SecretsManager::SecretTargetAttachment",
+            "Properties": {
+                "SecretId": {
+                    "Ref": "AWSConnectionTest"
+                },
+                "TargetId": {
+                    "Ref": "AuroraDbCluster"
+                },
+                "TargetType": "AWS::RDS::DBCluster"
             }
         }
     }
