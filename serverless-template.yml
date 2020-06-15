@@ -29,6 +29,7 @@
                 "CodeUri": "./publish",
                 "MemorySize": 512,
                 "Timeout": 30,
+                "Role": null,
                 "Policies": [
                     "AWSLambdaFullAccess",
                     "AmazonS3FullAccess"
