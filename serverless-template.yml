@@ -17,6 +17,7 @@
         }
     },
     "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": "AWS::Serverless-2016-10-31",
     "Conditions": {},
     "Resources": {
         "AspNetCoreFunction": {
@@ -518,8 +519,8 @@
         "ApiURL": {
             "Description": "API endpoint URL",
             "Value": {
-                "Fn::Sub": "https://cz7k3d7r2i.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+                "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
             }
         }
-    },
+    }
 }
