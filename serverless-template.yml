@@ -458,7 +458,9 @@
                 ],
                 "ArtifactStore": {
                     "Type": "S3",
-                    "Location": "publishbuildsbucket"
+                    "Location": {
+                        "Ref": "PublishBucket"
+                    }
                 },
                 "Name": "hrpotter-pipeline-cf"
             }
@@ -486,8 +488,9 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "publishbuildsbucket",
-                    "S3Key": "877d56be56284d44aadad5393db57e6b"
+                    "S3Bucket": {
+                        "Ref": "PublishBucket"
+                    },
                 },
                 "Tags": [{
                         "Value": "SAM",
