@@ -246,9 +246,11 @@
                         "PolicyName": "CodeBuildBasePolicy"
                     }
                 ],
-                "ManagedPolicyArns": [
-                    "arn:aws:iam::925000763740:policy/service-role/CodeBuildCloudWatchLogsPolicy-hrpotter-project-us-east-1",
-                    "arn:aws:iam::925000763740:policy/CreateCloudfrontInvalidationPolicy",
+                "ManagedPolicyArns": [{
+                        "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:policy/service-role/CodeBuildCloudWatchLogsPolicy-hrpotter-project-us-east-1"
+                    }, {
+                        "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:policy/CreateCloudfrontInvalidationPolicy"
+                    },
                     "arn:aws:iam::aws:policy/AmazonS3FullAccess"
                 ],
                 "MaxSessionDuration": 3600
@@ -272,7 +274,9 @@
                     "Type": "NO_CACHE"
                 },
                 "Description": "Project for hrpotter-main-pipeline",
-                "ServiceRole": "arn:aws:iam::925000763740:role/service-role/hrpotter-project-role",
+                "ServiceRole": {
+                    "Fn::GetAtt": ["HrpotterProjectRole", "Arn"]
+                },
                 "Artifacts": {
                     "Packaging": "NONE",
                     "EncryptionDisabled": false,
@@ -317,7 +321,9 @@
                             ],
                             "Effect": "Allow",
                             "Principal": {
-                                "AWS": "arn:aws:iam::925000763740:role/HRPotterStack-AspNetCoreFunctionRole-11HVXI2CUCG3C"
+                                "AWS": {
+                                    "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/HRPotterStack-AspNetCoreFunctionRole-11HVXI2CUCG3C"
+                                }
                             }
                         }
                     ]
@@ -376,7 +382,9 @@
         "HrpotterPipelineCf": {
             "Type": "AWS::CodePipeline::Pipeline",
             "Properties": {
-                "RoleArn": "arn:aws:iam::925000763740:role/service-role/AWSCodePipelineServiceRole-us-east-1-hrpotter-pipeline",
+                "RoleArn": {
+                    "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/service-role/AWSCodePipelineServiceRole-us-east-1-hrpotter-pipeline"
+                },
                 "Stages": [{
                         "Name": "Source",
                         "Actions": [{
@@ -457,7 +465,9 @@
                                 "Configuration": {
                                     "StackName": "HRPotterStack",
                                     "ActionMode": "CREATE_UPDATE",
-                                    "RoleArn": "arn:aws:iam::925000763740:role/cfn-lambda-pipeline",
+                                    "RoleArn": {
+                                        "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/cfn-lambda-pipeline"
+                                    },
                                     "Capabilities": "CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND,CAPABILITY_NAMED_IAM",
                                     "TemplatePath": "BuildArtifact::outputtemplate.yml"
                                 },
@@ -526,7 +536,9 @@
                 "Engine": "aurora",
                 "EngineVersion": "5.6.10a",
                 "EngineMode": "provisioned",
-                "KmsKeyId": "arn:aws:kms:us-east-1:925000763740:key/cfe0c0f5-fe4f-4f15-aff6-2789475cdf67",
+                "KmsKeyId": {
+                    "Fn::Sub": "arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/cfe0c0f5-fe4f-4f15-aff6-2789475cdf67"
+                },
                 "MasterUsername": {
                     "Fn::Join": ["", ["{{resolve:secretsmanager:", {
                                 "Ref": "AWSDbConnection"
