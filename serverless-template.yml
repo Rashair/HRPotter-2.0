@@ -277,9 +277,7 @@
                         }
                     }
                 ],
-                "ManagedPolicyArns": [{
-                        "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:policy/service-role/CodeBuildCloudWatchLogsPolicy-hrpotter-project-us-east-1"
-                    },
+                "ManagedPolicyArns": [
                     "arn:aws:iam::aws:policy/AmazonS3FullAccess"
                 ],
                 "MaxSessionDuration": 3600
