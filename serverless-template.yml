@@ -42,7 +42,7 @@
                                 ],
                                 "Resource": [
                                     "arn:aws:secretsmanager:*:*:secret:*",
-                                    "arn:aws:kms:*:*:key/*",
+                                    "arn:aws:kms:*:*:key/*"
                                 ]
                             }, {
                                 "Effect": "Allow",
@@ -181,6 +181,31 @@
                         }
                     }
                 }
+            }
+        },
+        "HrpotterProjectRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "codebuild.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "RoleName": "hrpotter-project-role-cf",
+                "Path": "/service-role/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::925000763740:policy/service-role/CodeBuildBasePolicy-hrpotter-project-us-east-1",
+                    "arn:aws:iam::925000763740:policy/service-role/CodeBuildCloudWatchLogsPolicy-hrpotter-project-us-east-1",
+                    "arn:aws:iam::925000763740:policy/CreateCloudfrontInvalidationPolicy",
+                    "AmazonS3FullAccess"
+                ],
+                "MaxSessionDuration": 3600
             }
         },
         "HrpotterProjectCf": {
