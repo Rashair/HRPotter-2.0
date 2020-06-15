@@ -547,8 +547,8 @@
         "AWSConnection": {
             "Type": "AWS::SecretsManager::Secret",
             "Properties": {
-                "Name": "AWSConnectionTest",
-                "Description": "Connection",
+                "Name": "AWSConnection",
+                "Description": "Connection data for hrpotter-db-cluster",
                 "GenerateSecretString": {
                     "SecretStringTemplate": "{\"username\":\"hrpotter_admin\"}",
                     "GenerateStringKey": "password",
@@ -567,7 +567,6 @@
         },
         "AuroraDbCluster": {
             "Type": "AWS::RDS::DBCluster",
-            "DeletionPolicy": "Retain",
             "Properties": {
                 "AssociatedRoles": [],
                 "AvailabilityZones": [
@@ -602,7 +601,6 @@
         },
         "HrpotterClusterInstance1": {
             "Type": "AWS::RDS::DBInstance",
-            "DeletionPolicy": "Retain",
             "Properties": {
                 "DBInstanceClass": "db.t3.small",
                 "Engine": "aurora",
