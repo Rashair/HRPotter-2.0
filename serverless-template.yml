@@ -33,7 +33,7 @@
                 "Policies": [
                     "AWSLambdaFullAccess",
                     "AmazonS3FullAccess",
-                    "DecryptAwsSecretManager",
+                    "decryptAwsSecretManager",
                     "AmazonRDSFullAccess"
                 ],
                 "Environment": {
