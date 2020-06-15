@@ -590,13 +590,10 @@
                 "DBClusterIdentifier": {
                     "Ref": "AuroraDbCluster"
                 },
-                "StorageEncrypted": true,
                 "KmsKeyId": "arn:aws:kms:us-east-1:925000763740:key/cfe0c0f5-fe4f-4f15-aff6-2789475cdf67",
                 "CACertificateIdentifier": "rds-ca-2019",
-                "CopyTagsToSnapshot": false,
                 "MonitoringInterval": 0,
                 "PromotionTier": 1,
-                "EnableIAMDatabaseAuthentication": false,
                 "EnablePerformanceInsights": false,
                 "EnableCloudwatchLogsExports": [
                     "error",
