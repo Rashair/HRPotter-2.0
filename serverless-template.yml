@@ -381,7 +381,7 @@
                 ],
                 "ArtifactStore": {
                     "Type": "S3",
-                    "Location": "publishbuildbucket"
+                    "Location": "publishbuildsbucket"
                 },
                 "Name": "hrpotter-pipeline-cf"
             }
