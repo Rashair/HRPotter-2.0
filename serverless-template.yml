@@ -607,8 +607,7 @@
                 "EnableCloudwatchLogsExports": [
                     "error",
                     "general"
-                ],
-                "DeletionProtection": false
+                ]
             }
         }
     }
