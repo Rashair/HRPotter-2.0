@@ -344,7 +344,7 @@
         "PublishBucket": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
-                "AccessControl": "private",
+                "AccessControl": "Private",
                 "LifecycleConfiguration": {
                     "Rules": [{
                             "ExpirationInDays": 90,
