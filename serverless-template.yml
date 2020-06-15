@@ -458,7 +458,7 @@
                                     "StackName": "HRPotterStack",
                                     "ActionMode": "CREATE_UPDATE",
                                     "RoleArn": "arn:aws:iam::925000763740:role/cfn-lambda-pipeline",
-                                    "Capabilities": "CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND",
+                                    "Capabilities": "CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND,CAPABILITY_NAMED_IAM",
                                     "TemplatePath": "BuildArtifact::outputtemplate.yml"
                                 },
                                 "RunOrder": 1
