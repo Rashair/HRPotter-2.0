@@ -577,9 +577,7 @@
             "Properties": {
                 "DBInstanceClass": "db.t3.small",
                 "Engine": "aurora",
-                "DBName": "hrpotter_db",
                 "AllocatedStorage": 1,
-                "BackupRetentionPeriod": 1,
                 "VPCSecurityGroups": [ "sg-f291c8d1" ],
                 "DBParameterGroupName": "default.aurora5.6",
                 "AvailabilityZone": "us-east-1a",
