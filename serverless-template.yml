@@ -200,6 +200,7 @@
                 "RoleName": "hrpotter-project-role-cf",
                 "Path": "/service-role/",
                 "Policies": [{
+                        "PolicyName": "CodeBuildBasePolicy",
                         "PolicyDocument": {
                             "Version": "2012-10-17",
                             "Statement": [{
@@ -242,14 +243,23 @@
                                     ]
                                 }
                             ]
-                        },
-                        "PolicyName": "CodeBuildBasePolicy"
+                        }
+                    }, {
+                        "PolicyName": "CreateCloudfrontInvalidationPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [{
+                                    "Sid": "VisualEditor0",
+                                    "Effect": "Allow",
+                                    "Action": "cloudfront:CreateInvalidation",
+                                    "Resource": "*"
+                                }
+                            ]
+                        }
                     }
                 ],
                 "ManagedPolicyArns": [{
                         "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:policy/service-role/CodeBuildCloudWatchLogsPolicy-hrpotter-project-us-east-1"
-                    }, {
-                        "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:policy/CreateCloudfrontInvalidationPolicy"
                     },
                     "arn:aws:iam::aws:policy/AmazonS3FullAccess"
                 ],
