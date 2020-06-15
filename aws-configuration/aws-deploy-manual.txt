@@ -8,4 +8,4 @@ Create following secrets in aws secret manager:
 
  
 When running create-stack:
-create-stack --template-body "serverless-template.yml" --parameters RepositoryName=repoName BranchName=branch  GitHubOwner=repoOwner --capabilities "CAPABILITY_IAM"
+create-stack --template-body "serverless-template.yml" --parameters RepositoryName=repoName BranchName=branch  GitHubOwner=repoOwner --capabilities "CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND,CAPABILITY_NAMED_IAM"
