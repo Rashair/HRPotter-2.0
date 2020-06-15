@@ -491,6 +491,7 @@
                     "S3Bucket": {
                         "Ref": "PublishBucket"
                     },
+                    "S3Key": "877d56be56284d44aadad5393db57e6b"
                 },
                 "Tags": [{
                         "Value": "SAM",
