@@ -589,7 +589,6 @@
                 "OptionGroupName": "default:aurora-5-6",
                 "PubliclyAccessible": true,
                 "StorageType": "aurora",
-                "Port": 0,
                 "DBClusterIdentifier": {
                     "Ref": "AuroraDbCluster"
                 },
