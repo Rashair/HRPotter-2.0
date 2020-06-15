@@ -249,7 +249,7 @@
                 "ManagedPolicyArns": [
                     "arn:aws:iam::925000763740:policy/service-role/CodeBuildCloudWatchLogsPolicy-hrpotter-project-us-east-1",
                     "arn:aws:iam::925000763740:policy/CreateCloudfrontInvalidationPolicy",
-                    "AmazonS3FullAccess"
+                    "arn:aws:iam::aws:policy/AmazonS3FullAccess"
                 ],
                 "MaxSessionDuration": 3600
             }
