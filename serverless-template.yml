@@ -32,9 +32,25 @@
                 "Role": null,
                 "Policies": [
                     "AWSLambdaFullAccess",
-                    "AmazonS3FullAccess",
-                    {"Ref": "DecryptAwsSecretPolicy"},
-                    "AmazonRDSFullAccess"
+                    "AmazonS3FullAccess", {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                                "Effect": "Allow",
+                                "Action": [
+                                    "secretsmanager:GetSecretValue",
+                                    "kms:Decrypt"
+                                ],
+                                "Resource": [
+                                    "arn:aws:secretsmanager:*:*:secret:*",
+                                    "arn:aws:kms:*:*:key/*",
+                                ]
+                            }, {
+                                "Effect": "Allow",
+                                "Action": "kms:ListKeys",
+                                "Resource": "*"
+                            }
+                        ]
+                    }
                 ],
                 "Environment": {
                     "Variables": {
@@ -65,31 +81,6 @@
                 }
             },
             "DependsOn": "SecretRDSInstanceAttachment"
-        },
-        "DecryptAwsSecretPolicy": {
-            "Type": "AWS::IAM::Policy",
-            "Properties": {
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                            "Effect": "Allow",
-                            "Action": [
-                                "secretsmanager:GetSecretValue",
-                                "kms:Decrypt"
-                            ],
-                            "Resource": [
-                                "arn:aws:secretsmanager:*:*:secret:*",
-                                "*"
-                            ]
-                        }, {
-                            "Effect": "Allow",
-                            "Action": "kms:ListKeys",
-                            "Resource": "*"
-                        }
-                    ]
-                },
-                "PolicyName": "DecryptSecretPolicy",
-            }
         },
         "s3staticcontenthrpotter": {
             "Type": "AWS::S3::Bucket",
