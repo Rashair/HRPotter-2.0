@@ -384,8 +384,8 @@ namespace HRPotter.Controllers
 
         private string GetValidFileName(string fileName)
         {
-            Regex.Replace(fileName, @"[^\u0000-\u007F]+", string.Empty);
-            return fileName;
+            var validFilename = Regex.Replace(fileName, @"[^\u0000-\u007F]+", string.Empty);
+            return validFilename;
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
