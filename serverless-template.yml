@@ -341,6 +341,26 @@
                 ]
             }
         },
+        "PublishBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "private",
+                "LifecycleConfiguration": {
+                    "Rules": [
+                        "ExpirationInDays": 90,
+                        "Status": "Enabled"
+                    ]
+                }
+                "PublicAccessBlockConfiguration": {
+                    "BlockPublicAcls": true,
+                    "BlockPublicPolicy": true,
+                    "RestrictPublicBuckets": true
+                },
+                "VersioningConfiguration": {
+                    "Status": "Suspended"
+                }
+            }
+        },
         "HrpotterPipelineCf": {
             "Type": "AWS::CodePipeline::Pipeline",
             "Properties": {
@@ -596,7 +616,11 @@
                                 "Ref": "AWSDbConnection"
                             }, ":SecretString:username}}"]]
                 },
-                "MasterUserPassword": {"Fn::Join": ["", ["{{resolve:secretsmanager:",{"Ref": "AWSDbConnection"},":SecretString:password}}"] ] },
+                "MasterUserPassword": {
+                    "Fn::Join": ["", ["{{resolve:secretsmanager:", {
+                                "Ref": "AWSDbConnection"
+                            }, ":SecretString:password}}"]]
+                },
                 "Port": 3306,
                 "SourceRegion": "us-east-1",
                 "StorageEncrypted": true,
