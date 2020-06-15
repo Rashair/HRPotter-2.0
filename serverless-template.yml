@@ -32,7 +32,9 @@
                 "Role": null,
                 "Policies": [
                     "AWSLambdaFullAccess",
-                    "AmazonS3FullAccess"
+                    "AmazonS3FullAccess",
+                    "DecryptAwsSecretManager",
+                    "AmazonRDSFullAccess"
                 ],
                 "Environment": {
                     "Variables": {
