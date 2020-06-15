@@ -86,6 +86,11 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:HRPotter.Helpers.Secrets.Secret">
+            <summary>
+            Use exaclty the name of the secret in Secret-Manager, case sensitive
+            </summary>
+        </member>
         <member name="T:HRPotter.LambdaEntryPoint">
             <summary>
             This class extends from APIGatewayProxyFunction which contains the method FunctionHandlerAsync which is the 

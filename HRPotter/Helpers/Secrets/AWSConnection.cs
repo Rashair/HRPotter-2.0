@@ -1,6 +1,6 @@
 ﻿namespace HRPotter.Helpers.Secrets
 {
-    public class AWSConnection : AwsSecret
+    public class AWSConnection : AWSSecret
     {
         public string Username { get; set; }
 

@@ -544,10 +544,10 @@
                 "Name": "AspNetCoreFunction"
             }
         },
-        "AWSConnection": {
+        "AWSDbConnection": {
             "Type": "AWS::SecretsManager::Secret",
             "Properties": {
-                "Name": "AWSConnection",
+                "Name": "AWSDbConnection",
                 "Description": "Connection data for hrpotter-db-cluster",
                 "GenerateSecretString": {
                     "SecretStringTemplate": "{\"username\":\"hrpotter_admin\"}",
@@ -590,8 +590,12 @@
                 "EngineVersion": "5.6.10a",
                 "EngineMode": "provisioned",
                 "KmsKeyId": "arn:aws:kms:us-east-1:925000763740:key/cfe0c0f5-fe4f-4f15-aff6-2789475cdf67",
-                "MasterUsername": "{{resolve:secretsmanager:AWSConnection:SecretString:username}}",
-                "MasterUserPassword": "{{resolve:secretsmanager:AWSConnection:SecretString:password}}",
+                "MasterUsername": {
+                    "Fn::Join": ["", ["{{resolve:secretsmanager:", {
+                                "Ref": "AWSDbConnection"
+                            }, ":SecretString:username}}"]]
+                },
+                "MasterUserPassword": {"Fn::Join": ["", ["{{resolve:secretsmanager:",{"Ref": "AWSDbConnection"},":SecretString:password}}"] ] },
                 "Port": 3306,
                 "SourceRegion": "us-east-1",
                 "StorageEncrypted": true,
@@ -625,7 +629,7 @@
             "Type": "AWS::SecretsManager::SecretTargetAttachment",
             "Properties": {
                 "SecretId": {
-                    "Ref": "AWSConnection"
+                    "Ref": "AWSDbConnection"
                 },
                 "TargetId": {
                     "Ref": "AuroraDbCluster"

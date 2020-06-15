@@ -1,6 +1,6 @@
 ﻿namespace HRPotter.Helpers.Secrets
 {
-    public class AwsSecret
+    public class AWSSecret
     {
         public virtual string Value { get; set; }
 

@@ -4,21 +4,21 @@ namespace HRPotter.Helpers.Secrets
 {
     public static class SecretsFactory
     {
-        public static AwsSecret Get(this Secret secret)
+        public static AWSSecret Get(this Secret secret)
         {
             var serialized = AwsTools.GetSerializedSecret(secret.ToString());
             return secret.Get(serialized);
         }
 
-        public static AwsSecret Get(this Secret secret, string serialized)
+        public static AWSSecret Get(this Secret secret, string serialized)
         {
             switch (secret)
             {
-                case Secret.AWSConnection:
+                case Secret.AWSDbConnection:
                     return JsonConvert.DeserializeObject<AWSConnection>(serialized);
             }
 
-            return JsonConvert.DeserializeObject<AwsSecret>(serialized);
+            return JsonConvert.DeserializeObject<AWSSecret>(serialized);
         }
     }
 }
