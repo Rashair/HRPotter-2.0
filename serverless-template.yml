@@ -355,7 +355,8 @@
                 "PublicAccessBlockConfiguration": {
                     "BlockPublicAcls": true,
                     "BlockPublicPolicy": true,
-                    "RestrictPublicBuckets": true
+                    "RestrictPublicBuckets": true,
+                    "IgnorePublicAcls": true
                 },
                 "VersioningConfiguration": {
                     "Status": "Suspended"
