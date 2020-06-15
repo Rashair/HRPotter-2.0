@@ -17,20 +17,6 @@
         }
     },
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Outputs": {
-        "ApiURL": {
-            "Description": "API endpoint URL",
-            "Value": {
-                "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
-            }
-        },
-        "DatabaseEndpoint": {
-            "Description": "Database endpoint URL",
-            "Value": {
-                "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
-            }
-        }
-    },
     "Conditions": {},
     "Resources": {
         "s3staticcontenthrpotter": {
@@ -134,34 +120,6 @@
                 }
             }
         },
-        "AspNetCoreFunctionProxyResourcePermissionProd": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "Action": "lambda:InvokeFunction",
-                "Principal": "apigateway.amazonaws.com",
-                "FunctionName": {
-                    "Ref": "AspNetCoreFunctionAliasAspNetCoreFunction"
-                },
-                "SourceArn": {
-                    "Fn::Sub": ["arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/*/*", {
-                            "__Stage__": "*",
-                            "__ApiId__": {
-                                "Ref": "ServerlessRestApi"
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        "AspNetCoreFunctionVersion2138e61bb2": {
-            "DeletionPolicy": "Retain",
-            "Type": "AWS::Lambda::Version",
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "AspNetCoreFunction"
-                }
-            }
-        },
         "HrpotterProjectCf": {
             "Type": "AWS::CodeBuild::Project",
             "Properties": {
@@ -206,25 +164,6 @@
                 "Name": "hrpotter-project-cf"
             }
         },
-        "AspNetCoreFunctionRootResourcePermissionProd": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "Action": "lambda:InvokeFunction",
-                "Principal": "apigateway.amazonaws.com",
-                "FunctionName": {
-                    "Ref": "AspNetCoreFunctionAliasAspNetCoreFunction"
-                },
-                "SourceArn": {
-                    "Fn::Sub": ["arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/*/", {
-                            "__Stage__": "*",
-                            "__ApiId__": {
-                                "Ref": "ServerlessRestApi"
-                            }
-                        }
-                    ]
-                }
-            }
-        },
         "s3policyhrpotterfilesstorage": {
             "Type": "AWS::S3::BucketPolicy",
             "Properties": {
@@ -254,35 +193,6 @@
                 }
             }
         },
-        "AspNetCoreFunctionRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                            "Action": ["sts:AssumeRole"],
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": ["lambda.amazonaws.com"]
-                            }
-                        }
-                    ]
-                },
-                "ManagedPolicyArns": [
-                    "arn:aws:iam::aws:policy/AWSLambdaFullAccess",
-                    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
-                    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-                    "arn:aws:iam::925000763740:policy/service-role/AWSLambdaRDSProxyExecutionRole-0a404fe4-7fc9-4afc-8737-3fdb29cc8051",
-                    "arn:aws:iam::925000763740:policy/decryptAwsSecretManager",
-                    "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
-                ],
-                "Tags": [{
-                        "Value": "SAM",
-                        "Key": "lambda:createdBy"
-                    }
-                ]
-            }
-        },
         "s3policystaticcontenthrpotter": {
             "Type": "AWS::S3::BucketPolicy",
             "Properties": {
@@ -304,18 +214,6 @@
                 "Bucket": {
                     "Ref": "s3staticcontenthrpotter"
                 }
-            }
-        },
-        "ServerlessRestApiProdStage": {
-            "Type": "AWS::ApiGateway::Stage",
-            "Properties": {
-                "DeploymentId": {
-                    "Ref": "ServerlessRestApiDeployment7ab9fd8247"
-                },
-                "RestApiId": {
-                    "Ref": "ServerlessRestApi"
-                },
-                "StageName": "Prod"
             }
         },
         "HrpotterPipelineWebhook": {
@@ -474,97 +372,48 @@
                 }
             }
         },
-        "ServerlessRestApiDeployment7ab9fd8247": {
-            "Type": "AWS::ApiGateway::Deployment",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ServerlessRestApi"
-                },
-                "Description": "RestApi deployment id: 7ab9fd8247dc0138441009cd3991b7ce086f00b2",
-                "StageName": "Stage"
-            }
-        },
         "AspNetCoreFunction": {
-            "Type": "AWS::Lambda::Function",
+            "Type": "AWS::Serverless::Function",
             "Properties": {
+                "AutoPublishAlias": "AspNetCoreFunction",
+                "Handler": "HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync",
+                "Runtime": "dotnetcore3.1",
                 "CodeUri": "./publish",
-                "Tags": [{
-                        "Value": "SAM",
-                        "Key": "lambda:createdBy"
-                    }
-                ],
                 "MemorySize": 512,
+                "Timeout": 30,
+                "Policies": [
+                    "AWSLambdaFullAccess",
+                    "AmazonS3FullAccess"
+                ],
                 "Environment": {
                     "Variables": {
-                        "CloudFrontDomain": {
-                            "Fn::GetAtt": ["hrpottercloudfront", "DomainName"]
-                        },
+                        "StorageService": "S3",
                         "BucketName": {
                             "Ref": "s3hrpotterfilesstorage"
                         },
-                        "StorageService": "S3"
+                        "CloudFrontDomain": {
+                            "Fn::GetAtt": ["hrpottercloudfront", "DomainName"]
+                        }
                     }
                 },
-                "Handler": "HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync",
-                "Role": {
-                    "Fn::GetAtt": ["AspNetCoreFunctionRole", "Arn"]
-                },
-                "Timeout": 30,
-                "Runtime": "dotnetcore3.1",
+                "Events": {
+                    "ProxyResource": {
+                        "Type": "Api",
+                        "Properties": {
+                            "Path": "/{proxy+}",
+                            "Method": "ANY"
+                        }
+                    },
+                    "RootResource": {
+                        "Type": "Api",
+                        "Properties": {
+                            "Path": "/",
+                            "Method": "ANY"
+                        }
+                    }
+                }
             },
             "DependsOn": "SecretRDSInstanceAttachment"
-        },
-        "ServerlessRestApi": {
-            "Type": "AWS::ApiGateway::RestApi",
-            "Properties": {
-                "Body": {
-                    "info": {
-                        "version": "1.0",
-                        "title": {
-                            "Ref": "AWS::StackName"
-                        }
-                    },
-                    "paths": {
-                        "/{proxy+}": {
-                            "x-amazon-apigateway-any-method": {
-                                "x-amazon-apigateway-integration": {
-                                    "httpMethod": "POST",
-                                    "type": "aws_proxy",
-                                    "uri": {
-                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AspNetCoreFunctionAliasAspNetCoreFunction}/invocations"
-                                    }
-                                },
-                                "responses": {}
-                            }
-                        },
-                        "/": {
-                            "x-amazon-apigateway-any-method": {
-                                "x-amazon-apigateway-integration": {
-                                    "httpMethod": "POST",
-                                    "type": "aws_proxy",
-                                    "uri": {
-                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AspNetCoreFunctionAliasAspNetCoreFunction}/invocations"
-                                    }
-                                },
-                                "responses": {}
-                            }
-                        }
-                    },
-                    "swagger": "2.0"
-                }
-            }
-        },
-        "AspNetCoreFunctionAliasAspNetCoreFunction": {
-            "Type": "AWS::Lambda::Alias",
-            "Properties": {
-                "FunctionVersion": {
-                    "Fn::GetAtt": ["AspNetCoreFunctionVersion2138e61bb2", "Version"]
-                },
-                "FunctionName": {
-                    "Ref": "AspNetCoreFunction"
-                },
-                "Name": "AspNetCoreFunction"
-            }
         },
         "AWSDbConnection": {
             "Type": "AWS::SecretsManager::Secret",
@@ -663,5 +512,13 @@
                 "TargetType": "AWS::RDS::DBCluster"
             }
         }
-    }
+    },
+    "Outputs": {
+        "ApiURL": {
+            "Description": "API endpoint URL",
+            "Value": {
+                "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
+            }
+        }
+    },
 }
