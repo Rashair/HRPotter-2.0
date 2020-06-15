@@ -249,10 +249,29 @@
                         "PolicyDocument": {
                             "Version": "2012-10-17",
                             "Statement": [{
-                                    "Sid": "VisualEditor0",
                                     "Effect": "Allow",
                                     "Action": "cloudfront:CreateInvalidation",
                                     "Resource": "*"
+                                }
+                            ]
+                        }
+                    }, {
+                        "PolicyName": "BuildLogsPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [{
+                                    "Effect": "Allow",
+                                    "Resource": [{
+                                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:hrpotter-build-project-logs"
+                                        }, {
+                                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:hrpotter-build-project-logs:*"
+                                        }
+                                    ],
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ]
                                 }
                             ]
                         }
