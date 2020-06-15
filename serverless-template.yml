@@ -151,7 +151,7 @@
                             },
                             "Id": "APIGateway",
                             "DomainName": {
-                                "Fn::Sub": "cz7k3d7r2i.execute-api.${AWS::Region}.amazonaws.com"
+                                "Fn::Sub": "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
                             }
                         }
                     ],
@@ -421,7 +421,7 @@
                     "SecretStringTemplate": "{\"username\":\"hrpotter_admin\"}",
                     "GenerateStringKey": "password",
                     "PasswordLength": 32,
-                    "ExcludeCharacters": "\"@/\\"
+                    "ExcludeCharacters": "\"@/\\=;"
                 },
                 "Tags": [{
                         "Key": "AppName",
