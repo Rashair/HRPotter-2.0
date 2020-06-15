@@ -627,7 +627,7 @@
             "Type": "AWS::SecretsManager::SecretTargetAttachment",
             "Properties": {
                 "SecretId": {
-                    "Ref": "AWSConnectionTest"
+                    "Ref": "AWSConnection"
                 },
                 "TargetId": {
                     "Ref": "AuroraDbCluster"
