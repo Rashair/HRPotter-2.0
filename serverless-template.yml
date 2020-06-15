@@ -577,7 +577,6 @@
             "Properties": {
                 "DBInstanceClass": "db.t3.small",
                 "Engine": "aurora",
-                "MasterUsername": "{{resolve:secretsmanager:HrpotterDbCredentials:SecretString:username}}",
                 "DBName": "hrpotter_db",
                 "AllocatedStorage": 1,
                 "BackupRetentionPeriod": 1,
