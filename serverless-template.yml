@@ -487,12 +487,7 @@
         "AspNetCoreFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "PublishBucket"
-                    },
-                    "S3Key": "877d56be56284d44aadad5393db57e6b"
-                },
+                "CodeUri": "./publish",
                 "Tags": [{
                         "Value": "SAM",
                         "Key": "lambda:createdBy"
