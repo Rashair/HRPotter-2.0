@@ -581,7 +581,7 @@
                 "DBName": "hrpotter_db",
                 "AllocatedStorage": 1,
                 "BackupRetentionPeriod": 1,
-                "VpcSecurityGroups": ["sg-f291c8d1"],
+                "VPCSecurityGroups": [ "sg-f291c8d1" ],
                 "DBParameterGroupName": "default.aurora5.6",
                 "AvailabilityZone": "us-east-1a",
                 "DBSubnetGroupName": "default-vpc-1cc8db66",
@@ -592,19 +592,18 @@
                 "OptionGroupName": "default:aurora-5-6",
                 "PubliclyAccessible": true,
                 "StorageType": "aurora",
-                "DbInstancePort": 0,
+                "Port": 0,
                 "DBClusterIdentifier": {
                     "Ref": "AuroraDbCluster"
                 },
                 "StorageEncrypted": true,
                 "KmsKeyId": "arn:aws:kms:us-east-1:925000763740:key/cfe0c0f5-fe4f-4f15-aff6-2789475cdf67",
-                "DbiResourceId": "db-QC4TWCSVRE5I5MHAERVHQ36K4Q",
                 "CACertificateIdentifier": "rds-ca-2019",
                 "CopyTagsToSnapshot": false,
                 "MonitoringInterval": 0,
                 "PromotionTier": 1,
                 "EnableIAMDatabaseAuthentication": false,
-                "PerformanceInsightsEnabled": false,
+                "EnablePerformanceInsights": false,
                 "EnableCloudwatchLogsExports": [
                     "error",
                     "general"
