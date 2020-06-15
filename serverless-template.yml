@@ -489,8 +489,9 @@
                     "Fn::GetAtt": ["AspNetCoreFunctionRole", "Arn"]
                 },
                 "Timeout": 30,
-                "Runtime": "dotnetcore3.1"
-            }
+                "Runtime": "dotnetcore3.1",
+            },
+            "DependsOn": "SecretRDSInstanceAttachment"
         },
         "ServerlessRestApi": {
             "Type": "AWS::ApiGateway::RestApi",
