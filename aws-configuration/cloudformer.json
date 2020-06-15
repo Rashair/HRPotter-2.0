@@ -139,6 +139,82 @@
             },
             "Type": "AWS::EC2::Instance"
         },
+        
+        
+        "HrpotterProjectRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "codebuild.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "RoleName": "hrpotter-project-role-cf",
+                "Path": "/service-role/",
+                "ManagedPolicyArns": [{
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [{
+                                    "Effect": "Allow",
+                                    "Resource": [{
+                                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/hrpotter-project-cf"
+                                        }, {
+                                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/hrpotter-project-cf:*"
+                                        }
+                                    ],
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ]
+                                }, {
+                                    "Effect": "Allow",
+                                    "Resource": [{
+                                            "Fn::Sub": "arn:aws:s3:::codepipeline-${AWS::Region}-*"
+                                        }
+                                    ],
+                                    "Action": [
+                                        "s3:PutObject",
+                                        "s3:GetObject",
+                                        "s3:GetObjectVersion",
+                                        "s3:GetBucketAcl",
+                                        "s3:GetBucketLocation"
+                                    ]
+                                }, {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "codebuild:CreateReportGroup",
+                                        "codebuild:CreateReport",
+                                        "codebuild:UpdateReport",
+                                        "codebuild:BatchPutTestCases"
+                                    ],
+                                    "Resource": [{
+                                            "Fn::Sub": "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:report-group/hrpotter-project-cf*"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "PolicyName": "CodeBuildBasePolicy"
+                    },
+                    "arn:aws:iam::925000763740:policy/service-role/CodeBuildCloudWatchLogsPolicy-hrpotter-project-us-east-1",
+                    "arn:aws:iam::925000763740:policy/CreateCloudfrontInvalidationPolicy",
+                    "AmazonS3FullAccess"
+                ],
+                "MaxSessionDuration": 3600
+            }
+        },
+        
+        {
+                    "Fn::GetAtt": ["HrpotterProjectRole", "Arn"]
+                }
+        
         "CodeBuildBasePolicyHrpotterProjectUsEast1": {
             "Type": "AWS::IAM::ManagedPolicy",
 			"DeletionPolicy": "Retain",

@@ -77,12 +77,7 @@ namespace HRPotter.UnitTests
             accessor.HttpContext.User = new ClaimsPrincipal(identity);
 
             controller = new JobOffersController(context);
-        }
-
-        [SetUp]
-        public void Setup()
-        {
-
+            controller.ControllerContext.HttpContext = accessor.HttpContext;
         }
 
         private void AddRole(string name)
