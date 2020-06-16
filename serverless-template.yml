@@ -1,628 +1,719 @@
 {
-    "Description": "HRPotter is an AWS Serverless Application running in Amazon Lambda.",
-    "Parameters": {
-        "RepositoryName": {
-            "Default": "HRPotter-2.0",
-            "Type": "String",
-            "Description": "GitHub repository name"
-        },
-        "BranchName": {
-            "Default": "develop",
-            "Type": "String",
-            "Description": "GitHub branch name"
-        },
-        "GitHubOwner": {
-            "Default": "Rashair",
-            "Type": "String"
-        }
+  "Description": "HRPotter is an AWS Serverless Application running in Amazon Lambda.",
+  "Parameters": {
+    "RepositoryName": {
+      "Default": "HRPotter-2.0",
+      "Type": "String",
+      "Description": "GitHub repository name"
     },
-    "AWSTemplateFormatVersion": "2010-09-09",
-    "Transform": "AWS::Serverless-2016-10-31",
-    "Conditions": {},
-    "Resources": {
-        "AspNetCoreFunction": {
-            "Type": "AWS::Serverless::Function",
-            "Properties": {
-                "AutoPublishAlias": "AspNetCoreFunction",
-                "Handler": "HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync",
-                "Runtime": "dotnetcore3.1",
-                "CodeUri": "./publish",
-                "MemorySize": 512,
-                "Timeout": 30,
-                "Role": null,
-                "Policies": [
-                    "AWSLambdaFullAccess",
-                    "AmazonS3FullAccess", {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                                "Effect": "Allow",
-                                "Action": [
-                                    "secretsmanager:GetSecretValue",
-                                    "kms:Decrypt"
-                                ],
-                                "Resource": [
-                                    "arn:aws:secretsmanager:*:*:secret:*",
-                                    "arn:aws:kms:*:*:key/*"
-                                ]
-                            }, {
-                                "Effect": "Allow",
-                                "Action": "kms:ListKeys",
-                                "Resource": "*"
-                            }
-                        ]
-                    }
-                ],
-                "Environment": {
-                    "Variables": {
-                        "StorageService": "S3",
-                        "BucketName": {
-                            "Ref": "s3hrpotterfilesstorage"
-                        },
-                        "CloudFrontDomain": {
-                            "Fn::GetAtt": ["hrpottercloudfront", "DomainName"]
-                        }
-                    }
-                },
-                "Events": {
-                    "ProxyResource": {
-                        "Type": "Api",
-                        "Properties": {
-                            "Path": "/{proxy+}",
-                            "Method": "ANY"
-                        }
-                    },
-                    "RootResource": {
-                        "Type": "Api",
-                        "Properties": {
-                            "Path": "/",
-                            "Method": "ANY"
-                        }
-                    }
-                }
-            },
-            "DependsOn": "SecretRDSInstanceAttachment"
-        },
-        "s3staticcontenthrpotter": {
-            "Type": "AWS::S3::Bucket",
-            "Properties": {
-                "AccessControl": "PublicRead",
-                "VersioningConfiguration": {
-                    "Status": "Suspended"
-                }
-            }
-        },
-        "hrpottercloudfront": {
-            "Type": "AWS::CloudFront::Distribution",
-            "Properties": {
-                "DistributionConfig": {
-                    "CacheBehaviors": [{
-                            "TargetOriginId": "S3-staticcontenthrpotter",
-                            "ViewerProtocolPolicy": "allow-all",
-                            "ForwardedValues": {
-                                "Cookies": {
-                                    "Forward": "none"
-                                },
-                                "QueryString": "false"
-                            },
-                            "PathPattern": "js/*",
-                            "CachedMethods": ["HEAD", "GET"],
-                            "AllowedMethods": ["HEAD", "GET"],
-                            "MinTTL": 0
-                        }, {
-                            "TargetOriginId": "S3-staticcontenthrpotter",
-                            "ViewerProtocolPolicy": "allow-all",
-                            "ForwardedValues": {
-                                "Cookies": {
-                                    "Forward": "none"
-                                },
-                                "QueryString": "false"
-                            },
-                            "PathPattern": "css/*",
-                            "CachedMethods": ["HEAD", "GET"],
-                            "AllowedMethods": ["HEAD", "GET"],
-                            "MinTTL": 0
-                        }, {
-                            "TargetOriginId": "S3-staticcontenthrpotter",
-                            "ViewerProtocolPolicy": "allow-all",
-                            "ForwardedValues": {
-                                "Cookies": {
-                                    "Forward": "none"
-                                },
-                                "QueryString": "false"
-                            },
-                            "PathPattern": "favicon.ico",
-                            "CachedMethods": ["HEAD", "GET"],
-                            "AllowedMethods": ["HEAD", "GET"],
-                            "MinTTL": 0
-                        }
-                    ],
-                    "Origins": [{
-                            "S3OriginConfig": {},
-                            "Id": "S3-staticcontenthrpotter",
-                            "DomainName": {
-                                "Fn::GetAtt": ["s3staticcontenthrpotter", "DomainName"]
-                            }
-                        }, {
-                            "OriginPath": "/Prod",
-                            "CustomOriginConfig": {
-                                "OriginProtocolPolicy": "http-only",
-                                "HTTPPort": "80",
-                                "HTTPSPort": "443"
-                            },
-                            "Id": "APIGateway",
-                            "DomainName": {
-                                "Fn::Sub": "cz7k3d7r2i.execute-api.${AWS::Region}.amazonaws.com"
-                            }
-                        }
-                    ],
-                    "PriceClass": "PriceClass_All",
-                    "Enabled": true,
-                    "DefaultCacheBehavior": {
-                        "TargetOriginId": "APIGateway",
-                        "ViewerProtocolPolicy": "allow-all",
-                        "ForwardedValues": {
-                            "Cookies": {
-                                "Forward": "all"
-                            },
-                            "QueryString": "false"
-                        },
-                        "CachedMethods": ["HEAD", "GET"],
-                        "AllowedMethods": ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"],
-                        "MinTTL": 0
-                    },
-                    "ViewerCertificate": {
-                        "CloudFrontDefaultCertificate": "true",
-                        "MinimumProtocolVersion": "TLSv1"
-                    },
-                    "Restrictions": {
-                        "GeoRestriction": {
-                            "RestrictionType": "none",
-                            "Locations": []
-                        }
-                    }
-                }
-            }
-        },
-        "HrpotterProjectRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": "codebuild.amazonaws.com"
-                            },
-                            "Action": "sts:AssumeRole"
-                        }
-                    ]
-                },
-                "RoleName": "hrpotter-project-role-cf",
-                "Path": "/service-role/",
-                "Policies": [{
-                        "PolicyName": "CodeBuildBasePolicy",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [{
-                                    "Effect": "Allow",
-                                    "Resource": [{
-                                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/hrpotter-project-cf"
-                                        }, {
-                                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/hrpotter-project-cf:*"
-                                        }
-                                    ],
-                                    "Action": [
-                                        "logs:CreateLogGroup",
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                    ]
-                                }, {
-                                    "Effect": "Allow",
-                                    "Resource": [{
-                                            "Fn::Sub": "arn:aws:s3:::codepipeline-${AWS::Region}-*"
-                                        }
-                                    ],
-                                    "Action": [
-                                        "s3:PutObject",
-                                        "s3:GetObject",
-                                        "s3:GetObjectVersion",
-                                        "s3:GetBucketAcl",
-                                        "s3:GetBucketLocation"
-                                    ]
-                                }, {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "codebuild:CreateReportGroup",
-                                        "codebuild:CreateReport",
-                                        "codebuild:UpdateReport",
-                                        "codebuild:BatchPutTestCases"
-                                    ],
-                                    "Resource": [{
-                                            "Fn::Sub": "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:report-group/hrpotter-project-cf*"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    }, {
-                        "PolicyName": "CreateCloudfrontInvalidationPolicy",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [{
-                                    "Effect": "Allow",
-                                    "Action": "cloudfront:CreateInvalidation",
-                                    "Resource": "*"
-                                }
-                            ]
-                        }
-                    }, {
-                        "PolicyName": "BuildLogsPolicy",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [{
-                                    "Effect": "Allow",
-                                    "Resource": [{
-                                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:hrpotter-build-project-logs"
-                                        }, {
-                                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:hrpotter-build-project-logs:*"
-                                        }
-                                    ],
-                                    "Action": [
-                                        "logs:CreateLogGroup",
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                    ]
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "ManagedPolicyArns": [
-                    "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-                ],
-                "MaxSessionDuration": 3600
-            }
-        },
-        "HrpotterProjectCf": {
-            "Type": "AWS::CodeBuild::Project",
-            "Properties": {
-                "LogsConfig": {
-                    "S3Logs": {
-                        "Status": "DISABLED",
-                        "EncryptionDisabled": false
-                    },
-                    "CloudWatchLogs": {
-                        "Status": "ENABLED",
-                        "GroupName": "hrpotter-build-project-logs",
-                        "StreamName": "hrpotter-build-project-log-stream"
-                    }
-                },
-                "Cache": {
-                    "Type": "NO_CACHE"
-                },
-                "Description": "Project for hrpotter-main-pipeline",
-                "ServiceRole": {
-                    "Fn::GetAtt": ["HrpotterProjectRole", "Arn"]
-                },
-                "Artifacts": {
-                    "Packaging": "NONE",
-                    "EncryptionDisabled": false,
-                    "Type": "CODEPIPELINE",
-                    "Name": "hrpotter-project-cf"
-                },
-                "TimeoutInMinutes": 15,
-                "BadgeEnabled": false,
-                "Environment": {
-                    "ComputeType": "BUILD_GENERAL1_LARGE",
-                    "ImagePullCredentialsType": "CODEBUILD",
-                    "PrivilegedMode": true,
-                    "Image": "aws/codebuild/amazonlinux2-x86_64-standard:3.0",
-                    "EnvironmentVariables": [],
-                    "Type": "LINUX_CONTAINER"
-                },
-                "FileSystemLocations": [],
-                "Source": {
-                    "InsecureSsl": false,
-                    "Type": "CODEPIPELINE"
-                },
-                "QueuedTimeoutInMinutes": 60,
-                "Name": "hrpotter-project-cf"
-            }
-        },
-        "s3policyhrpotterfilesstorage": {
-            "Type": "AWS::S3::BucketPolicy",
-            "Properties": {
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                            "Action": "s3:*",
-                            "Resource": [{
-                                    "Fn::Join": ["", ["arn:aws:s3:::", {
-                                                "Ref": "s3hrpotterfilesstorage"
-                                            }, ""]]
-                                }, {
-                                    "Fn::Join": ["", ["arn:aws:s3:::", {
-                                                "Ref": "s3hrpotterfilesstorage"
-                                            }, "/*"]]
-                                }
-                            ],
-                            "Effect": "Allow",
-                            "Principal": {
-                                "AWS": {
-                                    "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/HRPotterStack-AspNetCoreFunctionRole-11HVXI2CUCG3C"
-                                }
-                            }
-                        }
-                    ]
-                },
-                "Bucket": {
-                    "Ref": "s3hrpotterfilesstorage"
-                }
-            }
-        },
-        "s3policystaticcontenthrpotter": {
-            "Type": "AWS::S3::BucketPolicy",
-            "Properties": {
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                            "Action": "s3:GetObject",
-                            "Principal": "*",
-                            "Resource": {
-                                "Fn::Join": ["", ["arn:aws:s3:::", {
-                                            "Ref": "s3staticcontenthrpotter"
-                                        }, "/*"]]
-                            },
-                            "Effect": "Allow",
-                            "Sid": "PublicReadGetObject"
-                        }
-                    ]
-                },
-                "Bucket": {
-                    "Ref": "s3staticcontenthrpotter"
-                }
-            }
-        },
-        "HrpotterPipelineWebhook": {
-            "Type": "AWS::CodePipeline::Webhook",
-            "Properties": {
-                "AuthenticationConfiguration": {
-                    "SecretToken": "{{resolve:secretsmanager:GitHubAuth:SecretString:token}}"
-                },
-                "Name": "hrpotter-pipeline-webhook",
-                "TargetPipelineVersion": {
-                    "Fn::GetAtt": ["HrpotterPipelineCf", "Version"]
-                },
-                "RegisterWithThirdParty": true,
-                "Authentication": "GITHUB_HMAC",
-                "TargetPipeline": {
-                    "Ref": "HrpotterPipelineCf"
-                },
-                "TargetAction": "Source",
-                "Filters": [{
-                        "MatchEquals": "refs/heads/{Branch}",
-                        "JsonPath": "$.ref"
-                    }
-                ]
-            }
-        },
-        "HrpotterPipelineCf": {
-            "Type": "AWS::CodePipeline::Pipeline",
-            "Properties": {
-                "RoleArn": {
-                    "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/service-role/AWSCodePipelineServiceRole-us-east-1-hrpotter-pipeline"
-                },
-                "Stages": [{
-                        "Name": "Source",
-                        "Actions": [{
-                                "InputArtifacts": [],
-                                "Name": "Source",
-                                "Region": "us-east-1",
-                                "Namespace": "SourceVariables",
-                                "ActionTypeId": {
-                                    "Category": "Source",
-                                    "Owner": "ThirdParty",
-                                    "Version": "1",
-                                    "Provider": "GitHub"
-                                },
-                                "OutputArtifacts": [{
-                                        "Name": "SourceArtifact"
-                                    }
-                                ],
-                                "Configuration": {
-                                    "Owner": {
-                                        "Ref": "GitHubOwner"
-                                    },
-                                    "Repo": {
-                                        "Ref": "RepositoryName"
-                                    },
-                                    "PollForSourceChanges": "false",
-                                    "Branch": {
-                                        "Ref": "BranchName"
-                                    },
-                                    "OAuthToken": "{{resolve:secretsmanager:GitHubAuth:SecretString:token}}"
-                                },
-                                "RunOrder": 1
-                            }
-                        ]
-                    }, {
-                        "Name": "Build",
-                        "Actions": [{
-                                "InputArtifacts": [{
-                                        "Name": "SourceArtifact"
-                                    }
-                                ],
-                                "Name": "Build",
-                                "Region": "us-east-1",
-                                "Namespace": "BuildVariables",
-                                "ActionTypeId": {
-                                    "Category": "Build",
-                                    "Owner": "AWS",
-                                    "Version": "1",
-                                    "Provider": "CodeBuild"
-                                },
-                                "OutputArtifacts": [{
-                                        "Name": "BuildArtifact"
-                                    }
-                                ],
-                                "Configuration": {
-                                    "ProjectName": {
-                                        "Ref": "HrpotterProjectCf"
-                                    }
-                                },
-                                "RunOrder": 1
-                            }
-                        ]
-                    }, {
-                        "Name": "Deploy",
-                        "Actions": [{
-                                "InputArtifacts": [{
-                                        "Name": "BuildArtifact"
-                                    }
-                                ],
-                                "Name": "hrpotter-cf-deploy",
-                                "Region": "us-east-1",
-                                "ActionTypeId": {
-                                    "Category": "Deploy",
-                                    "Owner": "AWS",
-                                    "Version": "1",
-                                    "Provider": "CloudFormation"
-                                },
-                                "OutputArtifacts": [],
-                                "Configuration": {
-                                    "StackName": "HRPotterStack",
-                                    "ActionMode": "CREATE_UPDATE",
-                                    "RoleArn": {
-                                        "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/cfn-lambda-pipeline"
-                                    },
-                                    "Capabilities": "CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND,CAPABILITY_NAMED_IAM",
-                                    "TemplatePath": "BuildArtifact::outputtemplate.yml"
-                                },
-                                "RunOrder": 1
-                            }
-                        ]
-                    }
-                ],
-                "ArtifactStore": {
-                    "Type": "S3",
-                    "Location": "publishbuildsbucket"
-                },
-                "Name": "hrpotter-pipeline-cf"
-            }
-        },
-        "s3hrpotterfilesstorage": {
-            "Type": "AWS::S3::Bucket",
-            "Properties": {
-                "AccessControl": "Private",
-                "VersioningConfiguration": {
-                    "Status": "Suspended"
-                }
-            }
-        },
-
-        "AWSDbConnection": {
-            "Type": "AWS::SecretsManager::Secret",
-            "Properties": {
-                "Name": "AWSDbConnection",
-                "Description": "Connection data for hrpotter-db-cluster",
-                "GenerateSecretString": {
-                    "SecretStringTemplate": "{\"username\":\"hrpotter_admin\"}",
-                    "GenerateStringKey": "password",
-                    "PasswordLength": 32,
-                    "ExcludeCharacters": "\"@/\\=;"
-                },
-                "Tags": [{
-                        "Key": "AppName",
-                        "Value": "HRPotter"
-                    }, {
-                        "Key": "Environment",
-                        "Value": "Prod"
-                    }
-                ]
-            }
-        },
-        "AuroraDbCluster": {
-            "Type": "AWS::RDS::DBCluster",
-            "Properties": {
-                "AssociatedRoles": [],
-                "AvailabilityZones": [
-                    "us-east-1a",
-                    "us-east-1c",
-                    "us-east-1d"
-                ],
-                "BackupRetentionPeriod": 1,
-                "DatabaseName": "hrpotter_db",
-                "DBClusterParameterGroupName": "default.aurora5.6",
-                "DBSubnetGroupName": "default-vpc-1cc8db66",
-                "DeletionProtection": false,
-                "EnableCloudwatchLogsExports": [
-                    "error",
-                    "general"
-                ],
-                "EnableIAMDatabaseAuthentication": false,
-                "Engine": "aurora",
-                "EngineVersion": "5.6.10a",
-                "EngineMode": "provisioned",
-                "KmsKeyId": {
-                    "Fn::Sub": "arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/cfe0c0f5-fe4f-4f15-aff6-2789475cdf67"
-                },
-                "MasterUsername": {
-                    "Fn::Join": ["", ["{{resolve:secretsmanager:", {
-                                "Ref": "AWSDbConnection"
-                            }, ":SecretString:username}}"]]
-                },
-                "MasterUserPassword": {
-                    "Fn::Join": ["", ["{{resolve:secretsmanager:", {
-                                "Ref": "AWSDbConnection"
-                            }, ":SecretString:password}}"]]
-                },
-                "Port": 3306,
-                "SourceRegion": "us-east-1",
-                "StorageEncrypted": true,
-                "VpcSecurityGroupIds": ["sg-f291c8d1"]
-            }
-        },
-        "HrpotterClusterInstance1": {
-            "Type": "AWS::RDS::DBInstance",
-            "Properties": {
-                "DBInstanceClass": "db.t3.small",
-                "Engine": "aurora",
-                "DBParameterGroupName": "default.aurora5.6",
-                "AvailabilityZone": "us-east-1a",
-                "DBSubnetGroupName": "default-vpc-1cc8db66",
-                "AutoMinorVersionUpgrade": true,
-                "LicenseModel": "general-public-license",
-                "OptionGroupName": "default:aurora-5-6",
-                "PubliclyAccessible": true,
-                "StorageType": "aurora",
-                "DBClusterIdentifier": {
-                    "Ref": "AuroraDbCluster"
-                },
-                "CACertificateIdentifier": "rds-ca-2019",
-                "MonitoringInterval": 0,
-                "PromotionTier": 1,
-                "EnablePerformanceInsights": false
-            }
-        },
-        "SecretRDSInstanceAttachment": {
-            "Type": "AWS::SecretsManager::SecretTargetAttachment",
-            "Properties": {
-                "SecretId": {
-                    "Ref": "AWSDbConnection"
-                },
-                "TargetId": {
-                    "Ref": "AuroraDbCluster"
-                },
-                "TargetType": "AWS::RDS::DBCluster"
-            }
-        }
+    "BranchName": {
+      "Default": "develop",
+      "Type": "String",
+      "Description": "GitHub branch name"
     },
-    "Outputs": {
-        "ApiURL": {
-            "Description": "API endpoint URL",
-            "Value": {
-                "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
-            }
-        }
+    "GitHubOwner": {
+      "Default": "Rashair",
+      "Type": "String"
     }
+  },
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Transform": "AWS::Serverless-2016-10-31",
+  "Conditions": {},
+  "Resources": {
+    "AspNetCoreFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "AutoPublishAlias": "AspNetCoreFunction",
+        "Handler": "HRPotter::HRPotter.LambdaEntryPoint::FunctionHandlerAsync",
+        "Runtime": "dotnetcore3.1",
+        "CodeUri": "./publish",
+        "MemorySize": 512,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [
+          "AWSLambdaFullAccess",
+          "AmazonS3FullAccess",
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "secretsmanager:GetSecretValue",
+                  "kms:Decrypt"
+                ],
+                "Resource": [
+                  "arn:aws:secretsmanager:*:*:secret:*",
+                  "arn:aws:kms:*:*:key/*"
+                ]
+              },
+              {
+                "Effect": "Allow",
+                "Action": "kms:ListKeys",
+                "Resource": "*"
+              }
+            ]
+          }
+        ],
+        "Environment": {
+          "Variables": {
+            "StorageService": "S3",
+            "BucketName": {
+              "Ref": "s3hrpotterfilesstorage"
+            },
+            "CloudFrontDomain": {
+              "Fn::GetAtt": [ "hrpottercloudfront", "DomainName" ]
+            }
+          }
+        },
+        "Events": {
+          "ProxyResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/{proxy+}",
+              "Method": "ANY"
+            }
+          },
+          "RootResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "ANY"
+            }
+          }
+        }
+      },
+      "DependsOn": "SecretRDSInstanceAttachment"
+    },
+    "s3staticcontenthrpotter": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "AccessControl": "Private",
+        "VersioningConfiguration": {
+          "Status": "Suspended"
+        }
+      }
+    },
+    "hrpottercloudfront": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "CacheBehaviors": [
+            {
+              "TargetOriginId": "S3-staticcontenthrpotter",
+              "ViewerProtocolPolicy": "allow-all",
+              "ForwardedValues": {
+                "Cookies": {
+                  "Forward": "none"
+                },
+                "QueryString": "false"
+              },
+              "PathPattern": "js/*",
+              "CachedMethods": [ "HEAD", "GET" ],
+              "AllowedMethods": [ "HEAD", "GET" ],
+              "MinTTL": 0
+            },
+            {
+              "TargetOriginId": "S3-staticcontenthrpotter",
+              "ViewerProtocolPolicy": "allow-all",
+              "ForwardedValues": {
+                "Cookies": {
+                  "Forward": "none"
+                },
+                "QueryString": "false"
+              },
+              "PathPattern": "css/*",
+              "CachedMethods": [ "HEAD", "GET" ],
+              "AllowedMethods": [ "HEAD", "GET" ],
+              "MinTTL": 0
+            },
+            {
+              "TargetOriginId": "S3-staticcontenthrpotter",
+              "ViewerProtocolPolicy": "allow-all",
+              "ForwardedValues": {
+                "Cookies": {
+                  "Forward": "none"
+                },
+                "QueryString": "false"
+              },
+              "PathPattern": "favicon.ico",
+              "CachedMethods": [ "HEAD", "GET" ],
+              "AllowedMethods": [ "HEAD", "GET" ],
+              "MinTTL": 0
+            }
+          ],
+          "Origins": [
+            {
+              "S3OriginConfig": {
+                "OriginAccessIdentity": {
+                  "Fn::Sub": "origin-access-identity/cloudfront/${CFOriginAccessIdentity}"
+                }
+              },
+              "Id": "S3-staticcontenthrpotter",
+              "DomainName": {
+                "Fn::GetAtt": [ "s3staticcontenthrpotter", "DomainName" ]
+              }
+            },
+            {
+              "OriginPath": "/Prod",
+              "CustomOriginConfig": {
+                "OriginProtocolPolicy": "http-only",
+                "HTTPPort": "80",
+                "HTTPSPort": "443"
+              },
+              "Id": "APIGateway",
+              "DomainName": {
+                "Fn::Sub": "cz7k3d7r2i.execute-api.${AWS::Region}.amazonaws.com"
+              }
+            }
+          ],
+          "PriceClass": "PriceClass_All",
+          "Enabled": true,
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "APIGateway",
+            "ViewerProtocolPolicy": "allow-all",
+            "ForwardedValues": {
+              "Cookies": {
+                "Forward": "all"
+              },
+              "QueryString": "false"
+            },
+            "CachedMethods": [ "HEAD", "GET" ],
+            "AllowedMethods": [ "HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH" ],
+            "MinTTL": 0
+          },
+          "ViewerCertificate": {
+            "CloudFrontDefaultCertificate": "true",
+            "MinimumProtocolVersion": "TLSv1"
+          },
+          "Restrictions": {
+            "GeoRestriction": {
+              "RestrictionType": "none",
+              "Locations": []
+            }
+          }
+        }
+      }
+    },
+    "CFOriginAccessIdentity": {
+      "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+      "Properties": {
+        "CloudFrontOriginAccessIdentityConfig": {
+          "Comment": "Access ID to private S3 bucket."
+        }
+      }
+    },
+    "HrpotterProjectRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codebuild.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "RoleName": "hrpotter-project-role-cf",
+        "Path": "/service-role/",
+        "Policies": [
+          {
+            "PolicyName": "CodeBuildBasePolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/hrpotter-project-cf"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/hrpotter-project-cf:*"
+                    }
+                  ],
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:aws:s3:::codepipeline-${AWS::Region}-*"
+                    }
+                  ],
+                  "Action": [
+                    "s3:PutObject",
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:GetBucketAcl",
+                    "s3:GetBucketLocation"
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "codebuild:CreateReportGroup",
+                    "codebuild:CreateReport",
+                    "codebuild:UpdateReport",
+                    "codebuild:BatchPutTestCases"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:report-group/hrpotter-project-cf*"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "CreateCloudfrontInvalidationPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "cloudfront:CreateInvalidation",
+                  "Resource": "*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "BuildLogsPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:hrpotter-build-project-logs"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:hrpotter-build-project-logs:*"
+                    }
+                  ],
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        ],
+        "MaxSessionDuration": 3600
+      }
+    },
+    "HrpotterProjectCf": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "LogsConfig": {
+          "S3Logs": {
+            "Status": "DISABLED",
+            "EncryptionDisabled": false
+          },
+          "CloudWatchLogs": {
+            "Status": "ENABLED",
+            "GroupName": "hrpotter-build-project-logs",
+            "StreamName": "hrpotter-build-project-log-stream"
+          }
+        },
+        "Cache": {
+          "Type": "NO_CACHE"
+        },
+        "Description": "Project for hrpotter-main-pipeline",
+        "ServiceRole": {
+          "Fn::GetAtt": [ "HrpotterProjectRole", "Arn" ]
+        },
+        "Artifacts": {
+          "Packaging": "NONE",
+          "EncryptionDisabled": false,
+          "Type": "CODEPIPELINE",
+          "Name": "hrpotter-project-cf"
+        },
+        "TimeoutInMinutes": 15,
+        "BadgeEnabled": false,
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_LARGE",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": true,
+          "Image": "aws/codebuild/amazonlinux2-x86_64-standard:3.0",
+          "EnvironmentVariables": [],
+          "Type": "LINUX_CONTAINER"
+        },
+        "FileSystemLocations": [],
+        "Source": {
+          "InsecureSsl": false,
+          "Type": "CODEPIPELINE"
+        },
+        "QueuedTimeoutInMinutes": 60,
+        "Name": "hrpotter-project-cf"
+      }
+    },
+    "s3policyhrpotterfilesstorage": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "s3hrpotterfilesstorage"
+                      },
+                      ""
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "s3hrpotterfilesstorage"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/HRPotterStack-AspNetCoreFunctionRole-11HVXI2CUCG3C"
+                }
+              }
+            }
+          ]
+        },
+        "Bucket": {
+          "Ref": "s3hrpotterfilesstorage"
+        }
+      }
+    },
+    "s3policystaticcontenthrpotter": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Principal": {
+                "CanonicalUser": {
+                  "Fn::GetAtt": [ "CFOriginAccessIdentity", "S3CanonicalUserId" ]
+                }
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    {
+                      "Ref": "s3staticcontenthrpotter"
+                    },
+                    "/*"
+                  ]
+                ]
+              },
+              "Effect": "Allow",
+              "Sid": "PublicReadGetObjectForCloudFront"
+            }
+          ]
+        },
+        "Bucket": {
+          "Ref": "s3staticcontenthrpotter"
+        }
+      }
+    },
+    "HrpotterPipelineWebhook": {
+      "Type": "AWS::CodePipeline::Webhook",
+      "Properties": {
+        "AuthenticationConfiguration": {
+          "SecretToken": "{{resolve:secretsmanager:GitHubAuth:SecretString:token}}"
+        },
+        "Name": "hrpotter-pipeline-webhook",
+        "TargetPipelineVersion": {
+          "Fn::GetAtt": [ "HrpotterPipelineCf", "Version" ]
+        },
+        "RegisterWithThirdParty": true,
+        "Authentication": "GITHUB_HMAC",
+        "TargetPipeline": {
+          "Ref": "HrpotterPipelineCf"
+        },
+        "TargetAction": "Source",
+        "Filters": [
+          {
+            "MatchEquals": "refs/heads/{Branch}",
+            "JsonPath": "$.ref"
+          }
+        ]
+      }
+    },
+    "HrpotterPipelineCf": {
+      "Type": "AWS::CodePipeline::Pipeline",
+      "Properties": {
+        "RoleArn": {
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/service-role/AWSCodePipelineServiceRole-us-east-1-hrpotter-pipeline"
+        },
+        "Stages": [
+          {
+            "Name": "Source",
+            "Actions": [
+              {
+                "InputArtifacts": [],
+                "Name": "Source",
+                "Region": "us-east-1",
+                "Namespace": "SourceVariables",
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "ThirdParty",
+                  "Version": "1",
+                  "Provider": "GitHub"
+                },
+                "OutputArtifacts": [
+                  {
+                    "Name": "SourceArtifact"
+                  }
+                ],
+                "Configuration": {
+                  "Owner": {
+                    "Ref": "GitHubOwner"
+                  },
+                  "Repo": {
+                    "Ref": "RepositoryName"
+                  },
+                  "PollForSourceChanges": "false",
+                  "Branch": {
+                    "Ref": "BranchName"
+                  },
+                  "OAuthToken": "{{resolve:secretsmanager:GitHubAuth:SecretString:token}}"
+                },
+                "RunOrder": 1
+              }
+            ]
+          },
+          {
+            "Name": "Build",
+            "Actions": [
+              {
+                "InputArtifacts": [
+                  {
+                    "Name": "SourceArtifact"
+                  }
+                ],
+                "Name": "Build",
+                "Region": "us-east-1",
+                "Namespace": "BuildVariables",
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Version": "1",
+                  "Provider": "CodeBuild"
+                },
+                "OutputArtifacts": [
+                  {
+                    "Name": "BuildArtifact"
+                  }
+                ],
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "HrpotterProjectCf"
+                  }
+                },
+                "RunOrder": 1
+              }
+            ]
+          },
+          {
+            "Name": "Deploy",
+            "Actions": [
+              {
+                "InputArtifacts": [
+                  {
+                    "Name": "BuildArtifact"
+                  }
+                ],
+                "Name": "hrpotter-cf-deploy",
+                "Region": "us-east-1",
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Version": "1",
+                  "Provider": "CloudFormation"
+                },
+                "OutputArtifacts": [],
+                "Configuration": {
+                  "StackName": "HRPotterStack",
+                  "ActionMode": "CREATE_UPDATE",
+                  "RoleArn": {
+                    "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/cfn-lambda-pipeline"
+                  },
+                  "Capabilities": "CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND,CAPABILITY_NAMED_IAM",
+                  "TemplatePath": "BuildArtifact::outputtemplate.yml"
+                },
+                "RunOrder": 1
+              }
+            ]
+          }
+        ],
+        "ArtifactStore": {
+          "Type": "S3",
+          "Location": "publishbuildsbucket"
+        },
+        "Name": "hrpotter-pipeline-cf"
+      }
+    },
+    "s3hrpotterfilesstorage": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "AccessControl": "Private",
+        "VersioningConfiguration": {
+          "Status": "Suspended"
+        }
+      }
+    },
+
+    "AWSDbConnection": {
+      "Type": "AWS::SecretsManager::Secret",
+      "Properties": {
+        "Name": "AWSDbConnection",
+        "Description": "Connection data for hrpotter-db-cluster",
+        "GenerateSecretString": {
+          "SecretStringTemplate": "{\"username\":\"hrpotter_admin\"}",
+          "GenerateStringKey": "password",
+          "PasswordLength": 32,
+          "ExcludeCharacters": "\"@/\\=;"
+        },
+        "Tags": [
+          {
+            "Key": "AppName",
+            "Value": "HRPotter"
+          },
+          {
+            "Key": "Environment",
+            "Value": "Prod"
+          }
+        ]
+      }
+    },
+    "AuroraDbCluster": {
+      "Type": "AWS::RDS::DBCluster",
+      "Properties": {
+        "AssociatedRoles": [],
+        "AvailabilityZones": [
+          "us-east-1a",
+          "us-east-1c",
+          "us-east-1d"
+        ],
+        "BackupRetentionPeriod": 1,
+        "DatabaseName": "hrpotter_db",
+        "DBClusterParameterGroupName": "default.aurora5.6",
+        "DBSubnetGroupName": "default-vpc-1cc8db66",
+        "DeletionProtection": false,
+        "EnableCloudwatchLogsExports": [
+          "error",
+          "general"
+        ],
+        "EnableIAMDatabaseAuthentication": false,
+        "Engine": "aurora",
+        "EngineVersion": "5.6.10a",
+        "EngineMode": "provisioned",
+        "KmsKeyId": {
+          "Fn::Sub": "arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/cfe0c0f5-fe4f-4f15-aff6-2789475cdf67"
+        },
+        "MasterUsername": {
+          "Fn::Join": [
+            "",
+            [
+              "{{resolve:secretsmanager:",
+              {
+                "Ref": "AWSDbConnection"
+              },
+              ":SecretString:username}}"
+            ]
+          ]
+        },
+        "MasterUserPassword": {
+          "Fn::Join": [
+            "",
+            [
+              "{{resolve:secretsmanager:",
+              {
+                "Ref": "AWSDbConnection"
+              },
+              ":SecretString:password}}"
+            ]
+          ]
+        },
+        "Port": 3306,
+        "SourceRegion": "us-east-1",
+        "StorageEncrypted": true,
+        "VpcSecurityGroupIds": [ "sg-f291c8d1" ]
+      }
+    },
+    "HrpotterClusterInstance1": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceClass": "db.t3.small",
+        "Engine": "aurora",
+        "DBParameterGroupName": "default.aurora5.6",
+        "AvailabilityZone": "us-east-1a",
+        "DBSubnetGroupName": "default-vpc-1cc8db66",
+        "AutoMinorVersionUpgrade": true,
+        "LicenseModel": "general-public-license",
+        "OptionGroupName": "default:aurora-5-6",
+        "PubliclyAccessible": true,
+        "StorageType": "aurora",
+        "DBClusterIdentifier": {
+          "Ref": "AuroraDbCluster"
+        },
+        "CACertificateIdentifier": "rds-ca-2019",
+        "MonitoringInterval": 0,
+        "PromotionTier": 1,
+        "EnablePerformanceInsights": false
+      }
+    },
+    "SecretRDSInstanceAttachment": {
+      "Type": "AWS::SecretsManager::SecretTargetAttachment",
+      "Properties": {
+        "SecretId": {
+          "Ref": "AWSDbConnection"
+        },
+        "TargetId": {
+          "Ref": "AuroraDbCluster"
+        },
+        "TargetType": "AWS::RDS::DBCluster"
+      }
+    }
+  },
+  "Outputs": {
+    "ApiURL": {
+      "Description": "API endpoint URL",
+      "Value": {
+        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
+      }
+    }
+  }
 }
