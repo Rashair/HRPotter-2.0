@@ -13,6 +13,7 @@
                 <div class="col-12 col-md-4 py-2">
                     @using (Html.BeginForm("Index", "Users", FormMethod.Get, new { id = "searchForm" }))
                     {
+                        @Html.AntiForgeryToken();
                         <input type="hidden" value="0" id="author" />
                         <div class="input-group search-input">
                             <input id="searchInput"

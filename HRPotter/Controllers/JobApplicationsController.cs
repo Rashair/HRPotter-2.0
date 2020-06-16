@@ -104,14 +104,14 @@ namespace HRPotter.Controllers
                 if (userRole == "Admin")
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
-                        Where(app => app.JobOffer.JobTitle.Contains(searchString)).
+                        Where(app => app.JobOffer.JobTitle.ToLower().Contains(searchString)).
                         ToListAsync();
                 }
                 else
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
                         Where(u => u.CreatorId == id).
-                        Where(app => app.JobOffer.JobTitle.Contains(searchString)).
+                        Where(app => app.JobOffer.JobTitle.ToLower().Contains(searchString)).
                         ToListAsync();
                 }
             }

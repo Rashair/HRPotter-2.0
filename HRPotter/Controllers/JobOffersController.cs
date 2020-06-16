@@ -133,11 +133,11 @@ namespace HRPotter.Controllers
                 searchString = searchString.ToLower();
                 if (userRole == "HR")
                 {
-                    totalRecords = await _context.JobOffers.Where(off => off.CreatorId == User.GetId() && off.JobTitle.Contains(searchString)).CountAsync();
+                    totalRecords = await _context.JobOffers.Where(off => off.CreatorId == User.GetId() && off.JobTitle.ToLower().Contains(searchString)).CountAsync();
                 }
                 else
                 {
-                    totalRecords = await _context.JobOffers.Where(x => x.JobTitle.Contains(searchString)).CountAsync();
+                    totalRecords = await _context.JobOffers.Where(x => x.JobTitle.ToLower().Contains(searchString)).CountAsync();
                 }
                 totalPages = (totalRecords / pageSize) + ((totalRecords % pageSize) > 0 ? 1 : 0);
             }

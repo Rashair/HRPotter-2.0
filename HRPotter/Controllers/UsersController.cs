@@ -48,7 +48,7 @@ namespace HRPotter.Controllers
             else
             {
                 searchString = searchString.ToLower();
-                result = await _context.Users.Include(x => x.Role).Where(x => x.RoleId != 3).Where(u => u.Name.Contains(searchString)).ToListAsync();
+                result = await _context.Users.Include(x => x.Role).Where(x => x.RoleId != 3).Where(u => u.Name.ToLower().Contains(searchString)).ToListAsync();
             }
 
             return PartialView("_UsersTable", result);
@@ -135,12 +135,17 @@ namespace HRPotter.Controllers
         }
 
 
-        [Route("[action]/{id}")]
         [HttpPost, ActionName("Delete")]
+        [Route("Delete/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            var user = await _context.Users.Where(x => x.Id == id && x.Role != "Admin").FirstOrDefaultAsync();
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.Where(x => x.RoleId != 3).Where(x => x.Id == id).FirstOrDefaultAsync();
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
