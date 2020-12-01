@@ -4,7 +4,13 @@
     ViewData["Title"] = "Details";
 }
 
-<link rel="stylesheet" href="~/css/jobOfferDetails.css" />
+<environment include="Development">
+    <link rel="stylesheet" href="~/css/job-offer-details.css" />
+</environment>
+<environment exclude="Development">
+    <link rel="stylesheet" href="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/css/job-offer-details.css" />
+</environment>
+
 
 <div class="row">
     <h1 class="col-sm-12">@Model.JobTitle</h1>

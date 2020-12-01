@@ -1,5 +1,9 @@
-﻿using Azure.Storage.Blobs;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.S3.Transfer;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using HRPotter.Authorization;
 using HRPotter.Data;
 using HRPotter.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -10,8 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static HRPotter.Controllers.UsersController;
 
 namespace HRPotter.Controllers
 {
@@ -19,21 +23,36 @@ namespace HRPotter.Controllers
     [Authorize]
     public class JobApplicationsController : Controller
     {
+        private enum StorageType { S3, BlobStorage }
+
         const int maxFileSize = (int)5e6;
         const string separationString = "#_#";
+        private readonly string bucketName;
 
         private readonly HRPotterContext _context;
         private readonly BlobContainerClient blobContainerClient;
+        private readonly AmazonS3Client s3Client;
 
-        public JobApplicationsController(HRPotterContext context, IHttpContextAccessor httpContextAccessor,
-            BlobServiceClient blobService)
+        private readonly StorageType storageType;
+
+        public JobApplicationsController(HRPotterContext context, BlobServiceClient blobService)
         {
             _context = context;
             blobContainerClient = blobService.GetBlobContainerClient("job-applications");
-            if (!IsAuthorized())
+            s3Client = new AmazonS3Client(Amazon.RegionEndpoint.USEast1);
+
+            var storageService = Environment.GetEnvironmentVariable("StorageService");
+            if (storageService == "S3")
             {
-                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
+                storageType = StorageType.S3;
             }
+            else
+            {
+                // By default use BlobStorage
+                storageType = StorageType.BlobStorage;
+            }
+
+            bucketName = Environment.GetEnvironmentVariable("BucketName");
         }
 
         /// <summary>
@@ -47,13 +66,14 @@ namespace HRPotter.Controllers
         {
             List<JobApplication> result;
 
-            if (HRPotterUser.Role == "Admin")
+            if (User.GetRole() == "Admin")
             {
                 result = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).ToListAsync();
             }
             else
             {
-                result = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).Where(u => u.CreatorId == HRPotterUser.Id).ToListAsync();
+                int id = User.GetId();
+                result = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).Where(u => u.CreatorId == id).ToListAsync();
             }
 
             return View(result);
@@ -64,31 +84,34 @@ namespace HRPotter.Controllers
         public async Task<IActionResult> GetApplicationsTable([FromQuery(Name = "query")] string searchString)
         {
             List<JobApplication> applications;
+            var userRole = User.GetRole();
+            int id = User.GetId();
             if (string.IsNullOrEmpty(searchString))
             {
-                if (HRPotterUser.Role == "Admin")
+                if (userRole == "Admin")
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).ToListAsync();
                 }
                 else
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
-                        Where(u => u.CreatorId == HRPotterUser.Id).ToListAsync();
+                        Where(u => u.CreatorId == id).ToListAsync();
                 }
             }
             else
             {
-                if (HRPotterUser.Role == "Admin")
+                searchString = searchString.ToLower();
+                if (userRole == "Admin")
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
-                        Where(app => app.JobOffer.JobTitle.Contains(searchString)).
+                        Where(app => app.JobOffer.JobTitle.ToLower().Contains(searchString)).
                         ToListAsync();
                 }
                 else
                 {
                     applications = await _context.JobApplications.Include(x => x.JobOffer).ThenInclude(y => y.Company).
-                        Where(u => u.CreatorId == HRPotterUser.Id).
-                        Where(app => app.JobOffer.JobTitle.Contains(searchString)).
+                        Where(u => u.CreatorId == id).
+                        Where(app => app.JobOffer.JobTitle.ToLower().Contains(searchString)).
                         ToListAsync();
                 }
             }
@@ -112,7 +135,7 @@ namespace HRPotter.Controllers
                 return NotFound($"Application with corresponding id was not found: {id}");
             }
 
-            if (app.CreatorId != HRPotterUser.Id)
+            if (app.CreatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -126,11 +149,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> DetailsHR(int? id)
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return BadRequest("Id cannot be null");
@@ -153,11 +171,6 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int? id, int? status)
         {
-            if (HRPotterUser.Role != "HR")
-            {
-                return Forbid();
-            }
-
             if (id == null || status == null || !Enum.IsDefined(typeof(ApplicationStatus), status.Value))
             {
                 return BadRequest();
@@ -169,7 +182,7 @@ namespace HRPotter.Controllers
                 return NotFound();
             }
 
-            if (app.JobOffer.CreatorId != HRPotterUser.Id)
+            if (app.JobOffer.CreatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -213,11 +226,6 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(JobApplication model, [FromForm] IFormFile cvFile)
         {
-            if (HRPotterUser.Role != "User")
-            {
-                return Forbid();
-            }
-
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -242,7 +250,7 @@ namespace HRPotter.Controllers
 
             JobApplication app = new JobApplication
             {
-                CreatorId = HRPotterUser.Id,
+                CreatorId = User.GetId(),
                 JobOfferId = model.JobOfferId,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -260,9 +268,43 @@ namespace HRPotter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<string> UploadFile(IFormFile file)
+        [Route("[action]")]
+        [ActionName("Download")]
+        [HttpGet]
+        public async Task<IActionResult> DownloadFile(string name)
         {
-            var filename = Guid.NewGuid().ToString() + separationString + file.FileName; ;
+            try
+            {
+                if (storageType == StorageType.BlobStorage)
+                {
+                    return await DownloadBlobFile(name);
+                }
+                else
+                {
+                    return await DownloadS3File(name);
+                }
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
+
+        private Task<string> UploadFile(IFormFile file)
+        {
+            if (storageType == StorageType.BlobStorage)
+            {
+                return UploadFileToBlobStorage(file);
+            }
+            else
+            {
+                return UploadFileToS3(file);
+            }
+        }
+
+        private async Task<string> UploadFileToBlobStorage(IFormFile file)
+        {
+            var filename = Guid.NewGuid().ToString() + separationString + file.FileName;
             var blobClient = blobContainerClient.GetBlobClient(filename);
             using var uploadStream = file.OpenReadStream();
             try
@@ -277,10 +319,29 @@ namespace HRPotter.Controllers
             return filename;
         }
 
-        [Route("[action]")]
-        [ActionName("Download")]
-        [HttpGet]
-        public async Task<IActionResult> DownloadBlobFile(string name)
+        private async Task<string> UploadFileToS3(IFormFile file)
+        {
+            var key = Guid.NewGuid().ToString() + separationString + GetValidFileName(file.FileName);
+            TransferUtility fileTransferUtility;
+
+            try
+            {
+                fileTransferUtility = new TransferUtility(s3Client);
+                using (var fileToUpload = file.OpenReadStream())
+                {
+                    await fileTransferUtility.UploadAsync(fileToUpload, bucketName, key);
+                }
+            }
+            catch (Exception)
+            {
+                throw new FileLoadException();
+            }
+
+            fileTransferUtility.Dispose();
+            return key;
+        }
+
+        private async Task<IActionResult> DownloadBlobFile(string name)
         {
             var blobClient = blobContainerClient.GetBlobClient(name);
             BlobDownloadInfo download;
@@ -290,7 +351,7 @@ namespace HRPotter.Controllers
             }
             catch
             {
-                return RedirectToAction("Error", "Home");
+                throw new FileLoadException();
             }
 
             var ind = name.IndexOf(separationString);
@@ -298,6 +359,34 @@ namespace HRPotter.Controllers
             return File(download.Content, download.ContentType, downloadFileName);
         }
 
+        private async Task<IActionResult> DownloadS3File(string name)
+        {
+            GetObjectRequest request = new GetObjectRequest
+            {
+                BucketName = bucketName,
+                Key = name
+            };
+            GetObjectResponse response;
+            try
+            {
+                response = await s3Client.GetObjectAsync(request);
+            }
+            catch (Exception)
+            {
+                throw new FileLoadException();
+            }
+
+            var ind = name.IndexOf(separationString);
+            string downloadFileName = name.Substring(ind > 0 ? ind + separationString.Length : 0);
+
+            return File(response.ResponseStream, response.Headers["Content-Type"], downloadFileName);
+        }
+
+        private string GetValidFileName(string fileName)
+        {
+            var validFilename = Regex.Replace(fileName, @"[^\u0000-\u007F]+", string.Empty);
+            return validFilename;
+        }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -318,7 +407,7 @@ namespace HRPotter.Controllers
                 return NotFound();
             }
 
-            if (jobApplication.CreatorId != HRPotterUser.Id)
+            if (jobApplication.CreatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -347,7 +436,7 @@ namespace HRPotter.Controllers
             {
                 return BadRequest();
             }
-            if (app.CreatorId != HRPotterUser.Id)
+            if (app.CreatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -368,6 +457,7 @@ namespace HRPotter.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("[action]/{id}")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -376,7 +466,7 @@ namespace HRPotter.Controllers
             }
 
             int? creatorId = _context.JobApplications.Where(app => app.Id == id).Select(app => app.CreatorId).FirstOrDefault();
-            if (creatorId != HRPotterUser.Id)
+            if (creatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -403,7 +493,7 @@ namespace HRPotter.Controllers
             }
 
             int? creatorId = _context.JobApplications.Where(app => app.Id == id).Select(app => app.CreatorId).FirstOrDefault();
-            if (creatorId != HRPotterUser.Id)
+            if (creatorId != User.GetId())
             {
                 return Forbid();
             }
@@ -420,6 +510,7 @@ namespace HRPotter.Controllers
             }
             else
             {
+                searchString = searchString.ToLower();
                 result = await _context.JobApplications.Where(app => app.JobOfferId == id &&
                    (app.FirstName.Contains(searchString) || app.LastName.Contains(searchString))).
                    ToListAsync();

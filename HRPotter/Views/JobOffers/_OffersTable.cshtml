@@ -1,10 +1,13 @@
 ﻿@model JobOfferPagingView
+@{
+    var userRole = User.GetRole();
+}
 
 @foreach (var item in Model.Offers)
 {
     <tr>
         <td>
-            <a id="@item.Id" asp-action=@(HRPotterUser.Role == "HR" ? "DetailsHR": "Details") asp-route-id="@item.Id"
+            <a id="@item.Id" asp-action=@(userRole == "HR" ? "DetailsHR": "Details") asp-route-id="@item.Id"
                data-toggle="tooltip">
                 @Html.DisplayFor(modelItem => item.JobTitle)
             </a>
@@ -18,7 +21,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.Created)
         </td>
-        @if (HRPotterUser.Role == "HR")
+        @if (userRole == "HR")
         {
             <td>
                 <a class="btn btn-primary btn-sm mr-2" asp-action="Edit" asp-route-id="@item.Id">
@@ -30,7 +33,7 @@
 }
 
 <script>
-    @if (HRPotterUser.Role == "HR")
+    @if (userRole == "HR")
     {
         @: handleTooltips();
     };

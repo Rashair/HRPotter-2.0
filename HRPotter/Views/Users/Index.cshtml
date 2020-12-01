@@ -13,6 +13,7 @@
                 <div class="col-12 col-md-4 py-2">
                     @using (Html.BeginForm("Index", "Users", FormMethod.Get, new { id = "searchForm" }))
                     {
+                        @Html.AntiForgeryToken();
                         <input type="hidden" value="0" id="author" />
                         <div class="input-group search-input">
                             <input id="searchInput"
@@ -58,5 +59,10 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/users.js"></script>
+    <environment include="Development">
+        <script src="~/js/users.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/users.js"></script>
+    </environment>
 }

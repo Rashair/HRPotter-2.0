@@ -4,11 +4,30 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - HRPotter</title>
-    <link href="~/lib/fontawesome/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css">
+        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="icon" type="image/x-icon" href="~/favicon.ico">
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/css/site.css" />
+        <link rel="icon" type="image/x-icon" href="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/favicon.ico">
+    </environment>
+    @{
+        if (User.IsAuthenticated() && User.GetRole() == null)
+        {
+            <script>location.reload()</script>
+        }
+    }
 </head>
-<body>
+<body data-url="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.PathBase}")">
+    @{
+        bool isAuthenticated = User.IsAuthenticated();
+        var userRole = User.GetRole();
+    }
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -19,31 +38,28 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
-                    @if (User.Identity.IsAuthenticated && HRPotterUser != null)
+                    @if (isAuthenticated && userRole != null)
                     {
                         <ul class="navbar-nav flex-grow-1">
-                            @if (HRPotterUser.Role == "User" || HRPotterUser.Role == "HR")
+                            @if (userRole == "User" || userRole == "HR")
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="JobOffers" asp-action="Index">Job offers</a>
                                 </li>
                             }
-                            @if (HRPotterUser.Role == "User" || HRPotterUser.Role == "Admin")
+                            @if (userRole == "User" || userRole == "Admin")
                             {
-                                var keyword = HRPotterUser.Role == "User" ? "Your applications" : "Applications";
+                                var keyword = userRole == "User" ? "Your applications" : "Applications";
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="JobApplications" asp-action="Index">@keyword</a>
                                 </li>
                             }
-                            @if (HRPotterUser.Role == "Admin")
+                            @if (userRole == "Admin")
                             {
 
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Companies" asp-action="Index">Companies</a>
                                 </li>
-                            }
-                            @if (HRPotterUser.Role == "Admin")
-                            {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
                                 </li>
@@ -62,13 +78,21 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            <i class="fas fa-bolt"></i> 2019 - HRPotter
+            <i class="fas fa-bolt"></i> 2020 - HRPotter
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/knockout/knockout-min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="~/lib/knockout/knockout-min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
+        <script src="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/site.js" asp-append-version="true"></script>
+    </environment>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

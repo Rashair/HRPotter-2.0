@@ -69,5 +69,10 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/offersIndex.js"></script>
+    <environment include="Development">
+        <script src="~/js/offers-index.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/offers-index.js"></script>
+    </environment>
 }

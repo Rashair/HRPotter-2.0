@@ -86,5 +86,31 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:HRPotter.Helpers.Secrets.Secret">
+            <summary>
+            Use exaclty the name of the secret in Secret-Manager, case sensitive
+            </summary>
+        </member>
+        <member name="T:HRPotter.LambdaEntryPoint">
+            <summary>
+            This class extends from APIGatewayProxyFunction which contains the method FunctionHandlerAsync which is the 
+            actual Lambda function entry point. 
+            </summary>
+        </member>
+        <member name="M:HRPotter.LambdaEntryPoint.Init(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            The builder has configuration, logging and Amazon API Gateway already configured. 
+            The startup class needs to be configured in this method using the UseStartup() method.
+            </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="M:HRPotter.LambdaEntryPoint.Init(Microsoft.Extensions.Hosting.IHostBuilder)">
+            <summary>
+            Use this override to customize the services registered with the IHostBuilder. 
+            It is recommended not to call ConfigureWebHostDefaults to configure the IWebHostBuilder inside this method.
+            Instead customize the IWebHostBuilder in the Init(IWebHostBuilder) overload.
+            </summary>
+            <param name="builder"></param>
+        </member>
     </members>
 </doc>

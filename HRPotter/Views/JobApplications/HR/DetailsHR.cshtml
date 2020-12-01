@@ -99,6 +99,11 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/applicationsDetails.js"></script>
+    <environment include="Development">
+        <script src="~/js/applications-details.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/applications-details.js"></script>
+    </environment>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

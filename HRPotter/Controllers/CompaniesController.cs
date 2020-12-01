@@ -6,25 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using static HRPotter.Controllers.UsersController;
 
 
 namespace HRPotter.Controllers
 {
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Route("[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class CompaniesController : Controller
     {
         private readonly HRPotterContext _context;
 
-        public CompaniesController(HRPotterContext context, IHttpContextAccessor httpContextAccessor)
+        public CompaniesController(HRPotterContext context)
         {
             _context = context;
-            if (!IsAuthorized())
-            {
-                AuthorizeUser(_context, httpContextAccessor.HttpContext.User);
-            }
         }
 
         /// <summary>
@@ -36,11 +31,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             return View(await _context.Companies.ToListAsync());
         }
 
@@ -50,11 +40,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCompaniesTable()
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             return PartialView("_CompaniesTable", await _context.Companies.ToListAsync());
         }
 
@@ -68,11 +53,6 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Company company)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             if (ModelState.IsValid)
             {
                 _context.Add(company);
@@ -93,11 +73,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return NotFound();
@@ -122,11 +97,6 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Company company)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             if (company == null || id != company.Id)
             {
                 return NotFound();
@@ -165,11 +135,6 @@ namespace HRPotter.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDeleteModal(int? id)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return NotFound();
@@ -194,11 +159,6 @@ namespace HRPotter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (HRPotterUser.Role != "Admin")
-            {
-                return Forbid();
-            }
-
             var company = await _context.Companies.FindAsync(id);
             _context.Companies.Remove(company);
             await _context.SaveChangesAsync();

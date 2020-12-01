@@ -4,7 +4,13 @@
     ViewData["Title"] = "Details";
 }
 
-<link rel="stylesheet" href="~/css/jobOfferDetails.css" />
+<environment include="Development">
+    <link rel="stylesheet" href="~/css/job-offer-details.css" />
+</environment>
+<environment exclude="Development">
+    <link rel="stylesheet" href="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/css/job-offer-details.css" />
+</environment>
+
 
 <div class="panel panel-default">
     <div class="row ml-0">
@@ -78,5 +84,10 @@
 @await Html.PartialAsync("/Views/Shared/_DeleteModal.cshtml", (Title: Model.JobTitle, Id: Model.Id, Controller: "JobOffers"))
 
 @section Scripts {
-    <script src="~/js/applicationsIndexHR.js"></script>
+    <environment include="Development">
+        <script src="~/js/applications-indexHR.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://@Environment.GetEnvironmentVariable("CloudFrontDomain")/js/applications-indexHR.js"></script>
+    </environment>
 }

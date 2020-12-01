@@ -14,7 +14,7 @@
 
     function getApplications(val) {
         $.ajax({
-            url: '/JobApplications/GetApplicationsTable?query=' + val,
+            url: document.body.dataset.url + '/JobApplications/GetApplicationsTable?query=' + val,
             type: 'GET',
             dataType: 'html',
             success: function (data) {
